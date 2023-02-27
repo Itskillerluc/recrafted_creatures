@@ -1,0 +1,109 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.giraffe",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 6.5,
+				"visible_bounds_offset": [0, 2.75, 0]
+			},
+			"bones": [
+				{
+					"name": "giraffe",
+					"pivot": [0, 34, -1]
+				},
+				{
+					"name": "tail",
+					"parent": "giraffe",
+					"pivot": [0, 41, 13],
+					"cubes": [
+						{"origin": [0, 22, 13], "size": [0, 20, 7], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "body_2",
+					"parent": "giraffe",
+					"pivot": [0, 40, -10],
+					"cubes": [
+						{"origin": [-6, 35, -17], "size": [12, 16, 13], "uv": [49, 59]},
+						{"origin": [0, 47, -10], "size": [0, 6, 8], "uv": [48, 37]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body_2",
+					"pivot": [0, 51, -13],
+					"cubes": [
+						{"origin": [-4, 47, -16.5], "size": [8, 32, 7], "uv": [0, 72]},
+						{"origin": [4, 78, -13], "size": [5, 2, 1], "pivot": [4, 79, -12], "rotation": [0, -10, -20], "uv": [0, 3]},
+						{"origin": [1, 79, -13], "size": [2, 3, 2], "uv": [14, 20]},
+						{"origin": [-3, 79, -13], "size": [2, 3, 2], "uv": [20, 23]},
+						{"origin": [-9, 78, -13], "size": [5, 2, 1], "pivot": [-4, 79, -12], "rotation": [0, 10, 20], "uv": [0, 0]},
+						{"origin": [-1, 60, -10], "size": [2, 18, 2], "uv": [18, 0]},
+						{"origin": [0, 52, -10], "size": [0, 26, 3], "uv": [62, 85]},
+						{"origin": [-2, 72, -22.5], "size": [4, 4, 6], "uv": [58, 45]}
+					]
+				},
+				{
+					"name": "tongue",
+					"parent": "head",
+					"pivot": [0, 73, -10.5],
+					"cubes": [
+						{"origin": [-1, 73, -22.5], "size": [2, 0, 12], "uv": [2, 0]}
+					]
+				},
+				{
+					"name": "body_1",
+					"parent": "giraffe",
+					"pivot": [0, 35, -1],
+					"cubes": [
+						{"origin": [-8, 28, -15], "size": [16, 17, 28], "pivot": [0, 38, -15], "rotation": [-2.5, 0, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "Saddle",
+					"parent": "body_1",
+					"pivot": [0, 35, -1],
+					"cubes": [
+						{"origin": [-8.5, 31.5, -3], "size": [17, 13, 14], "pivot": [0, 35, -1], "rotation": [-2.5, 0, 0], "uv": [0, 45]}
+					]
+				},
+				{
+					"name": "leg3",
+					"parent": "giraffe",
+					"pivot": [5, 27, 12],
+					"cubes": [
+						{"origin": [3, 0, 9], "size": [4, 28, 4], "uv": [88, 0]}
+					]
+				},
+				{
+					"name": "leg2",
+					"parent": "giraffe",
+					"pivot": [6, 28, -11],
+					"cubes": [
+						{"origin": [4, 0, -13], "size": [4, 28, 4], "uv": [30, 72]}
+					]
+				},
+				{
+					"name": "leg1",
+					"parent": "giraffe",
+					"pivot": [-5, 27, 12],
+					"cubes": [
+						{"origin": [-7, 0, 9], "size": [4, 28, 4], "uv": [88, 32]}
+					]
+				},
+				{
+					"name": "leg0",
+					"parent": "giraffe",
+					"pivot": [-6, 28, -11],
+					"cubes": [
+						{"origin": [-8, 0, -13], "size": [4, 28, 4], "uv": [46, 88]}
+					]
+				}
+			]
+		}
+	]
+}
