@@ -5,11 +5,16 @@ import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
 import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.TimeUtil;
@@ -19,14 +24,20 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.extensions.IForgePlayer;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Giraffe extends AbstractHorse implements NeutralMob, Animatable<GiraffeModel> {
+public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "giraffe");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(Items.WHEAT, Items.HAY_BLOCK.asItem(), Items.CARROT, Items.GOLDEN_CARROT), Ingredient.of(ItemTags.LEAVES)));
@@ -64,9 +75,69 @@ public class Giraffe extends AbstractHorse implements NeutralMob, Animatable<Gir
     }
 
     @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Giraffe.class));
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this) {
+            @Override
+            public void start() {
+                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0){
+                    return;
+                }
+                super.start();
+            }
+        });
+    }
+
+    @Override
+    public float getStepHeight() {
+        return 1;
+    }
+
+    @Override
+    public double getPassengersRidingOffset() {
+        return super.getPassengersRidingOffset() + 1;
+    }
+
+    @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!level.isClientSide() && isSaddleable() && pPlayer.getItemInHand(pHand).isEmpty()){
-            this.setSaddled(false);
+        if (!level.isClientSide() && getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
+            if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty()) {
+                setSaddled(false);
+                return InteractionResult.SUCCESS;
+            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE)){
+                var itemStack = pPlayer.getItemInHand(pHand);
+                if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
+                    if (!pPlayer.getAbilities().instabuild) {
+                        itemStack.shrink(1);
+                    }
+                    this.heal((float) itemStack.getItem().getFoodProperties().getNutrition());
+                } else {
+                    pPlayer.startRiding(this);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        if (!this.level.isClientSide && this.getOwner() == null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
+            this.setInLove(pPlayer);
+            return InteractionResult.SUCCESS;
+        }
+        if (!this.level.isClientSide && this.getOwner() == null && pPlayer.isShiftKeyDown() && isFood(pPlayer.getItemInHand(pHand))){
+            if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
+                this.tame(pPlayer);
+                this.navigation.stop();
+                this.setTarget(null);
+                this.level.broadcastEntityEvent(this, (byte)7);
+            } else {
+                this.level.broadcastEntityEvent(this, (byte)6);
+            }
+
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
@@ -74,8 +145,11 @@ public class Giraffe extends AbstractHorse implements NeutralMob, Animatable<Gir
     @Override
     public void tick() {
         super.tick();
-        animateWhen("tail_run", getPose() == Pose.STANDING && Animatable.isMoving(this), tickCount);
-        animateWhen("tounge", random.nextInt(3600) == 1, tickCount);
+        if (random.nextInt(30) == 1) {
+            getAnimationState("tounge").startIfStopped(tickCount);
+        } else if (random.nextInt(20) == 1) {
+            getAnimationState("tounge").stop();
+        }
     }
 
     @Override
@@ -91,6 +165,67 @@ public class Giraffe extends AbstractHorse implements NeutralMob, Animatable<Gir
         super.removePassenger(pPassenger);
         if (pPassenger instanceof Player player && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
             player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() -2);
+        }
+    }
+
+    public @NotNull Vec3 getDismountLocationForPassenger(@NotNull LivingEntity p_230268_1_) {
+        Direction direction = this.getMotionDirection();
+        if (direction.getAxis() != Direction.Axis.Y) {
+            int[][] aint = DismountHelper.offsetsForDirection(direction);
+            BlockPos blockpos = this.blockPosition();
+            BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
+
+            for (Pose pose : p_230268_1_.getDismountPoses()) {
+                AABB axisalignedbb = p_230268_1_.getLocalBoundsForPose(pose);
+
+                for (int[] aint1 : aint) {
+                    blockpos$mutable.set(blockpos.getX() + aint1[0], blockpos.getY(), blockpos.getZ() + aint1[1]);
+                    double d0 = this.level.getBlockFloorHeight(blockpos$mutable);
+                    if (DismountHelper.isBlockFloorValid(d0)) {
+                        Vec3 vec3 = Vec3.upFromBottomCenterOf(blockpos$mutable, d0);
+                        if (DismountHelper.canDismountTo(this.level, p_230268_1_, axisalignedbb.move(vec3))) {
+                            p_230268_1_.setPose(pose);
+                            return vec3;
+                        }
+                    }
+                }
+            }
+
+        }
+        return super.getDismountLocationForPassenger(p_230268_1_);
+    }
+
+    @Nullable
+    @Override
+    public Entity getControllingPassenger() {
+        return getFirstPassenger();
+    }
+
+    public void travel(@NotNull Vec3 pTravelVector) {
+        if (this.isAlive()) {
+            if (this.isVehicle()) {
+                LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
+                this.setYRot(livingentity.getYRot());
+                this.yRotO = this.getYRot();
+                this.setXRot(livingentity.getXRot() * 0.5F);
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = this.getYRot();
+                this.yHeadRot = this.yBodyRot;
+                float f = livingentity.xxa * 0.5F;
+                float f1 = livingentity.zza;
+                if (f1 <= 0.0F) {
+                    f1 *= 0.25F;
+                }
+
+                if (this.isControlledByLocalInstance()) {
+                    this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                    super.travel(new Vec3(f, pTravelVector.y, f1));
+                }
+                this.calculateEntityAnimation(this, false);
+                this.tryCheckInsideBlocks();
+            } else {
+                super.travel(pTravelVector);
+            }
         }
     }
 
@@ -146,6 +281,11 @@ public class Giraffe extends AbstractHorse implements NeutralMob, Animatable<Gir
         if (pSource != null) {
             this.level.playSound(null, this, this.getSaddleSoundEvent(), pSource, 0.5F, 1.0F);
         }
+    }
+
+    @Override
+    public SoundEvent getSaddleSoundEvent() {
+        return SoundEvents.HORSE_SADDLE;
     }
 
     @Override

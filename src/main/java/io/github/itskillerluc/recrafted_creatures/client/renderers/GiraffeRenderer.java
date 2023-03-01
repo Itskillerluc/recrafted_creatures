@@ -12,6 +12,6 @@ public class GiraffeRenderer extends AnimatableDucRenderer<Giraffe, GiraffeModel
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/giraffe.png");
 
     public GiraffeRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, () -> new GiraffeModel((Ducling) pContext.bakeLayer(GiraffeModel.LAYER_LOCATION)), entity -> LOCATION, 2);
+        super(pContext, () -> new GiraffeModel((Ducling) pContext.bakeLayer(GiraffeModel.LAYER_LOCATION)), entity -> LOCATION, 1.5f);
     }
 }

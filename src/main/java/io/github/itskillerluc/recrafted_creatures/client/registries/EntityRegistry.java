@@ -14,7 +14,7 @@ public class EntityRegistry {
     public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, RecraftedCreatures.MODID);
 
     public static final RegistryObject<EntityType<Giraffe>> GIRAFFE = ENTITY_TYPES.register("giraffe",
-            () -> EntityType.Builder.of(Giraffe::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(Giraffe::new, MobCategory.CREATURE).sized(1, 3)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "giraffe").toString()));
 
     public static final RegistryObject<EntityType<RedPanda>> RED_PANDA = ENTITY_TYPES.register("red_panda",
