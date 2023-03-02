@@ -2,6 +2,7 @@ package io.github.itskillerluc.recrafted_creatures;
 
 import com.mojang.logging.LogUtils;
 import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.client.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import net.minecraft.client.Minecraft;
@@ -37,9 +38,10 @@ public class RecraftedCreatures
     public RecraftedCreatures()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+        
         modEventBus.addListener(this::addEntityAttributes);
 
+        SoundRegistry.SOUNDS.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in

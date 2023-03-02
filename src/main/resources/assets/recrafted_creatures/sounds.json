@@ -1,0 +1,44 @@
+{
+  "entity.giraffe_death": {
+    "subtitle": "subtitle.recrafted_creatures.giraffe_death",
+    "sounds": [
+      "recrafted_creatures:giraffe_death"
+    ]
+  },
+  "entity.giraffe_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.giraffe_hurt",
+    "sounds": [
+      "recrafted_creatures:giraffe_hurt_1",
+      "recrafted_creatures:giraffe_hurt_2"
+    ]
+  },
+  "entity.giraffe_sound": {
+    "subtitle": "subtitle.recrafted_creatures.giraffe_sound",
+    "sounds": [
+      "recrafted_creatures:giraffe_sound_1",
+      "recrafted_creatures:giraffe_sound_2",
+      "recrafted_creatures:giraffe_sound_3"
+    ]
+  },
+  "entity.red_panda_death": {
+    "subtitle": "subtitle.recrafted_creatures.red_panda_death",
+    "sounds": [
+      "recrafted_creatures:red_panda_death"
+    ]
+  },
+  "entity.red_panda_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.red_panda_hurt",
+    "sounds": [
+      "recrafted_creatures:red_panda_hurt1_1_1",
+      "recrafted_creatures:red_panda_hurt2_2_1"
+    ]
+  },
+  "entity.red_panda_sound": {
+    "subtitle": "subtitle.recrafted_creatures.red_panda_sound",
+    "sounds": [
+      "recrafted_creatures:red_panda_sound2_1_1",
+      "recrafted_creatures:red_panda_sound3_1_1",
+      "recrafted_creatures:red_panda_sound111"
+    ]
+  }
+}

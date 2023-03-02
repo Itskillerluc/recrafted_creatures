@@ -5,7 +5,6 @@ import io.github.itskillerluc.duclib.client.model.Ducling;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -22,6 +21,10 @@ public class GiraffeModel extends AnimatableDucModel<Giraffe> {
     @Override
     public void setupAnim(@NotNull Giraffe pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+        if (this.young){
+            root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
+            root().offsetPos(new Vector3f(0f, 7f, 0f));
+        }
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot = pHeadPitch * ((float)Math.PI / 180F);
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).yRot = pNetHeadYaw * ((float)Math.PI / 180F);
         ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;

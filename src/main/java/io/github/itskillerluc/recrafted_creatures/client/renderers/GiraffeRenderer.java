@@ -10,8 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GiraffeRenderer extends AnimatableDucRenderer<Giraffe, GiraffeModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/giraffe.png");
+    public static final ResourceLocation LOCATION_SADDLED = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/giraffe_saddled.png");
 
     public GiraffeRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, () -> new GiraffeModel((Ducling) pContext.bakeLayer(GiraffeModel.LAYER_LOCATION)), entity -> LOCATION, 1.5f);
+        super(pContext, () -> new GiraffeModel((Ducling) pContext.bakeLayer(GiraffeModel.LAYER_LOCATION)), entity -> entity.isSaddled() ? LOCATION_SADDLED : LOCATION, 1.5f);
     }
 }

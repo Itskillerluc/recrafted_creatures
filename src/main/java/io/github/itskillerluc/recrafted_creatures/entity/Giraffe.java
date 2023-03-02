@@ -5,6 +5,7 @@ import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
 import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.client.registries.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +22,7 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -116,7 +118,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                     if (!pPlayer.getAbilities().instabuild) {
                         itemStack.shrink(1);
                     }
-                    this.heal((float) itemStack.getItem().getFoodProperties().getNutrition());
+                    this.heal(3);
                 } else {
                     pPlayer.startRiding(this);
                 }
@@ -268,7 +270,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     @Override
     public boolean isSaddleable() {
-        return !isSaddled();
+        return !isSaddled() && getOwnerUUID() != null;
     }
 
     public void setSaddled(boolean saddled){
@@ -312,5 +314,23 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     @Override
     public AnimationState getAnimationState(String animation) {
         return getAnimations().get().get("animation.giraffe." + animation);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return SoundRegistry.GIRAFFE_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundRegistry.GIRAFFE_DEATH.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundRegistry.GIRAFFE_SOUND.get();
     }
 }
