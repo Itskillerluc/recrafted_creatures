@@ -79,6 +79,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Giraffe.class));
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
@@ -108,9 +109,13 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!level.isClientSide() && getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
-            if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty()) {
+        if (level.isClientSide()){
+            return InteractionResult.FAIL;
+        }
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
+            if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty() && pPlayer.isShiftKeyDown()) {
                 setSaddled(false);
+                pPlayer.setItemInHand(pHand, new ItemStack(Items.SADDLE));
                 return InteractionResult.SUCCESS;
             } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE)){
                 var itemStack = pPlayer.getItemInHand(pHand);
@@ -125,11 +130,11 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 return InteractionResult.SUCCESS;
             }
         }
-        if (!this.level.isClientSide && this.getOwner() == null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
+        else if (this.getOwner() == null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
             this.setInLove(pPlayer);
             return InteractionResult.SUCCESS;
         }
-        if (!this.level.isClientSide && this.getOwner() == null && pPlayer.isShiftKeyDown() && isFood(pPlayer.getItemInHand(pHand))){
+        else if (this.getOwner() == null && pPlayer.isShiftKeyDown() && isFood(pPlayer.getItemInHand(pHand))){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
@@ -147,26 +152,29 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     @Override
     public void tick() {
         super.tick();
-        if (random.nextInt(30) == 1) {
-            getAnimationState("tounge").startIfStopped(tickCount);
-        } else if (random.nextInt(20) == 1) {
-            getAnimationState("tounge").stop();
+        if (level.isClientSide()) {
+            if (random.nextInt(30) == 1) {
+                getAnimationState("tounge").startIfStopped(tickCount);
+            } else if (random.nextInt(20) == 1) {
+                getAnimationState("tounge").stop();
+            }
+            animateWhen("tail_run", Animatable.isMoving(this) && getPose() == Pose.STANDING, tickCount);
         }
     }
 
     @Override
     protected void addPassenger(@NotNull Entity pPassenger) {
         super.addPassenger(pPassenger);
-        if (pPassenger instanceof Player player && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
-            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() + 2);
+        if (!level.isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
+            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() + (player.isCreative() ? 2.5 :3));
         }
     }
 
     @Override
     protected void removePassenger(@NotNull Entity pPassenger) {
         super.removePassenger(pPassenger);
-        if (pPassenger instanceof Player player && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
-            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() -2);
+        if (pPassenger instanceof Player player && !level.isClientSide() && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
+            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() - (player.isCreative() ? 3.5 : 3));
         }
     }
 
@@ -205,7 +213,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     public void travel(@NotNull Vec3 pTravelVector) {
         if (this.isAlive()) {
-            if (this.isVehicle()) {
+            if (this.isVehicle() && isSaddled()) {
                 LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();

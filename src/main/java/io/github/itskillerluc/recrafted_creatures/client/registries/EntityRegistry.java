@@ -18,6 +18,6 @@ public class EntityRegistry {
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "giraffe").toString()));
 
     public static final RegistryObject<EntityType<RedPanda>> RED_PANDA = ENTITY_TYPES.register("red_panda",
-            () -> EntityType.Builder.of(RedPanda::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(RedPanda::new, MobCategory.CREATURE).sized(1, 1)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "red_panda").toString()));
 }

@@ -16,6 +16,7 @@
 		},
 		"animation.giraffe.tail_run": {
 			"loop": true,
+			"animation_length": 1,
 			"bones": {
 				"tail": {
 					"rotation": [30, 0, 0]
