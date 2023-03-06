@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:bamboo_jungle",
+  "spawners":
+  {
+    "type": "recrafted_creatures:red_panda",
+    "weight": 85,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}

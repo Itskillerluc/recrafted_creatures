@@ -132,6 +132,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         }
         else if (this.getOwner() == null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
             this.setInLove(pPlayer);
+            pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
         else if (this.getOwner() == null && pPlayer.isShiftKeyDown() && isFood(pPlayer.getItemInHand(pHand))){
@@ -140,6 +141,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 this.navigation.stop();
                 this.setTarget(null);
                 this.level.broadcastEntityEvent(this, (byte)7);
+                pPlayer.getItemInHand(pHand).shrink(1);
             } else {
                 this.level.broadcastEntityEvent(this, (byte)6);
             }

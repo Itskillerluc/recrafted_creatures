@@ -2,13 +2,15 @@ package io.github.itskillerluc.recrafted_creatures;
 
 import com.mojang.logging.LogUtils;
 import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.client.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -40,9 +42,11 @@ public class RecraftedCreatures
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         
         modEventBus.addListener(this::addEntityAttributes);
+        modEventBus.addListener(this::creativeTab);
 
         SoundRegistry.SOUNDS.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
+        ItemRegistry.ITEMS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -52,5 +56,14 @@ public class RecraftedCreatures
     private void addEntityAttributes(EntityAttributeCreationEvent event){
         event.put(EntityRegistry.GIRAFFE.get(), Giraffe.attributes().build());
         event.put(EntityRegistry.RED_PANDA.get(), RedPanda.attributes().build());
+        event.put(EntityRegistry.ZEBRA.get(), Horse.createBaseHorseAttributes().build());
+    }
+
+    private void creativeTab(CreativeModeTabEvent.Register event){
+        event.registerCreativeModeTab(new ResourceLocation(MODID, "tab"), builder -> builder
+                .title(Component.translatable("itemGroup." + MODID + ".tab"))
+                .icon(() -> new ItemStack(ItemRegistry.GIRAFFE_SPAWN_EGG.get()))
+                .displayItems((feature, item, bool) -> ItemRegistry.ITEMS.getEntries()
+                        .stream().map(RegistryObject::get).forEach(item::accept)));
     }
 }

@@ -1,0 +1,18 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#minecraft:is_savanna",
+  "spawners": [
+    {
+      "type": "recrafted_creatures:giraffe",
+      "weight": 40,
+      "minCount": 3,
+      "maxCount": 5
+    },
+    {
+      "type": "recrafted_creatures:zebra",
+      "weight": 40,
+      "minCount": 3,
+      "maxCount": 5
+    }
+  ]
+}
