@@ -45,7 +45,7 @@ description='''
 A simple mod adding three new mobs to the game!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.recrafted_creatures]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -57,14 +57,14 @@ A simple mod adding three new mobs to the game!
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.recrafted_creatures]]
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.19.3,1.20)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.modid]]
+[[dependencies.recrafted_creatures]]
     modId="duclib"
     mandatory=true
     versionRange="[1.0,)"
