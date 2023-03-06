@@ -27,7 +27,7 @@ displayName="Recrafted Creatures" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="recrafted_creatures.png" #optional
+logoFile="Recrafted.jpg" #optional
 # A text field displayed in the mod UI
 credits="Made for TheGBZard" #optional
 # A text field displayed in the mod UI
@@ -42,7 +42,7 @@ authors="Itskillerluc" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A simple mod adding 2 new mobs to the game!
+A simple mod adding three new mobs to the game!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.examplemod]] #optional
