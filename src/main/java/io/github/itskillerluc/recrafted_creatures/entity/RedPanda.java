@@ -22,16 +22,22 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
+
+import static io.github.itskillerluc.recrafted_creatures.entity.RedPanda.SleepGoal.WAIT_TIME_BEFORE_SLEEP;
 
 public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
@@ -54,15 +60,20 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.4D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 5));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(5, new SleepGoal());
         this.goalSelector.addGoal(5, new DistractEntityGoal<>(Monster.class));
-        this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Mob.class, 1.2f, 1, 1));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Monster.class, 4f, 2, 2));
 
+    }
+
+    @Override
+    public void setJumping(boolean pJumping) {
+        super.setJumping(pJumping && this.getPose() != Pose.SLEEPING);
     }
 
     @Override
@@ -93,8 +104,13 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     }
 
     @Override
-    public AnimationState getAnimationState(String animation) {
-        return getAnimations().get().get("animation.red_panda." + animation);
+    public Optional<AnimationState> getAnimationState(String animation) {
+        return Optional.ofNullable(getAnimations().get().get("animation.red_panda." + animation));
+    }
+
+    @Override
+    public int tickCount() {
+        return tickCount;
     }
 
     @Nullable
@@ -105,6 +121,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     class DistractEntityGoal<T extends Mob> extends Goal {
         final Class<T> target;
+        protected Mob toAvoid;
         T entity;
 
         public DistractEntityGoal(Class<T> tClass) {
@@ -123,6 +140,19 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         public void start() {
             super.start();
             isTargeted = true;
+            var target = TargetingConditions.forCombat().range(4).selector(EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
+            this.toAvoid = RedPanda.this.level.getNearestEntity(RedPanda.this.level.getEntitiesOfClass(Mob.class, RedPanda.this.getBoundingBox().inflate(4, 3.0D, 4), (p_148078_) -> true), target, RedPanda.this, getX(), getY(), getZ());
+            Path path = null;
+            Vec3 vec3 = DefaultRandomPos.getPosAway(RedPanda.this, 16, 7, this.toAvoid.position());
+            if (vec3 != null) {
+                if (!(this.toAvoid.distanceToSqr(vec3.x, vec3.y, vec3.z) < this.toAvoid.distanceToSqr(RedPanda.this))) {
+                    path = RedPanda.this.navigation.createPath(vec3.x, vec3.y, vec3.z, 0);
+                }
+            }
+            if (path != null) {
+                RedPanda.this.navigation.moveTo(path, 2);
+            }
+
         }
 
         @Override
@@ -141,8 +171,8 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             return !level.canSeeSky(blockpos) && getWalkTargetValue(blockpos) >= 0.0F;
         }
 
-        private static final int WAIT_TIME_BEFORE_SLEEP = reducedTickDelay(140);
-        private int countdown = random.nextInt(WAIT_TIME_BEFORE_SLEEP);
+        public static final int WAIT_TIME_BEFORE_SLEEP = reducedTickDelay(140);
+        public int countdown = random.nextInt(WAIT_TIME_BEFORE_SLEEP);
 
         /**
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
@@ -224,15 +254,37 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
             return InteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide()) {
-            animateWhen("sleep", this.getPose() == Pose.SLEEPING, tickCount);
-            animateWhen("sit", this.isInSittingPose(), tickCount);
+        animateWhen("sleep", hasPose(Pose.SLEEPING));
+        animateWhen("sit", hasPose(Pose.SITTING));
+
+    }
+
+    @Override
+    public void setInSittingPose(boolean pSitting) {
+        super.setInSittingPose(pSitting);
+        if (pSitting) {
+            this.setPose(Pose.SITTING);
+        } else {
+            this.setPose(Pose.STANDING);
+        }
+    }
+
+    @Override
+    public void push(double pX, double pY, double pZ) {
+        super.push(pX, pY, pZ);
+        if (hasPose(Pose.SLEEPING)) {
+            var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
+            if (goal.isPresent()) {
+                random.nextInt(WAIT_TIME_BEFORE_SLEEP);
+            }
+            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
+            RedPanda.this.setPose(Pose.STANDING);
         }
     }
 

@@ -2,7 +2,6 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.giraffe.tounge": {
-			"animation_length": 1,
 			"bones": {
 				"tongue": {
 					"rotation": [0, 0, 0],
@@ -16,7 +15,6 @@
 		},
 		"animation.giraffe.tail_run": {
 			"loop": true,
-			"animation_length": 1,
 			"bones": {
 				"tail": {
 					"rotation": [30, 0, 0]

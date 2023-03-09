@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
@@ -104,7 +106,17 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() + 1;
+        return 2.2;
+    }
+
+    @Override
+    public void positionRider(Entity pPassenger) {
+        if (this.hasPassenger(pPassenger)) {
+            float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
+            float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
+            pPassenger.setPos(this.getX() + (double)(0.5 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (double)(0.5 * f));
+
+        }
     }
 
     @Override
@@ -130,7 +142,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 return InteractionResult.SUCCESS;
             }
         }
-        else if (this.getOwner() == null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
+        else if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
@@ -156,11 +168,15 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         super.tick();
         if (level.isClientSide()) {
             if (random.nextInt(30) == 1) {
-                getAnimationState("tounge").startIfStopped(tickCount);
+                playAnimation("tounge");
             } else if (random.nextInt(20) == 1) {
-                getAnimationState("tounge").stop();
+                stopAnimation("tounge");
             }
-            animateWhen("tail_run", Animatable.isMoving(this) && getPose() == Pose.STANDING, tickCount);
+            animateWhen("tail_run", isMoving(this) && hasPose(Pose.STANDING));
+        } else {
+            if (isInWater() && isVehicle()){
+                ejectPassengers();
+            }
         }
     }
 
@@ -322,8 +338,13 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     }
 
     @Override
-    public AnimationState getAnimationState(String animation) {
-        return getAnimations().get().get("animation.giraffe." + animation);
+    public Optional<AnimationState> getAnimationState(String animation) {
+        return Optional.ofNullable(getAnimations().get().get("animation.giraffe." + animation));
+    }
+
+    @Override
+    public int tickCount() {
+        return tickCount;
     }
 
     @Nullable

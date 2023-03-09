@@ -2,8 +2,8 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.red_panda.sit": {
-			"animation_length": 1,
 			"loop": true,
+			"animation_length": 1,
 			"bones": {
 				"root": {
 					"rotation": [325, 0, 0],
