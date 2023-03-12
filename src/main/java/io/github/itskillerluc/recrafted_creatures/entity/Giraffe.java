@@ -129,25 +129,25 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 setSaddled(false);
                 pPlayer.setItemInHand(pHand, new ItemStack(Items.SADDLE));
                 return InteractionResult.SUCCESS;
-            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE)){
+            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE) && pPlayer.isShiftKeyDown()){
                 var itemStack = pPlayer.getItemInHand(pHand);
                 if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
                     if (!pPlayer.getAbilities().instabuild) {
                         itemStack.shrink(1);
                     }
                     this.heal(3);
-                } else {
-                    pPlayer.startRiding(this);
                 }
                 return InteractionResult.SUCCESS;
+            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE)) {
+                pPlayer.startRiding(this);
             }
         }
-        else if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
+        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
-        else if (this.getOwner() == null && pPlayer.isShiftKeyDown() && isFood(pPlayer.getItemInHand(pHand))){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();

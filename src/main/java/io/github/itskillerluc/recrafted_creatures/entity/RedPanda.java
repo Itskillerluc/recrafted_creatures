@@ -237,7 +237,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 this.setOrderedToSit(!isOrderedToSit());
             }
             return InteractionResult.SUCCESS;
-        } else if (pPlayer.isShiftKeyDown() && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.BAMBOO)) {
+        } else if (this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.BAMBOO)) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
