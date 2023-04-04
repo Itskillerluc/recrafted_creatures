@@ -3,13 +3,12 @@ package io.github.itskillerluc.recrafted_creatures.client;
 import io.github.itskillerluc.duclib.client.model.BaseDucModel;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
+import io.github.itskillerluc.recrafted_creatures.client.models.MammothModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
 import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
-import io.github.itskillerluc.recrafted_creatures.client.renderers.GiraffeRenderer;
-import io.github.itskillerluc.recrafted_creatures.client.renderers.RedPandaRenderer;
-import io.github.itskillerluc.recrafted_creatures.client.renderers.ZebraArmorLayer;
-import io.github.itskillerluc.recrafted_creatures.client.renderers.ZebraRenderer;
+import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
+import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -28,12 +27,14 @@ public class ClientEvents {
         EntityRenderers.register(EntityRegistry.GIRAFFE.get(), GiraffeRenderer::new);
         EntityRenderers.register(EntityRegistry.RED_PANDA.get(), RedPandaRenderer::new);
         EntityRenderers.register(EntityRegistry.ZEBRA.get(), ZebraRenderer::new);
+        EntityRenderers.register(EntityRegistry.MAMMOTH.get(), MammothRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerLayers(final EntityRenderersEvent.RegisterLayerDefinitions event){
         event.registerLayerDefinition(GiraffeModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Giraffe.LOCATION));
         event.registerLayerDefinition(RedPandaModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(RedPanda.LOCATION));
+        event.registerLayerDefinition(MammothModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Mammoth.LOCATION));
         event.registerLayerDefinition(ZebraRenderer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(CubeDeformation.NONE), 64, 64));
         event.registerLayerDefinition(ZebraArmorLayer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(new CubeDeformation(0.1F)), 64, 64));
     }

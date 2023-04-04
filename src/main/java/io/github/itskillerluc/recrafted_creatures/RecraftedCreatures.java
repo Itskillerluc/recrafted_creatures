@@ -5,6 +5,7 @@ import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegist
 import io.github.itskillerluc.recrafted_creatures.client.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
+import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -57,6 +58,7 @@ public class RecraftedCreatures
         event.put(EntityRegistry.GIRAFFE.get(), Giraffe.attributes().build());
         event.put(EntityRegistry.RED_PANDA.get(), RedPanda.attributes().build());
         event.put(EntityRegistry.ZEBRA.get(), Horse.createBaseHorseAttributes().build());
+        event.put(EntityRegistry.MAMMOTH.get(), Mammoth.attributes().build());
     }
 
     private void creativeTab(CreativeModeTabEvent.Register event){

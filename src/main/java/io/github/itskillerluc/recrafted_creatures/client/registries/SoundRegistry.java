@@ -18,6 +18,11 @@ public class SoundRegistry{
         public static final RegistryObject<SoundEvent> RED_PANDA_HURT = register("entity.red_panda_hurt");
         public static final RegistryObject<SoundEvent> RED_PANDA_SOUND = register("entity.red_panda_sound");
 
+        public static final RegistryObject<SoundEvent> MAMMOTH_DEATH = register("entity.mammoth_death");
+        public static final RegistryObject<SoundEvent> MAMMOTH_HURT = register("entity.mammoth_hurt");
+        public static final RegistryObject<SoundEvent> MAMMOTH_SOUND = register("entity.mammoth_sound");
+        public static final RegistryObject<SoundEvent> MAMMOTH_TRUMPET = register("entity.mammoth_trumpet");
+
 
         private static RegistryObject<SoundEvent> register(String name) {
             return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(RecraftedCreatures.MODID, name)));

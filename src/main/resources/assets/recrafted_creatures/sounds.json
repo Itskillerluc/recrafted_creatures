@@ -40,5 +40,32 @@
       "recrafted_creatures:red_panda_sound3_1_1",
       "recrafted_creatures:red_panda_sound111"
     ]
+  },
+  "entity.mammoth_death": {
+    "subtitle": "subtitle.recrafted_creatures.mammoth_death",
+    "sounds": [
+      "recrafted_creatures:mammoth_death"
+    ]
+  },
+  "entity.mammoth_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.mammoth_hurt",
+    "sounds": [
+      "recrafted_creatures:mammoth_hurt_1",
+      "recrafted_creatures:mammoth_hurt_2"
+    ]
+  },
+  "entity.mammoth_sound": {
+    "subtitle": "subtitle.recrafted_creatures.mammoth_sound",
+    "sounds": [
+      "recrafted_creatures:mammoth_sound_1",
+      "recrafted_creatures:mammoth_sound_2"
+    ]
+  },
+  "entity.mammoth_trumpet": {
+    "subtitle": "subtitle.recrafted_creatures.mammoth_trumpet",
+    "sounds": [
+      "recrafted_creatures:mammoth_trumpet",
+      "recrafted_creatures:mammoth_trumpet_2"
+    ]
   }
 }

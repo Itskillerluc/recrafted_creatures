@@ -2,6 +2,7 @@
   "entity.recrafted_creatures.giraffe": "Giraffe",
   "entity.recrafted_creatures.red_panda": "Red Panda",
   "entity.recrafted_creatures.zebra": "Zebra",
+  "entity.recrafted_creatures.mammoth": "Mammoth",
 
   "subtitle.recrafted_creatures.giraffe_death": "Giraffe Death",
   "subtitle.recrafted_creatures.giraffe_hurt": "Giraffe Hurt",
@@ -9,9 +10,14 @@
   "subtitle.recrafted_creatures.red_panda_death": "Red Panda Death",
   "subtitle.recrafted_creatures.red_panda_hurt": "Red Panda Hurt",
   "subtitle.recrafted_creatures.red_panda_sound": "Red Panda Ambient",
+  "subtitle.recrafted_creatures.mammoth_death": "Mammoth Death",
+  "subtitle.recrafted_creatures.mammoth_hurt": "Mammoth Hurt",
+  "subtitle.recrafted_creatures.mammoth_sound": "Mammoth Ambient",
+  "subtitle.recrafted_creatures.mammoth_trumpet": "Mammoth Trumpet",
 
   "item.recrafted_creatures.giraffe_spawn_egg": "Giraffe Spawn Egg",
   "item.recrafted_creatures.red_panda_spawn_egg": "Red Panda Spawn Egg",
   "item.recrafted_creatures.zebra_spawn_egg": "Zebra Spawn Egg",
+  "item.recrafted_creatures.mammoth_spawn_egg": "Mammoth Spawn Egg",
   "itemGroup.recrafted_creatures.tab": "Recrafted Creatures"
 }

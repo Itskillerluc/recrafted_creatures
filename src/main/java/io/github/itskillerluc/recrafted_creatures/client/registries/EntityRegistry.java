@@ -2,6 +2,7 @@ package io.github.itskillerluc.recrafted_creatures.client.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
+import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import io.github.itskillerluc.recrafted_creatures.entity.Zebra;
 import net.minecraft.resources.ResourceLocation;
@@ -26,4 +27,8 @@ public class EntityRegistry {
     public static final RegistryObject<EntityType<Zebra>> ZEBRA = ENTITY_TYPES.register("zebra",
             () -> EntityType.Builder.of(Zebra::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "zebra").toString()));
+
+    public static final RegistryObject<EntityType<Mammoth>> MAMMOTH = ENTITY_TYPES.register("mammoth",
+            () -> EntityType.Builder.of(Mammoth::new, MobCategory.CREATURE).sized(1.3964844F, 1.6f)
+                    .build(new ResourceLocation(RecraftedCreatures.MODID, "mammoth").toString()));
 }
