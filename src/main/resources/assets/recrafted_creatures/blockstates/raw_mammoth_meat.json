@@ -1,0 +1,36 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "bites": "0"
+      },
+      "apply": {
+        "model": "recrafted_creatures:block/mammoth_meat"
+      }
+    },
+    {
+      "when": {
+        "bites": "0|1"
+      },
+      "apply": {
+        "model": "recrafted_creatures:block/mammoth_meat_slice2"
+      }
+    },
+    {
+      "when": {
+        "bites": "0|1|2"
+      },
+      "apply": {
+        "model": "recrafted_creatures:block/mammoth_meat_slice3"
+      }
+    },
+    {
+      "when": {
+        "bites": "0|1|2|3"
+      },
+      "apply": {
+        "model": "recrafted_creatures:block/mammoth_meat_slice4"
+      }
+    }
+  ]
+}

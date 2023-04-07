@@ -1,10 +1,9 @@
 package io.github.itskillerluc.recrafted_creatures.entity;
 
-import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;

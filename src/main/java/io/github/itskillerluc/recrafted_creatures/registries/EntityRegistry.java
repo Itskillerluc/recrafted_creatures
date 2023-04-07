@@ -1,4 +1,4 @@
-package io.github.itskillerluc.recrafted_creatures.client.registries;
+package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;

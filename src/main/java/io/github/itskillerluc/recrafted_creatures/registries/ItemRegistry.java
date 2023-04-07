@@ -1,6 +1,8 @@
-package io.github.itskillerluc.recrafted_creatures.client.registries;
+package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,4 +23,11 @@ public class ItemRegistry {
 
     public static final RegistryObject<ForgeSpawnEggItem> MAMMOTH_SPAWN_EGG = ITEMS.register("mammoth_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.MAMMOTH, 0x6b4832, 0x473123, new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> ELEPHANT_MEAT = ITEMS.register("raw_mammoth_meat",
+            () -> new BlockItem(BlockRegistry.RAW_ELEPHANT_MEAT.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> COOKED_ELEPHANT_MEAT = ITEMS.register("cooked_mammoth_meat",
+            () -> new BlockItem(BlockRegistry.COOKED_ELEPHANT_MEAT.get(), new Item.Properties()));
+
 }

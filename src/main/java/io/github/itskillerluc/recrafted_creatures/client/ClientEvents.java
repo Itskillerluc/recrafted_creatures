@@ -5,7 +5,7 @@ import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.MammothModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
-import io.github.itskillerluc.recrafted_creatures.client.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
