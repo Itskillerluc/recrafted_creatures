@@ -44,12 +44,20 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> MammothModel.createStateMap(getAnimation()));
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
+    private static final UniformInt PERSISTENT_CHARGE_TIME = TimeUtil.rangeOfSeconds(10, 15);
     private int remainingPersistentAngerTime;
+    private int remainingPersistentChargeTime;
     private UUID persistentAngerTarget;
+    boolean frozen;
+    boolean damageBoost;
+    private int freezeTime;
+
+    final byte[] color = new byte[3];
 
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
+
 
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
@@ -66,12 +74,43 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+        });
+        this.goalSelector.addGoal(2, new MammothChargeGoal());
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
             @Override
@@ -147,6 +186,24 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public void tick() {
+        if (remainingPersistentChargeTime > 0) {
+            remainingPersistentChargeTime--;
+        }
+        if (frozen) {
+            damageBoost = false;
+            navigation.stop();
+        }
+        if (damageBoost) {
+            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(18);
+        }
+        if (freezeTime > 0) {
+            frozen = true;
+            damageBoost = true;
+            freezeTime--;
+        } else {
+            frozen = false;
+        }
+        animateWhen("idle", hasPose(Pose.STANDING));
         super.tick();
     }
 
@@ -312,9 +369,51 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public boolean doHurtTarget(Entity pEntity) {
         var hurt = (super.doHurtTarget(pEntity));
         if (hurt){
-            replayAnimation("attack");
+            playAnimation("attack");
+            damageBoost = false;
+            getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(6);
             return true;
         }
         return false;
+    }
+
+    protected class MammothChargeGoal extends Goal {
+
+
+        @Override
+        public boolean canUse() {
+            return Mammoth.this.target != null &&
+                    Mammoth.this.target.distanceToSqr(Mammoth.this) < 100 &
+                    !Mammoth.this.isTame() &&
+                    Mammoth.this.remainingPersistentChargeTime <= 0;
+        }
+
+        @Override
+        public void start() {
+            freezeTime = 80;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return false;
+        }
+
+        @Override
+        public void tick() {
+            if (freezeTime <= 0) {
+                stop();
+            }
+        }
+
+        @Override
+        public void stop() {
+            Mammoth.this.remainingPersistentChargeTime = PERSISTENT_CHARGE_TIME.sample(random);
+            frozen = false;
+        }
     }
 }

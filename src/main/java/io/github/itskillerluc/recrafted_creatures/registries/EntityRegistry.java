@@ -29,6 +29,6 @@ public class EntityRegistry {
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "zebra").toString()));
 
     public static final RegistryObject<EntityType<Mammoth>> MAMMOTH = ENTITY_TYPES.register("mammoth",
-            () -> EntityType.Builder.of(Mammoth::new, MobCategory.CREATURE).sized(1.3964844F, 1.6f)
+            () -> EntityType.Builder.of(Mammoth::new, MobCategory.CREATURE).sized(3, 3f)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "mammoth").toString()));
 }
