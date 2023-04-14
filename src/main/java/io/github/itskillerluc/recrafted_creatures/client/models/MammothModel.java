@@ -14,6 +14,7 @@ import org.joml.Vector3f;
 
 public class MammothModel extends AnimatableDucModel<Mammoth> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "mammoth.png"), "all");
+    public static final ModelLayerLocation MARKINGS_LAYER = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "markings"), "markings");
 
     public MammothModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

@@ -8,6 +8,7 @@ import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -27,10 +28,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +56,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     boolean damageBoost;
     private int freezeTime;
 
-    final byte[] color = new byte[3];
+    public byte[] color = new byte[]{(byte)255,(byte)255,(byte)255};
 
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -69,6 +73,18 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putByteArray("color", color);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        color = pCompound.getByteArray("color");
     }
 
     @Override
@@ -111,7 +127,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             }
         });
         this.goalSelector.addGoal(2, new MammothChargeGoal());
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !frozen;
+            }
+
+            @Override
+            protected double getAttackReachSqr(LivingEntity pAttackTarget) {
+                return super.getAttackReachSqr(pAttackTarget) / 2;
+            }
+        });
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
             @Override
             public void start() {
@@ -149,6 +175,11 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         if (level.isClientSide()){
             return InteractionResult.FAIL;
         }
+        if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
+            this.color = new byte[]{(byte)255,(byte)255,(byte)255};
+            pPlayer.setItemInHand(pHand, new ItemStack(Items.GLASS_BOTTLE));
+            return InteractionResult.SUCCESS;
+        }
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
             if (pPlayer.isShiftKeyDown()){
                 var itemStack = pPlayer.getItemInHand(pHand);
@@ -159,8 +190,9 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                     this.heal(3);
                 }
                 return InteractionResult.SUCCESS;
-            } else {
+            } else if (pHand == InteractionHand.MAIN_HAND){
                 pPlayer.startRiding(this);
+                return InteractionResult.SUCCESS;
             }
         }
         if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK)) {
@@ -177,6 +209,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 pPlayer.getItemInHand(pHand).shrink(1);
             } else {
                 this.level.broadcastEntityEvent(this, (byte)6);
+                pPlayer.getItemInHand(pHand).shrink(1);
             }
 
             return InteractionResult.SUCCESS;
@@ -204,6 +237,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             frozen = false;
         }
         animateWhen("idle", hasPose(Pose.STANDING));
+        animateWhen("charge", damageBoost && !frozen);
         super.tick();
     }
 
@@ -369,12 +403,21 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public boolean doHurtTarget(Entity pEntity) {
         var hurt = (super.doHurtTarget(pEntity));
         if (hurt){
-            playAnimation("attack");
             damageBoost = false;
+            level.broadcastEntityEvent(this, (byte) 4);
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(6);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if (pId == 4) {
+            replayAnimation("attack");
+        } else {
+            super.handleEntityEvent(pId);
+        }
     }
 
     protected class MammothChargeGoal extends Goal {
@@ -391,6 +434,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         @Override
         public void start() {
             freezeTime = 80;
+            Mammoth.this.playAnimation("charge");
         }
 
         @Override
