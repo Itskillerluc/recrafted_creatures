@@ -27,7 +27,7 @@ public class MarkingsLayer<T extends Mammoth,M extends EntityModel<T>> extends R
         ResourceLocation resourcelocation = MammothRenderer.MARKINGS_LAYER;
         if (!pLivingEntity.isInvisible() && pLivingEntity.isTame()) {
             VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucent(resourcelocation));
-            this.getParentModel().renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, LivingEntityRenderer.getOverlayCoords(pLivingEntity, 0.0F), ((float) (0.00392156862D * Byte.toUnsignedInt(pLivingEntity.color[0]))), ((float) (0.00392156862D * Byte.toUnsignedInt(pLivingEntity.color[1]))), ((float) (0.00392156862D * Byte.toUnsignedInt(pLivingEntity.color[2]))), 1.0F);
+            this.getParentModel().renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, LivingEntityRenderer.getOverlayCoords(pLivingEntity, 0.0F), ((pLivingEntity.getColor() & 0xFF0000) >> 16) / 255F, ((pLivingEntity.getColor() & 0x00FF00) >> 8) / 255F, (pLivingEntity.getColor() & 0x0000FF) / 255F, 1.0F);
         }
     }
 }

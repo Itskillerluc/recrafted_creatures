@@ -9,6 +9,9 @@ import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -26,6 +29,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -55,9 +59,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     boolean frozen;
     boolean damageBoost;
     private int freezeTime;
-
-    public byte[] color = new byte[]{(byte)255,(byte)255,(byte)255};
-
+    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -73,18 +75,19 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        entityData.define(COLOR, 0xFFFFFF);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putByteArray("color", color);
+        pCompound.putInt("color", entityData.get(COLOR));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        color = pCompound.getByteArray("color");
+        entityData.set(COLOR, pCompound.getInt("color"));
     }
 
     @Override
@@ -134,7 +137,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             }
 
             @Override
-            protected double getAttackReachSqr(LivingEntity pAttackTarget) {
+            protected double getAttackReachSqr(@NotNull LivingEntity pAttackTarget) {
                 return super.getAttackReachSqr(pAttackTarget) / 2;
             }
         });
@@ -161,13 +164,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     }
 
     @Override
-    public void positionRider(Entity pPassenger) {
+    public void positionRider(@NotNull Entity pPassenger) {
         if (this.hasPassenger(pPassenger)) {
             float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
             float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
-            pPassenger.setPos(this.getX() + (0.5 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (double)(0.5 * f));
+            pPassenger.setPos(this.getX() + (0.5 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (0.5 * f));
 
         }
+    }
+
+    public int getColor(){
+        return entityData.get(COLOR);
     }
 
     @Override
@@ -176,8 +183,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             return InteractionResult.FAIL;
         }
         if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
-            this.color = new byte[]{(byte)255,(byte)255,(byte)255};
+            entityData.set(COLOR, 0xFFFFFF);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.GLASS_BOTTLE));
+            return InteractionResult.SUCCESS;
+        }
+        if (this.getOwner() != null && pPlayer.getItemInHand(pHand).is(Tags.Items.DYES)) {
+            DyeItem item = ((DyeItem) pPlayer.getItemInHand(pHand).getItem());
+            int existingColor = getColor();
+            int dyeColor = item.getDyeColor().getTextColor();
+
+            int resultColor = blendColors(existingColor, dyeColor);
+            entityData.set(COLOR, resultColor);
             return InteractionResult.SUCCESS;
         }
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
@@ -215,6 +231,27 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
+    }
+
+    private int blendColors(int baseColor, int addedColor) {
+        int originalRed = baseColor >> 16 & 255;
+        int originalGreen = baseColor >> 8 & 255;
+        int originalBlue = baseColor & 255;
+
+        int dyeRed = addedColor >> 16 & 255;
+        int dyeGreen = addedColor >> 8 & 255;
+        int dyeBlue = addedColor & 255;
+
+        int diffRed = -dyeRed + originalRed;
+        int diffGreen = -dyeGreen + originalGreen;
+        int diffBlue = -dyeBlue + originalBlue;
+
+
+        int resultRed = 255 - Math.max(0, (255 - originalRed) + (diffRed == 0 ? 0 : diffRed/Math.min(16, Math.max(1, Math.abs(((diffRed/4)/4))))));
+        int resultGreen = 255 - Math.max(0, (255- originalGreen) + (diffGreen == 0 ? 0 : diffGreen/Math.min(16, Math.max(1, Math.abs(((diffGreen/4)/4))))));
+        int resultBlue = 255 - Math.max(0, (255 - originalBlue) + (diffBlue == 0 ? 0 : diffBlue/Math.min(16, Math.max(1, Math.abs(((diffBlue/4)/4))))));
+
+        return resultRed << 16 | resultGreen << 8 | resultBlue;
     }
 
     @Override
