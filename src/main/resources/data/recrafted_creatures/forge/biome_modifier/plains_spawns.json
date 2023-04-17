@@ -1,0 +1,12 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:plains",
+  "spawners": [
+    {
+      "type": "minecraft:rabbit",
+      "weight": 4,
+      "minCount": 2,
+      "maxCount": 3
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:snowy_plains",
+  "spawners": [
+    {
+      "type": "recrafted_creatures:mammoth",
+      "weight": 40,
+      "minCount": 2,
+      "maxCount": 4
+    }
+  ]
+}

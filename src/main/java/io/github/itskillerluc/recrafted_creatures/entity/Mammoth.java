@@ -75,7 +75,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(COLOR, 0xFFFFFF);
+        entityData.define(COLOR, 0xFF0000);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             return InteractionResult.FAIL;
         }
         if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
-            entityData.set(COLOR, 0xFFFFFF);
+            entityData.set(COLOR, 0xFF0000);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.GLASS_BOTTLE));
             return InteractionResult.SUCCESS;
         }
@@ -247,9 +247,9 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         int diffBlue = -dyeBlue + originalBlue;
 
 
-        int resultRed = 255 - Math.max(0, (255 - originalRed) + (diffRed == 0 ? 0 : diffRed/Math.min(16, Math.max(1, Math.abs(((diffRed/4)/4))))));
-        int resultGreen = 255 - Math.max(0, (255- originalGreen) + (diffGreen == 0 ? 0 : diffGreen/Math.min(16, Math.max(1, Math.abs(((diffGreen/4)/4))))));
-        int resultBlue = 255 - Math.max(0, (255 - originalBlue) + (diffBlue == 0 ? 0 : diffBlue/Math.min(16, Math.max(1, Math.abs(((diffBlue/4)/4))))));
+        int resultRed = 255 - Math.max(0, 255 - originalRed + diffRed/Math.max(1, Math.abs(diffRed/16)));
+        int resultGreen = 255 - Math.max(0, 255- originalGreen + diffGreen/Math.max(1, Math.abs(diffGreen/16)));
+        int resultBlue = 255 - Math.max(0, 255 - originalBlue + diffBlue/Math.max(1, Math.abs(diffBlue/16)));
 
         return resultRed << 16 | resultGreen << 8 | resultBlue;
     }
@@ -364,6 +364,10 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
         return EntityRegistry.MAMMOTH.get().create(pLevel);
+    }
+    @Override
+    public int getAmbientSoundInterval() {
+        return 400;
     }
 
     @Override

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "group": "food",
+  "ingredient": {
+    "item": "recrafted_creatures:raw_mammoth_meat"
+  },
+  "result": "recrafted_creatures:cooked_mammoth_meat",
+  "experience": 0.7,
+  "cookingtime": 200
+}

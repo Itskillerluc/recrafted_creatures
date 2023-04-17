@@ -343,6 +343,11 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         return tickCount;
     }
 
+    @Override
+    public int getAmbientSoundInterval() {
+        return 400;
+    }
+
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {

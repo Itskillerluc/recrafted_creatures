@@ -8,14 +8,21 @@ import io.github.itskillerluc.recrafted_creatures.client.models.MammothModel;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-public class MammothRenderer extends AnimatableDucRenderer<Mammoth, MammothModel> {
+public class MammothRenderer extends MobRenderer<Mammoth, MammothModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/mammoth.png");
+    public static final ResourceLocation BABY_LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/baby_mammoth.png");
     public static final ResourceLocation MARKINGS_LAYER = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/markings.png");
 
     public MammothRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, () -> new MammothModel((Ducling) pContext.bakeLayer(MammothModel.LAYER_LOCATION)), entity -> LOCATION, 1.5f);
+        super(pContext, new MammothModel((Ducling) pContext.bakeLayer(MammothModel.LAYER_LOCATION)), 1.5f);
         this.addLayer(new MarkingsLayer<>(this));
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(Mammoth pEntity) {
+        return pEntity.isBaby() ? BABY_LOCATION : LOCATION;
     }
 }
