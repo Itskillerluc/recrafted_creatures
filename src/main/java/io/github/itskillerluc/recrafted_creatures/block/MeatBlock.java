@@ -39,7 +39,7 @@ public class MeatBlock extends Block {
 
     @Override
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        if (pLevel.isClientSide() | !pPlayer.getFoodData().needsFood() | pHand != InteractionHand.MAIN_HAND){
+        if (pLevel.isClientSide() | !pPlayer.canEat(false) | pHand != InteractionHand.MAIN_HAND){
             return InteractionResult.FAIL;
         }
         if (pState.getValue(BITES) == 3){

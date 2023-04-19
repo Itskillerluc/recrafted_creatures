@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "recrafted_creatures:giraffe",
-      "weight": 40,
+      "weight": 20,
       "minCount": 3,
       "maxCount": 5
     },

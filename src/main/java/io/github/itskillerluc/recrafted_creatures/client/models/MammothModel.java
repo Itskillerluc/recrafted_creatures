@@ -9,12 +9,12 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 public class MammothModel extends AnimatableDucModel<Mammoth> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "mammoth.png"), "all");
-    public static final ModelLayerLocation MARKINGS_LAYER = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "markings"), "markings");
 
     public MammothModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);
@@ -27,9 +27,12 @@ public class MammothModel extends AnimatableDucModel<Mammoth> {
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
             root().offsetPos(new Vector3f(0f, 7f, 0f));
         }
-        ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg2").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).xRot = pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
+        ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).yRot = pNetHeadYaw * ((float) Math.PI / 180F);
+
+        ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f)) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f) + (float)Math.PI) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f) + (float)Math.PI) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg2").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f)) * 1.4F * pLimbSwingAmount;
     }
 }

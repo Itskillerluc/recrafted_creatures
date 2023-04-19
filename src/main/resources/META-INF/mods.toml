@@ -42,8 +42,7 @@ authors="Itskillerluc" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A simple mod adding four new mobs to the game!
-'''
+A simple mod adding four new mobs to the game!'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.recrafted_creatures]] #optional
     # the modid of the dependency

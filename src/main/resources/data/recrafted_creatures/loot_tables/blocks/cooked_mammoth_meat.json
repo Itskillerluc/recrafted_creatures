@@ -8,6 +8,15 @@
           "type": "minecraft:item",
           "name": "recrafted_creatures:cooked_mammoth_meat"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "recrafted_creatures:raw_mammoth_meat",
+          "properties": {
+            "bites": "0"
+          }
+        }
       ]
     }
   ]

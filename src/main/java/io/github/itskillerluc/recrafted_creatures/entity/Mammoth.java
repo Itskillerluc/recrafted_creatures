@@ -160,7 +160,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.2;
+        return 2;
     }
 
     @Override
@@ -168,7 +168,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         if (this.hasPassenger(pPassenger)) {
             float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
             float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
-            pPassenger.setPos(this.getX() + (0.5 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (0.5 * f));
+            pPassenger.setPos(this.getX() + (0.7 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (0.7 * f));
 
         }
     }
@@ -196,6 +196,16 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             entityData.set(COLOR, resultColor);
             return InteractionResult.SUCCESS;
         }
+        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK)) {
+            this.setInLove(pPlayer);
+            pPlayer.getItemInHand(pHand).shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        if (this.isBaby() && isFood(pPlayer.getItemInHand(pHand))) {
+            pPlayer.getItemInHand(pHand).shrink(1);
+            this.ageUp(getSpeedUpSecondsWhenFeeding(-getAge()), true);
+            return InteractionResult.SUCCESS;
+        }
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
             if (pPlayer.isShiftKeyDown()){
                 var itemStack = pPlayer.getItemInHand(pHand);
@@ -206,21 +216,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                     this.heal(3);
                 }
                 return InteractionResult.SUCCESS;
-            } else if (pHand == InteractionHand.MAIN_HAND){
+            } else if (pHand == InteractionHand.MAIN_HAND && !isBaby()){
                 pPlayer.startRiding(this);
                 return InteractionResult.SUCCESS;
             }
-        }
-        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK)) {
-            this.setInLove(pPlayer);
-            pPlayer.getItemInHand(pHand).shrink(1);
-            return InteractionResult.SUCCESS;
         }
         if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
                 this.setTarget(null);
+                this.entityData.set(COLOR, 0xFF0000);
                 this.level.broadcastEntityEvent(this, (byte)7);
                 pPlayer.getItemInHand(pHand).shrink(1);
             } else {
@@ -344,12 +350,13 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 }
 
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                    this.setSpeed(0.13F);
                     super.travel(new Vec3(f, pTravelVector.y, f1));
                 }
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
+                this.setSpeed(0.4F);
                 super.travel(pTravelVector);
             }
         }
@@ -363,7 +370,12 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
-        return EntityRegistry.MAMMOTH.get().create(pLevel);
+        var entity = EntityRegistry.MAMMOTH.get().create(pLevel);
+        if (((Mammoth) pOtherParent).isTame() && isTame()){
+            entity.setTame(true);
+            entity.setOwnerUUID(this.getOwnerUUID());
+        }
+        return entity;
     }
     @Override
     public int getAmbientSoundInterval() {
@@ -425,7 +437,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return SoundRegistry.MAMMOTH_HURT.get();
+        return random.nextFloat() < 0.3 ? SoundRegistry.MAMMOTH_TRUMPET.get() : SoundRegistry.MAMMOTH_HURT.get();
     }
 
     @Nullable
@@ -437,7 +449,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundRegistry.MAMMOTH_SOUND.get();
+        return random.nextFloat() < 0.3 ? SoundRegistry.MAMMOTH_TRUMPET.get() : SoundRegistry.MAMMOTH_SOUND.get();
     }
 
     @Override
@@ -474,7 +486,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
         @Override
         public void start() {
-            freezeTime = 80;
+            freezeTime = 40;
             Mammoth.this.playAnimation("charge");
         }
 

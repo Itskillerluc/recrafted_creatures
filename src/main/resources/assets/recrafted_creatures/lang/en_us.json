@@ -22,8 +22,8 @@
   "item.recrafted_creatures.raw_mammoth_meat": "Raw Elephant Meat",
   "item.recrafted_creatures.cooked_mammoth_meat": "Cooked Elephant Meat",
 
-  "block.recrafted_creatures.raw_mammoth_meat": "Raw Elephant Meat",
-  "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Elephant Meat",
+  "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
+  "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
 
   "itemGroup.recrafted_creatures.tab": "Recrafted Creatures"
 }

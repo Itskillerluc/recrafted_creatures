@@ -12,15 +12,10 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class MarkingsLayer<T extends Mammoth,M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final RenderType MARKINGS = RenderType.entityCutoutNoCull(new ResourceLocation("textures/entity/spider_eyes.png"));
-
     public MarkingsLayer(RenderLayerParent<T, M> p_117507_) {
         super(p_117507_);
     }
 
-    public RenderType renderType() {
-        return MARKINGS;
-    }
 
     @Override
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
