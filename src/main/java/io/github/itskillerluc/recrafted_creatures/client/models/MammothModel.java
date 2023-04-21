@@ -30,9 +30,9 @@ public class MammothModel extends AnimatableDucModel<Mammoth> {
         ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).xRot = pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
         ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).yRot = pNetHeadYaw * ((float) Math.PI / 180F);
 
-        ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f)) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f) + (float)Math.PI) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f) + (float)Math.PI) * 1.4F * pLimbSwingAmount;
-        ((Ducling) getAnyDescendantWithName("leg2").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * (pEntity.isBaby() ? 0.35f : 1f)) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * 0.35f) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * 0.35f + (float)Math.PI) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * 0.35f + (float)Math.PI) * 1.4F * pLimbSwingAmount;
+        ((Ducling) getAnyDescendantWithName("leg2").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F * 0.35f) * 1.4F * pLimbSwingAmount;
     }
 }

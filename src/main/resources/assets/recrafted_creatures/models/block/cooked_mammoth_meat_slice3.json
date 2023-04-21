@@ -3,7 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "recrafted_creatures:block/cooked_mammoth_meat",
-		"particle": "recrafted_creatures:block/cooked_mammoth_meat"
+		"particle": "recrafted_creatures:block/cooked_particle"
 	},
 	"elements": [
 		{

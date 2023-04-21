@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.DyeItem;
@@ -151,6 +152,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             }
         });
         targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
+        targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
     @Override
@@ -437,13 +439,13 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return random.nextFloat() < 0.3 ? SoundRegistry.MAMMOTH_TRUMPET.get() : SoundRegistry.MAMMOTH_HURT.get();
+        return SoundRegistry.MAMMOTH_TRUMPET.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.MAMMOTH_DEATH.get();
+        return SoundRegistry.MAMMOTH_TRUMPET.get();
     }
 
     @Nullable

@@ -15,6 +15,7 @@ public class MammothRenderer extends MobRenderer<Mammoth, MammothModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/mammoth.png");
     public static final ResourceLocation BABY_LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/baby_mammoth.png");
     public static final ResourceLocation MARKINGS_LAYER = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/markings.png");
+    public static final ResourceLocation BABY_MARKINGS_LAYER = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/baby_markings.png");
 
     public MammothRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new MammothModel((Ducling) pContext.bakeLayer(MammothModel.LAYER_LOCATION)), 1.5f);
