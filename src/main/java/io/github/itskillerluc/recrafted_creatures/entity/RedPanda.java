@@ -260,8 +260,9 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     @Override
     public void tick() {
         super.tick();
+        playAnimation("sit");
         animateWhen("sleep", hasPose(Pose.SLEEPING));
-        animateWhen("sit", hasPose(Pose.SITTING));
+        animateWhen("sit", hasPose(Pose.CROUCHING));
 
     }
 
@@ -269,7 +270,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     public void setInSittingPose(boolean pSitting) {
         super.setInSittingPose(pSitting);
         if (pSitting) {
-            this.setPose(Pose.SITTING);
+            this.setPose(Pose.CROUCHING);
         } else {
             this.setPose(Pose.STANDING);
         }

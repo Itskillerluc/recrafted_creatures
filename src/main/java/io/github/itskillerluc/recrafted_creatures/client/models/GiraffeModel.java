@@ -1,5 +1,6 @@
 package io.github.itskillerluc.recrafted_creatures.client.models;
 
+import com.mojang.math.Vector3f;
 import io.github.itskillerluc.duclib.client.model.AnimatableDucModel;
 import io.github.itskillerluc.duclib.client.model.Ducling;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
@@ -9,7 +10,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 public class GiraffeModel extends AnimatableDucModel<Giraffe> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "giraffe.png"), "all");

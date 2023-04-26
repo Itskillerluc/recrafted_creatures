@@ -1,5 +1,6 @@
 package io.github.itskillerluc.recrafted_creatures.client.models;
 
+import com.mojang.math.Vector3f;
 import io.github.itskillerluc.duclib.client.animation.AnimationHolder;
 import io.github.itskillerluc.duclib.client.model.AnimatableDucModel;
 import io.github.itskillerluc.duclib.client.model.Ducling;
@@ -13,7 +14,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import java.util.Map;
 
@@ -44,10 +44,10 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
         }
         if (pEntity.getPose() != Pose.SLEEPING){
             ((Ducling) getAnyDescendantWithName("tail").orElseThrow()).yRot = Mth.sin(pAgeInTicks * (this.young ? 0.2f : 0.03f) * Mth.PI) * 0.15f;
-            ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot = pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
+            ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot = pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.CROUCHING) ? 0.610865f : 0);
             ((Ducling) getAnyDescendantWithName("head").orElseThrow()).yRot = pNetHeadYaw * ((float) Math.PI / 180F);
         }
-        if (pEntity.hasPose(Pose.SITTING)){
+        if (pEntity.hasPose(Pose.CROUCHING)){
             return;
         }
 

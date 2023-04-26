@@ -25,6 +25,6 @@ public class SoundRegistry{
 
 
         private static RegistryObject<SoundEvent> register(String name) {
-            return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(RecraftedCreatures.MODID, name)));
+            return SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(RecraftedCreatures.MODID, name)));
         }
 }

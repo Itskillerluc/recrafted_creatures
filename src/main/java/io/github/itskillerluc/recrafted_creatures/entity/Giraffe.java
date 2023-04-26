@@ -303,13 +303,8 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     public void equipSaddle(@Nullable SoundSource pSource) {
         setSaddled(true);
         if (pSource != null) {
-            this.level.playSound(null, this, this.getSaddleSoundEvent(), pSource, 0.5F, 1.0F);
+            this.level.playSound(null, this, SoundEvents.HORSE_SADDLE, pSource, 0.5F, 1.0F);
         }
-    }
-
-    @Override
-    public SoundEvent getSaddleSoundEvent() {
-        return SoundEvents.HORSE_SADDLE;
     }
 
     @Override

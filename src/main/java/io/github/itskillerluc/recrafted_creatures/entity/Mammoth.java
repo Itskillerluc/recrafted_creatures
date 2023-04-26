@@ -35,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -69,7 +70,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 60)
-                .add(Attributes.MOVEMENT_SPEED, 0.4D)
+                .add(Attributes.MOVEMENT_SPEED, 0.45D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D);
     }
 
@@ -142,6 +143,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 return super.getAttackReachSqr(pAttackTarget) / 2;
             }
         });
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1, Ingredient.of(Items.HAY_BLOCK), false));
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
             @Override
             public void start() {
@@ -158,6 +160,12 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     public float getStepHeight() {
         return 1;
+    }
+
+
+    @Override
+    public boolean wantsToAttack(LivingEntity pTarget, LivingEntity pOwner) {
+        return !((pTarget instanceof Mammoth mammoth) && mammoth.isTame() && mammoth.getOwnerUUID().equals(pOwner.getUUID()))&& super.wantsToAttack(pTarget, pOwner);
     }
 
     @Override
@@ -281,6 +289,9 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         } else {
             frozen = false;
         }
+        if (!level.isClientSide() && isInWater() && isVehicle()){
+            ejectPassengers();
+        }
         animateWhen("idle", hasPose(Pose.STANDING));
         animateWhen("charge", damageBoost && !frozen);
         super.tick();
@@ -358,7 +369,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
-                this.setSpeed(0.4F);
+                this.setSpeed(0.45F);
                 super.travel(pTravelVector);
             }
         }
