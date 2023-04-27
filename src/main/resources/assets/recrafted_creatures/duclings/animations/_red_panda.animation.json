@@ -1,0 +1,65 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.red_panda.sit": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"root": {
+					"rotation": [325, 0, 0],
+					"position": [0, -5, 9]
+				},
+				"tail": {
+					"rotation": [45, 0, 0]
+				},
+				"head": {
+					"rotation": [35, 0, 0],
+					"position": [0, -1, -2]
+				},
+				"leg3": {
+					"rotation": [-50.29958, -26.1122, -20.0727],
+					"position": [0, 1, 0]
+				},
+				"leg2": {
+					"rotation": [20, 0, 0]
+				},
+				"leg1": {
+					"rotation": [-50.29958, 26.11218, 20.07273],
+					"position": [0, 1, 0]
+				},
+				"leg0": {
+					"rotation": [20, 0, 0]
+				}
+			}
+		},
+		"animation.red_panda.sleep": {
+			"animation_length": 0.04167,
+			"bones": {
+				"root": {
+					"rotation": [90, 0, 0],
+					"position": [0, -23, -20]
+				},
+				"tail": {
+					"rotation": [-166.96907, 67.35201, -176.62554],
+					"position": [0, -3, 0]
+				},
+				"head": {
+					"rotation": [0, -122.5, 0],
+					"position": [2, -2, -2]
+				},
+				"leg3": {
+					"scale": [0, 0, 0]
+				},
+				"leg2": {
+					"scale": [0, 0, 0]
+				},
+				"leg1": {
+					"scale": [0, 0, 0]
+				},
+				"leg0": {
+					"scale": [0, 0, 0]
+				}
+			}
+		}
+	}
+}

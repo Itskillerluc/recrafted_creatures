@@ -259,11 +259,13 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     @Override
     public void tick() {
-        super.tick();
-        playAnimation("sit");
+        super.tick();//todo
+        /*playAnimation("sit");
         animateWhen("sleep", hasPose(Pose.SLEEPING));
-        animateWhen("sit", hasPose(Pose.CROUCHING));
-
+        animateWhen("sit", hasPose(Pose.CROUCHING));*/
+        if (this.level.isClientSide()) {
+            animateWhen("walk", hasPose(Pose.STANDING) && isMoving(this));
+        }
     }
 
     @Override
