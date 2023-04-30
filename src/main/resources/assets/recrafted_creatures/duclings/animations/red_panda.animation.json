@@ -36,7 +36,7 @@
 			"bones": {
 				"root": {
 					"rotation": [90, 0, 90],
-					"position": [0, -4, 0]
+					"position": [0, -4, -3]
 				},
 				"tail": {
 					"rotation": [-166.96907, 67.35201, -176.62554],
