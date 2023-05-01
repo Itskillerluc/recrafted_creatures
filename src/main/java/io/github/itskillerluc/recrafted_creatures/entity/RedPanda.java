@@ -167,7 +167,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     class SleepGoal extends Goal {
         protected boolean hasShelter() {
-            BlockPos blockpos = new BlockPos(getX(), getBoundingBox().maxY, getZ());
+            BlockPos blockpos = new BlockPos((int) getX(), (int) getBoundingBox().maxY, (int) getZ());
             return !level.canSeeSky(blockpos) && getWalkTargetValue(blockpos) >= 0.0F;
         }
 

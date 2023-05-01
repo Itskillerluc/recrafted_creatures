@@ -53,7 +53,7 @@ public class RecraftedCreatures
         event.registerCreativeModeTab(new ResourceLocation(MODID, "tab"), builder -> builder
                 .title(Component.translatable("itemGroup." + MODID + ".tab"))
                 .icon(() -> new ItemStack(ItemRegistry.GIRAFFE_SPAWN_EGG.get()))
-                .displayItems((feature, item, bool) -> ItemRegistry.ITEMS.getEntries()
-                        .stream().map(RegistryObject::get).forEach(item::accept)));
+                .displayItems((param, out) -> ItemRegistry.ITEMS.getEntries()
+                        .stream().map(RegistryObject::get).forEach(out::accept)));
     }
 }

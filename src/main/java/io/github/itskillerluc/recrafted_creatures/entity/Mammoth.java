@@ -289,16 +289,16 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void addPassenger(@NotNull Entity pPassenger) {
         super.addPassenger(pPassenger);
-        if (!level.isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
-            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() + (player.isCreative() ? 2.5 :3));
+        if (!level.isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 :3));
         }
     }
 
     @Override
     protected void removePassenger(@NotNull Entity pPassenger) {
         super.removePassenger(pPassenger);
-        if (pPassenger instanceof Player player && !level.isClientSide() && player.getAttribute(ForgeMod.REACH_DISTANCE.get()) != null){
-            player.getAttribute(ForgeMod.REACH_DISTANCE.get()).setBaseValue(player.getReachDistance() - (player.isCreative() ? 3.5 : 3));
+        if (pPassenger instanceof Player player && !level.isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() - (player.isCreative() ? 3.5 : 3));
         }
     }
 
@@ -331,8 +331,8 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Nullable
     @Override
-    public Entity getControllingPassenger() {
-        return getFirstPassenger();
+    public LivingEntity getControllingPassenger() {
+        return getFirstPassenger() instanceof LivingEntity entity ? entity : null;
     }
 
     public void travel(@NotNull Vec3 pTravelVector) {
@@ -355,7 +355,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                     this.setSpeed(0.13F);
                     super.travel(new Vec3(f, pTravelVector.y, f1));
                 }
-                this.calculateEntityAnimation(this, false);
+                this.calculateEntityAnimation(false);
                 this.tryCheckInsideBlocks();
             } else {
                 this.setSpeed(0.4F);
