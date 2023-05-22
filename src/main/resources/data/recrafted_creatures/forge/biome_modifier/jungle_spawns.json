@@ -1,6 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "minecraft:bamboo_jungle",
+  "biomes": "#minecraft:is_jungle",
   "spawners":
   {
     "type": "recrafted_creatures:red_panda",

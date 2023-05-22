@@ -27,7 +27,7 @@ displayName="Recrafted Creatures" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="Recrafted.jpg" #optional
+logoFile="Recrafted.png" #optional
 # A text field displayed in the mod UI
 credits="Made for TheGBZard" #optional
 # A text field displayed in the mod UI
