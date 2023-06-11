@@ -130,7 +130,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
         @Override
         public boolean canUse() {
-            T entity = RedPanda.this.level.getNearestEntity(target, TargetingConditions.DEFAULT, RedPanda.this, 5, 5, 5, AABB.ofSize(RedPanda.this.position(), 5, 5, 5));
+            T entity = RedPanda.this.level().getNearestEntity(target, TargetingConditions.DEFAULT, RedPanda.this, 5, 5, 5, AABB.ofSize(RedPanda.this.position(), 5, 5, 5));
             this.entity = entity;
             isTargeted = entity != null;
             return getOwnerUUID() != null && entity != null;
@@ -141,7 +141,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             super.start();
             isTargeted = true;
             var target = TargetingConditions.forCombat().range(4).selector(EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
-            this.toAvoid = RedPanda.this.level.getNearestEntity(RedPanda.this.level.getEntitiesOfClass(Mob.class, RedPanda.this.getBoundingBox().inflate(4, 3.0D, 4), (p_148078_) -> true), target, RedPanda.this, getX(), getY(), getZ());
+            this.toAvoid = RedPanda.this.level().getNearestEntity(RedPanda.this.level().getEntitiesOfClass(Mob.class, RedPanda.this.getBoundingBox().inflate(4, 3.0D, 4), (p_148078_) -> true), target, RedPanda.this, getX(), getY(), getZ());
             Path path = null;
             Vec3 vec3 = DefaultRandomPos.getPosAway(RedPanda.this, 16, 7, this.toAvoid.position());
             if (vec3 != null) {
@@ -168,7 +168,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     class SleepGoal extends Goal {
         protected boolean hasShelter() {
             BlockPos blockpos = new BlockPos((int) getX(), (int) getBoundingBox().maxY, (int) getZ());
-            return !level.canSeeSky(blockpos) && getWalkTargetValue(blockpos) >= 0.0F;
+            return !level().canSeeSky(blockpos) && getWalkTargetValue(blockpos) >= 0.0F;
         }
 
         public static final int WAIT_TIME_BEFORE_SLEEP = reducedTickDelay(140);
@@ -198,7 +198,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 --this.countdown;
                 return false;
             } else {
-                return level.isDay() && this.hasShelter() && !isInPowderSnow && !isInSittingPose() && !isTargeted;
+                return level().isDay() && this.hasShelter() && !isInPowderSnow && !isInSittingPose() && !isTargeted;
             }
         }
 
@@ -224,7 +224,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level.isClientSide()){
+        if (level().isClientSide()){
             return InteractionResult.CONSUME;
         }
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
@@ -246,10 +246,10 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 this.tame(pPlayer);
                 this.navigation.stop();
                 this.setTarget(null);
-                this.level.broadcastEntityEvent(this, (byte)7);
+                this.level().broadcastEntityEvent(this, (byte)7);
                 pPlayer.getItemInHand(pHand).shrink(1);
             } else {
-                this.level.broadcastEntityEvent(this, (byte)6);
+                this.level().broadcastEntityEvent(this, (byte)6);
             }
 
             return InteractionResult.SUCCESS;

@@ -28,7 +28,10 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
     public void setupAnim(@NotNull RedPanda pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         if (this.young){
-            if (pEntity.getPose() != Pose.SLEEPING) {
+            if (pEntity.hasPose(Pose.SITTING)) {
+              this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
+              this.root().offsetPos(new Vector3f(0, 6f, 0));
+            } else if (pEntity.getPose() != Pose.SLEEPING) {
                 this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
                 this.root().offsetPos(new Vector3f(0, 7f, 0));
             } else if (pEntity.getPose() == Pose.SLEEPING){

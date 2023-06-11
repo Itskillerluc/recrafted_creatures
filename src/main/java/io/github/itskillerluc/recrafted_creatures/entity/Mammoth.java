@@ -166,7 +166,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     }
 
     @Override
-    public void positionRider(@NotNull Entity pPassenger) {
+    public void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction function) {
         if (this.hasPassenger(pPassenger)) {
             float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
             float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
@@ -181,7 +181,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level.isClientSide()){
+        if (level().isClientSide()){
             return InteractionResult.FAIL;
         }
         if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
@@ -229,10 +229,10 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 this.navigation.stop();
                 this.setTarget(null);
                 this.entityData.set(COLOR, 0xFF0000);
-                this.level.broadcastEntityEvent(this, (byte)7);
+                this.level().broadcastEntityEvent(this, (byte)7);
                 pPlayer.getItemInHand(pHand).shrink(1);
             } else {
-                this.level.broadcastEntityEvent(this, (byte)6);
+                this.level().broadcastEntityEvent(this, (byte)6);
                 pPlayer.getItemInHand(pHand).shrink(1);
             }
 
@@ -289,7 +289,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void addPassenger(@NotNull Entity pPassenger) {
         super.addPassenger(pPassenger);
-        if (!level.isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+        if (!level().isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
             player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 :3));
         }
     }
@@ -297,7 +297,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Override
     protected void removePassenger(@NotNull Entity pPassenger) {
         super.removePassenger(pPassenger);
-        if (pPassenger instanceof Player player && !level.isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+        if (pPassenger instanceof Player player && !level().isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
             player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() - (player.isCreative() ? 3.5 : 3));
         }
     }
@@ -314,10 +314,10 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
                 for (int[] aint1 : aint) {
                     blockpos$mutable.set(blockpos.getX() + aint1[0], blockpos.getY(), blockpos.getZ() + aint1[1]);
-                    double d0 = this.level.getBlockFloorHeight(blockpos$mutable);
+                    double d0 = this.level().getBlockFloorHeight(blockpos$mutable);
                     if (DismountHelper.isBlockFloorValid(d0)) {
                         Vec3 vec3 = Vec3.upFromBottomCenterOf(blockpos$mutable, d0);
-                        if (DismountHelper.canDismountTo(this.level, p_230268_1_, axisalignedbb.move(vec3))) {
+                        if (DismountHelper.canDismountTo(this.level(), p_230268_1_, axisalignedbb.move(vec3))) {
                             p_230268_1_.setPose(pose);
                             return vec3;
                         }
@@ -338,7 +338,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public void travel(@NotNull Vec3 pTravelVector) {
         if (this.isAlive()) {
             if (this.isVehicle() && isTame()) {
-                LivingEntity livingentity = (LivingEntity)this.getControllingPassenger();
+                LivingEntity livingentity = this.getControllingPassenger();
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);
@@ -438,7 +438,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
         return SoundRegistry.MAMMOTH_TRUMPET.get();
     }
 
@@ -455,11 +455,11 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     }
 
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
+    public boolean doHurtTarget(@NotNull Entity pEntity) {
         var hurt = (super.doHurtTarget(pEntity));
         if (hurt){
             damageBoost = false;
-            level.broadcastEntityEvent(this, (byte) 4);
+            level().broadcastEntityEvent(this, (byte) 4);
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(6);
             return true;
         }

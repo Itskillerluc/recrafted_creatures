@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class MarkingsLayer<T extends Mammoth,M extends EntityModel<T>> extends RenderLayer<T, M> {
     public MarkingsLayer(RenderLayerParent<T, M> p_117507_) {
@@ -18,7 +19,7 @@ public class MarkingsLayer<T extends Mammoth,M extends EntityModel<T>> extends R
 
 
     @Override
-    public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+    public void render(@NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         ResourceLocation resourcelocation = pLivingEntity.isBaby() ? MammothRenderer.BABY_MARKINGS_LAYER : MammothRenderer.MARKINGS_LAYER;
         if (!pLivingEntity.isInvisible() && pLivingEntity.isTame()) {
             VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucent(resourcelocation));
