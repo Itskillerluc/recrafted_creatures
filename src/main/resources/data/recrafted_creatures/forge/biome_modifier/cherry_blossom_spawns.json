@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:cherry_grove",
+  "spawners":
+  {
+    "type": "recrafted_creatures:red_panda",
+    "weight": 50,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}
