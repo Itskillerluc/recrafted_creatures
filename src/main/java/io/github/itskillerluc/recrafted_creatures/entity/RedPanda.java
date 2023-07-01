@@ -234,12 +234,13 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 }
                 this.heal(3);
             } else {
+                if (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) && this.getAge() == 0 && !this.isInLove()) {
+                    this.setInLove(pPlayer);
+                    pPlayer.getItemInHand(pHand).shrink(1);
+                    return InteractionResult.SUCCESS;
+                }
                 this.setOrderedToSit(!isOrderedToSit());
             }
-            return InteractionResult.SUCCESS;
-        } else if (this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.BAMBOO)) {
-            this.setInLove(pPlayer);
-            pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         } else if (this.getOwner() == null && pPlayer.getItemInHand(pHand).is(Items.BAMBOO)){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {

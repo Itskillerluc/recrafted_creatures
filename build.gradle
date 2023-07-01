@@ -5,7 +5,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '1.1.1-1.20'
+version = '1.1.2-1.20'
 group = 'io.github.itskillerluc.recrafted_creatures' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'recrafted_creatures'
 
