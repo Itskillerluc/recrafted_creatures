@@ -143,6 +143,9 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             var target = TargetingConditions.forCombat().range(4).selector(EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
             this.toAvoid = RedPanda.this.level().getNearestEntity(RedPanda.this.level().getEntitiesOfClass(Mob.class, RedPanda.this.getBoundingBox().inflate(4, 3.0D, 4), (p_148078_) -> true), target, RedPanda.this, getX(), getY(), getZ());
             Path path = null;
+            if (toAvoid == null) {
+                return;
+            }
             Vec3 vec3 = DefaultRandomPos.getPosAway(RedPanda.this, 16, 7, this.toAvoid.position());
             if (vec3 != null) {
                 if (!(this.toAvoid.distanceToSqr(vec3.x, vec3.y, vec3.z) < this.toAvoid.distanceToSqr(RedPanda.this))) {

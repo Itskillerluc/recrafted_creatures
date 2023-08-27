@@ -439,13 +439,13 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundRegistry.MAMMOTH_TRUMPET.get();
+        return SoundRegistry.MAMMOTH_HURT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.MAMMOTH_TRUMPET.get();
+        return SoundRegistry.MAMMOTH_DEATH.get();
     }
 
     @Nullable
