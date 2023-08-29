@@ -2,8 +2,12 @@ package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,5 +33,8 @@ public class ItemRegistry {
 
     public static final RegistryObject<BlockItem> COOKED_ELEPHANT_MEAT = ITEMS.register("cooked_mammoth_meat",
             () -> new BlockItem(BlockRegistry.COOKED_ELEPHANT_MEAT.get(), new Item.Properties()));
+
+    public static final RegistryObject<MobBucketItem> FROG_BUCKET = ITEMS.register("frog_bucket",
+            () -> new MobBucketItem(() -> EntityType.FROG, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_TADPOLE, new Item.Properties().stacksTo(1)));
 
 }

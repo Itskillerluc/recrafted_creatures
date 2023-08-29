@@ -3,31 +3,74 @@
 	"animations": {
 		"animation.mammoth.idle": {
 			"loop": true,
-			"animation_length": 4,
+			"animation_length": 2,
 			"bones": {
-				"Trunk1": {
-					"rotation": {
-						"0.0": [0, 0, 0],
-						"1.0": [5, 0, 0],
-						"3.0": [-5, 0, 0],
-						"4.0": [0, 0, 0]
+				"Head": {
+					"position": {
+						"0.0": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": [0, -1, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
 					}
 				},
-				"Tail": {
+				"Trunk1": {
 					"rotation": {
-						"0.0": [-60, 0, 0],
-						"1.0": [-61.92445, 11.0311, -19.7339],
-						"3.0": [-61.9244, -11.0311, 19.7339],
-						"4.0": [-60, 0, 0]
+						"0.0": {
+							"post": [-2.5, 0.43523, 2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [-2.5, 0.44, -2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": [2.5, 0.44, -2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"1.5": {
+							"post": [2.5, 0.44, 2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": [-2.5, 0.44, 2.5],
+							"lerp_mode": "catmullrom"
+						}
 					}
 				},
 				"Trunk2": {
 					"rotation": {
-						"0.0": [0, 0, 0],
-						"1.0": [5, 0, 0],
-						"3.0": [-5, 0, 0],
-						"4.0": [0, 0, 0]
+						"0.0": {
+							"post": [-2.5, 0, 2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0, 0, -2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": [2.5, 0, -2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"1.5": {
+							"post": [0, 0, 2.5],
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": [-2.5, 0, 2.5],
+							"lerp_mode": "catmullrom"
+						}
 					}
+				},
+				"Tail": {
+					"rotation": [-60, 0, 0]
 				}
 			}
 		},

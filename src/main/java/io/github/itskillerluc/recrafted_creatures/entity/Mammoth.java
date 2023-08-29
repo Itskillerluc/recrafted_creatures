@@ -64,7 +64,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 60)
-                .add(Attributes.MOVEMENT_SPEED, 0.4D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D);
     }
 
@@ -292,13 +292,13 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 }
 
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(0.13F);
+                    this.setSpeed(0.2F);
                     super.travel(new Vec3(f, pTravelVector.y, f1));
                 }
                 this.calculateEntityAnimation(false);
                 this.tryCheckInsideBlocks();
             } else {
-                this.setSpeed(0.4F);
+                this.setSpeed(0.5F);
                 super.travel(pTravelVector);
             }
         }
