@@ -4,8 +4,9 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
+import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeAnimations;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
-import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
+import net.minecraft.client.animation.Keyframe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +24,6 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -42,10 +42,7 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "giraffe");
@@ -57,9 +54,17 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
+    public final AnimationState walkTest = new AnimationState();
 
     public Giraffe(EntityType<? extends Giraffe> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        System.out.println(GiraffeAnimations.GIRAFFE_WALK.boneAnimations().entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), entry.getValue().stream()
+                        .flatMap(e -> Arrays.stream(e.keyframes()).sorted(Comparator.comparingDouble(Keyframe::timestamp)).map(Keyframe::target)).toList())).toList());
+
+        System.out.println(ANIMATION.getAnimations().get("animation.giraffe.walk").animation().boneAnimations().entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), entry.getValue().stream()
+                        .flatMap(e -> Arrays.stream(e.keyframes()).sorted(Comparator.comparingDouble(Keyframe::timestamp)).map(Keyframe::target)).toList())).toList());
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -169,7 +174,6 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
             } else if (random.nextInt(20) == 1) {
                 stopAnimation("tounge");
             }
-            animateWhen("tail_run", isMoving(this) && hasPose(Pose.STANDING));
         } else {
             if (isInWater() && isVehicle()){
                 ejectPassengers();
