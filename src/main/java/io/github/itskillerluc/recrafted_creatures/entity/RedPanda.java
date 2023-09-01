@@ -200,7 +200,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
          */
         public boolean canUse() {
             if (xxa == 0.0F && yya == 0.0F && zza == 0.0F) {
-                return (this.canSleep() || isSleeping()) && !isTargeted;
+                return !RedPanda.this.isInFluidType() && (this.canSleep() || isSleeping()) && !isTargeted;
             } else {
                 return false;
             }
@@ -218,7 +218,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 --this.countdown;
                 return false;
             } else {
-                return level().isDay() && this.hasShelter() && !isInPowderSnow && !isInSittingPose() && !isTargeted;
+                return !RedPanda.this.isInFluidType() && level().isDay() && this.hasShelter() && !isInPowderSnow && !isInSittingPose() && !isTargeted;
             }
         }
 
