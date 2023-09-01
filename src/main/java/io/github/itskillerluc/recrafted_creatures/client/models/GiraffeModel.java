@@ -28,8 +28,8 @@ public class GiraffeModel extends AnimatableDucModel<Giraffe> {
     @Override
     public void setupAnim(@NotNull Giraffe pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        if (pEntity.hasControllingPassenger()) {
-            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.giraffe.run").animation(), pLimbSwing, pLimbSwingAmount, 2, 2f);
+        if (true) {
+            this.animateWalk(GiraffeAnimations.GIRAFFE_RUN, pLimbSwing, pLimbSwingAmount, 2, 2f);
         } else {
             this.animateWalk(GiraffeAnimations.GIRAFFE_WALK, pLimbSwing, pLimbSwingAmount, 2, 2f);
         }

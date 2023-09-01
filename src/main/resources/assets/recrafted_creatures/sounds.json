@@ -29,8 +29,8 @@
   "entity.mammoth_hurt": {
     "subtitle": "subtitle.recrafted_creatures.mammoth_hurt",
     "sounds": [
-      "recrafted_creatures:mammoth_hurt_1",
-      "recrafted_creatures:mammoth_hurt_2"
+      "recrafted_creatures:mammoth_trumpet",
+      "recrafted_creatures:mammoth_trumpet_2"
     ]
   },
   "entity.mammoth_sound": {

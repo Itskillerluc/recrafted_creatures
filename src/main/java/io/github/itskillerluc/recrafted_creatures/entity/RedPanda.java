@@ -9,6 +9,9 @@ import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -42,6 +45,16 @@ import static io.github.itskillerluc.recrafted_creatures.entity.RedPanda.SleepGo
 public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
+    public final AnimationState sleep = new AnimationState();
+    public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
+    public static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.BOOLEAN);
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(SLEEPING, false);
+        entityData.define(LAST_POSE_CHANGE_TICK, 0L);
+    }
 
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private boolean isTargeted = false;
@@ -73,19 +86,23 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     @Override
     public void setJumping(boolean pJumping) {
-        super.setJumping(pJumping && this.getPose() != Pose.SLEEPING);
+        super.setJumping(pJumping && !entityData.get(SLEEPING));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isTargeted", isTargeted);
+        pCompound.putBoolean("sleeping", entityData.get(SLEEPING));
+        pCompound.putLong("last_pose_change_tick", entityData.get(LAST_POSE_CHANGE_TICK));
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         isTargeted = pCompound.getBoolean("isTargeted");
+        entityData.set(SLEEPING, pCompound.getBoolean("sleeping"));
+        entityData.set(LAST_POSE_CHANGE_TICK, pCompound.getLong("last_pose_change_tick"));
     }
 
     @Override
@@ -212,13 +229,17 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             this.countdown = random.nextInt(WAIT_TIME_BEFORE_SLEEP);
             RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
             RedPanda.this.setPose(Pose.STANDING);
+            entityData.set(SLEEPING, false);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
         public void start() {
-            RedPanda.this.setPose(Pose.SLEEPING);
+            RedPanda.this.setPose(Pose.STANDING);
+            entityData.set(SLEEPING, true);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
             RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
             RedPanda.this.getNavigation().stop();
             RedPanda.this.getMoveControl().setWantedPosition(getX(), getY(), getZ(), 0.0D);
@@ -264,9 +285,22 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     @Override
     public void tick() {
         super.tick();
-        animateWhen("sleep", hasPose(Pose.SLEEPING));
+        if (entityData.get(SLEEPING)) {
+            if (level().getGameTime() - entityData.get(LAST_POSE_CHANGE_TICK) < 30L) {
+                playAnimation("falling_asleep");
+            } else {
+                stopAnimation("falling_asleep");
+                playAnimation("sleep");
+            }
+        } else {
+            if (level().getGameTime() - entityData.get(LAST_POSE_CHANGE_TICK) < 30L) {
+                stopAnimation("sleep");
+                playAnimation("waking_up");
+            } else {
+                stopAnimation("waking_up");
+            }
+        }
         animateWhen("sit", hasPose(Pose.SITTING));
-
     }
 
     @Override
@@ -282,13 +316,15 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     @Override
     public void push(double pX, double pY, double pZ) {
         super.push(pX, pY, pZ);
-        if (hasPose(Pose.SLEEPING)) {
+        if (entityData.get(SLEEPING)) {
             var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
             if (goal.isPresent()) {
                 random.nextInt(WAIT_TIME_BEFORE_SLEEP);
             }
             RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
             RedPanda.this.setPose(Pose.STANDING);
+            entityData.set(SLEEPING, false);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         }
     }
 
