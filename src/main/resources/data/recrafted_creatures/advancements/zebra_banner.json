@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:zebra_hide"
+    },
+    "title": "It's just a retextured Horse",
+    "description": "Craft a banner using the Zebra Banner Pattern",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "pattern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:banners",
+            "nbt": "{SelectedItem:{tag:{BlockEntityTag:{Patterns:[{Pattern:\"zebra_pattern\"}]}}}}"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pattern"
+    ]
+  ]
+}

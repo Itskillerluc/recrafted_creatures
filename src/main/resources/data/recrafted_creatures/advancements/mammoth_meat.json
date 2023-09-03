@@ -1,0 +1,43 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:raw_mammoth_meat"
+    },
+    "title": "Me eat Meat, Meat good",
+    "description": "Eat a slice of mammoth meat",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "meat": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:any_of",
+            "terms": [
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "recrafted_creatures:raw_mammoth_meat",
+                "properties": {}
+              },
+              {
+                "condition": "minecraft:block_state_property",
+                "block": "recrafted_creatures:cooked_mammoth_meat",
+                "properties": {}
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "meat"
+    ]
+  ]
+}

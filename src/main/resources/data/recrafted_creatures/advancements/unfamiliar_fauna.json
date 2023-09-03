@@ -1,0 +1,113 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:zebra_spawn_egg"
+    },
+    "title": "Unfamiliar Fauna",
+    "description": "Encounter all Recrafted Creatures mobs",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "mammoth": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:mammoth"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "giraffe": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:giraffe"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "red_panda": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:red_panda"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "zebra": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:zebra"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "red_panda"
+    ],
+    [
+      "zebra"
+    ],
+    [
+      "mammoth"
+    ],
+    [
+      "giraffe"
+    ]
+  ],
+  "rewards": {
+    "experience": 5
+  }
+}

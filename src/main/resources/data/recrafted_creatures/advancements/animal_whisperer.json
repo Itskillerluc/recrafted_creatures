@@ -1,0 +1,65 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:red_panda_spawn_egg"
+    },
+    "title": "Animal Whisperer",
+    "description": "Tame all animals in Recrafted Creatures",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "recrafted_creatures:unfamiliar_fauna",
+  "criteria": {
+    "mammoth": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:mammoth"
+        }
+      }
+    },
+    "zebra": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:zebra"
+        }
+      }
+    },
+    "red_panda": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:red_panda"
+        }
+      }
+    },
+    "giraffe": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:giraffe"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "red_panda"
+    ],
+    [
+      "zebra"
+    ],
+    [
+      "mammoth"
+    ],
+    [
+      "giraffe"
+    ]
+  ],
+  "rewards": {
+    "experience": 10
+  }
+}

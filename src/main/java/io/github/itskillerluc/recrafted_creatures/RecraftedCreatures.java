@@ -4,10 +4,7 @@ import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
 import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
 import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
-import io.github.itskillerluc.recrafted_creatures.registries.CreativeModeTabRegistry;
-import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
-import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
-import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
@@ -33,6 +30,7 @@ public class RecraftedCreatures
         modEventBus.addListener(this::addEntityAttributes);
         modEventBus.addListener(this::registerSpawnPlacement);
 
+        BannerPatternRegistry.BANNER_PATTERNS.register(modEventBus);
         SoundRegistry.SOUNDS.register(modEventBus);
         CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);

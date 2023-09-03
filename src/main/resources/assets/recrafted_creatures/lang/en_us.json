@@ -22,9 +22,29 @@
   "item.recrafted_creatures.raw_mammoth_meat": "Raw Elephant Meat",
   "item.recrafted_creatures.cooked_mammoth_meat": "Cooked Elephant Meat",
   "item.recrafted_creatures.frog_bucket": "Frog Bucket",
+  "item.recrafted_creatures.zebra_hide": "Zebra Hide",
+  "item.recrafted_creatures.zebra_pattern": "Banner Pattern",
+  "item.recrafted_creatures.zebra_pattern.desc": "Zebra",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
+
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.white": "White Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_gray": "Light Gray Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.gray": "Gray Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.black": "Black Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.brown": "Brown Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.red": "Red Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.orange": "Orange Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.yellow": "Yellow Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.lime": "Lime Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.green": "Green Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.cyan": "Cyan Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_blue": "Light Blue Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.blue": "Blue Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.purple": "Purple Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.magenta": "Magenta Zebra",
+  "block.minecraft.banner.recrafted_creatures.zebra_pattern.pink": "Pink Zebra",
 
   "itemGroup.recrafted_creatures.tab": "Recrafted Creatures"
 }
