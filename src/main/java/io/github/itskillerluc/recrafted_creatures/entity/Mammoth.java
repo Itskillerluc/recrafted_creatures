@@ -15,9 +15,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +28,6 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.DyeItem;
@@ -38,9 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -60,6 +55,8 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
+    public final AnimationState stomp = new AnimationState();
+    public final AnimationState attack = new AnimationState();
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -68,6 +65,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 50)
                 .add(Attributes.MAX_HEALTH, 60)
                 .add(Attributes.MOVEMENT_SPEED, 0.5D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D);
@@ -99,10 +97,32 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true) {
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.9f, true) {
             @Override
             protected double getAttackReachSqr(@NotNull LivingEntity pAttackTarget) {
                 return super.getAttackReachSqr(pAttackTarget) / 2;
+            }
+
+            @Override
+            protected void checkAndPerformAttack(LivingEntity pEnemy, double pDistToEnemySqr) {
+                double d0 = this.getAttackReachSqr(pEnemy);
+                if (pDistToEnemySqr <= d0 && getTicksUntilNextAttack() <= 0) {
+                    this.resetAttackCooldown();
+                    if (random.nextFloat() > 0.5f) {
+                        this.mob.swing(InteractionHand.MAIN_HAND);
+                        this.mob.doHurtTarget(pEnemy);
+                        level().broadcastEntityEvent(Mammoth.this, (byte) -4);
+                    } else {
+                        this.mob.swing(InteractionHand.MAIN_HAND);
+                        this.mob.doHurtTarget(pEnemy);
+                        level().broadcastEntityEvent(Mammoth.this, (byte)-6);
+                        pEnemy.knockback(2, this.mob.getX() - pEnemy.getX(), this.mob.getZ() - pEnemy.getZ());
+
+                    }
+                }
+
+
             }
         });
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
@@ -401,8 +421,11 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public void handleEntityEvent(byte pId) {
-        if (pId == 4) {
-            replayAnimation("attack");
+
+        if (pId == -4) {
+            attack.start(this.tickCount());
+        } else if (pId == -6){
+            stomp.start(this.tickCount());
         } else {
             super.handleEntityEvent(pId);
         }
