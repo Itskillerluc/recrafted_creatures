@@ -23,13 +23,16 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -61,6 +64,13 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     public RedPanda(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.lookControl = new LookControl(this) {
+            public void tick() {
+                if (!RedPanda.this.entityData.get(SLEEPING)) {
+                    super.tick();
+                }
+            }
+        };
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -301,6 +311,15 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             }
         }
         animateWhen("sit", hasPose(Pose.SITTING));
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (entityData.get(SLEEPING)) {
+            this.xxa = 0.0F;
+            this.zza = 0.0F;
+        }
     }
 
     @Override

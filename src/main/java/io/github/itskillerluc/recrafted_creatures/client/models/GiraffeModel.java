@@ -28,10 +28,10 @@ public class GiraffeModel extends AnimatableDucModel<Giraffe> {
     @Override
     public void setupAnim(@NotNull Giraffe pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        if (true) {
-            this.animateWalk(GiraffeAnimations.GIRAFFE_RUN, pLimbSwing, pLimbSwingAmount, 2, 2f);
+        if (pEntity.hasControllingPassenger()) {
+            this.animateWalk(GiraffeAnimations.GIRAFFE_RUN, pLimbSwing, pLimbSwingAmount, 1, 2f);
         } else {
-            this.animateWalk(GiraffeAnimations.GIRAFFE_WALK, pLimbSwing, pLimbSwingAmount, 2, 2f);
+            this.animateWalk(GiraffeAnimations.GIRAFFE_WALK, pLimbSwing, pLimbSwingAmount, 1, 2);
         }
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));

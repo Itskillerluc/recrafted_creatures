@@ -11,6 +11,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RecraftedCreatures.MODID);
 
-    public static final RegistryObject<MeatBlock> RAW_ELEPHANT_MEAT = BLOCKS.register("raw_mammoth_meat", () -> new MeatBlock(BlockBehaviour.Properties.copy(Blocks.CAKE), 3, 1));
-    public static final RegistryObject<MeatBlock> COOKED_ELEPHANT_MEAT = BLOCKS.register("cooked_mammoth_meat", () -> new MeatBlock(BlockBehaviour.Properties.copy(Blocks.CAKE), 5, 4));
+    public static final RegistryObject<MeatBlock> RAW_MAMMOTH_MEAT = BLOCKS.register("raw_mammoth_meat", () -> new MeatBlock(BlockBehaviour.Properties.copy(Blocks.CAKE), 3, 1));
+    public static final RegistryObject<MeatBlock> COOKED_MAMMOTH_MEAT = BLOCKS.register("cooked_mammoth_meat", () -> new MeatBlock(BlockBehaviour.Properties.copy(Blocks.CAKE), 5, 4));
 }

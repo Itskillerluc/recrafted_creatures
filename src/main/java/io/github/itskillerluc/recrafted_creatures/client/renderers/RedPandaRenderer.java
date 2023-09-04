@@ -20,6 +20,6 @@ public class RedPandaRenderer extends MobRenderer<RedPanda, RedPandaModel> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(RedPanda pEntity) {
-        return pEntity.getPose() == Pose.SLEEPING ? LOCATION_SLEEPING : LOCATION;
+        return pEntity.getEntityData().get(RedPanda.SLEEPING) ? LOCATION_SLEEPING : LOCATION;
     }
 }

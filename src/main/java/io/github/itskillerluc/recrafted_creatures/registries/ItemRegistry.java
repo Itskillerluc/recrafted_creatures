@@ -31,10 +31,10 @@ public class ItemRegistry {
             () -> new ForgeSpawnEggItem(EntityRegistry.MAMMOTH, 0x6b4832, 0x473123, new Item.Properties()));
 
     public static final RegistryObject<BlockItem> MAMMOTH_MEAT = ITEMS.register("raw_mammoth_meat",
-            () -> new BlockItem(BlockRegistry.RAW_ELEPHANT_MEAT.get(), new Item.Properties()));
+            () -> new BlockItem(BlockRegistry.RAW_MAMMOTH_MEAT.get(), new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> COOKED_ELEPHANT_MEAT = ITEMS.register("cooked_mammoth_meat",
-            () -> new BlockItem(BlockRegistry.COOKED_ELEPHANT_MEAT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> COOKED_MAMMOTH_MEAT = ITEMS.register("cooked_mammoth_meat",
+            () -> new BlockItem(BlockRegistry.COOKED_MAMMOTH_MEAT.get(), new Item.Properties()));
 
     public static final RegistryObject<MobBucketItem> FROG_BUCKET = ITEMS.register("frog_bucket",
             () -> new MobBucketItem(() -> EntityType.FROG, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_TADPOLE, new Item.Properties().stacksTo(1)));
