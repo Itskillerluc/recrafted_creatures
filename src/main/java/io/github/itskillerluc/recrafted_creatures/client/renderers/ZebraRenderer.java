@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class ZebraRenderer extends AbstractHorseRenderer<Zebra, HorseModel<Zebra>> {
-    public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/zebra_pattern.png");
+    public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/zebra.png");
     public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "horse_armor"), "main");
     public ZebraRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new HorseModel<>(pContext.bakeLayer(ModelLayers.HORSE)), 1.1F);
