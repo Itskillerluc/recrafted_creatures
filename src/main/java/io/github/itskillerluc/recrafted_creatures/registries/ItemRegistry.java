@@ -44,5 +44,4 @@ public class ItemRegistry {
 
     public static final RegistryObject<BannerPatternItem> ZEBRA_PATTERN = ITEMS.register("zebra_pattern",
             () -> new BannerPatternItem(Tags.ZEBRA_PATTERN, new Item.Properties().stacksTo(1)));
-
 }

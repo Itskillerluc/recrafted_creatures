@@ -35,6 +35,7 @@ public class RecraftedCreatures
         CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
+        PaintingRegistry.PAINTINGS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
