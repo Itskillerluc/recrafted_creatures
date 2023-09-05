@@ -48,7 +48,6 @@ import static io.github.itskillerluc.recrafted_creatures.entity.RedPanda.SleepGo
 public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
-    public final AnimationState sleep = new AnimationState();
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
     public static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.BOOLEAN);
 
@@ -247,12 +246,14 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
          * Execute a one shot task or start executing a continuous task
          */
         public void start() {
-            RedPanda.this.setPose(Pose.STANDING);
-            entityData.set(SLEEPING, true);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
-            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
-            RedPanda.this.getNavigation().stop();
-            RedPanda.this.getMoveControl().setWantedPosition(getX(), getY(), getZ(), 0.0D);
+            if (!entityData.get(SLEEPING)) {
+                RedPanda.this.setPose(Pose.STANDING);
+                entityData.set(SLEEPING, true);
+                entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
+                RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
+                RedPanda.this.getNavigation().stop();
+                RedPanda.this.getMoveControl().setWantedPosition(getX(), getY(), getZ(), 0.0D);
+            }
         }
     }
 
@@ -345,6 +346,21 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
             entityData.set(SLEEPING, false);
             entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (entityData.get(SLEEPING)) {
+            var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
+            if (goal.isPresent()) {
+                random.nextInt(WAIT_TIME_BEFORE_SLEEP);
+            }
+            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
+            RedPanda.this.setPose(Pose.STANDING);
+            entityData.set(SLEEPING, false);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Nullable
