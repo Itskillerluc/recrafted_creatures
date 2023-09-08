@@ -33,6 +33,7 @@ public class GiraffeModel extends AnimatableDucModel<Giraffe> {
         } else {
             this.animateWalk(GiraffeAnimations.GIRAFFE_WALK, pLimbSwing, pLimbSwingAmount, 1, 2);
         }
+        this.animate(pEntity.tongue, GiraffeAnimations.GIRAFFE_TOUNGE, pAgeInTicks);
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
             root().offsetPos(new Vector3f(0f, 7f, 0f));

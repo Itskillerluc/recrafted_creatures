@@ -268,35 +268,45 @@ public class MammothAnimations {
                                     AnimationChannel.Interpolations.CATMULLROM),
                             new Keyframe(1.5f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.CATMULLROM))).build();
-
-
-    public static final AnimationDefinition MAMMOTH_ATTACK = AnimationDefinition.Builder.withLength(0.58333f)
+    public static final AnimationDefinition MAMMOTH_ATTACK = AnimationDefinition.Builder.withLength(0.79167f)
             .addAnimation("Head",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
                             new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(0.2917f, KeyframeAnimations.degreeVec(-30f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(0.5833f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.2083f, KeyframeAnimations.degreeVec(27.5f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.3333f, KeyframeAnimations.degreeVec(-30f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.5f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.625f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
             .addAnimation("Trunk1",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(0.2917f, KeyframeAnimations.degreeVec(-30f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
+                            new Keyframe(0.2083f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.3333f, KeyframeAnimations.degreeVec(-17.5f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
                             new Keyframe(0.5833f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
+                                    AnimationChannel.Interpolations.CATMULLROM)))
+            .addAnimation("Trunk2",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.2083f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
             .addAnimation("Trunk2",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
                             new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(0.2917f, KeyframeAnimations.degreeVec(-30f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.2083f, KeyframeAnimations.degreeVec(12.5f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.3333f, KeyframeAnimations.degreeVec(-22.5f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
                             new Keyframe(0.5833f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
+                                    AnimationChannel.Interpolations.CATMULLROM)))
             .addAnimation("Tail",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(-15f, 0f, 0f),
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-60f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR))).build();
 }

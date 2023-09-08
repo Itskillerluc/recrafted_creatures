@@ -59,7 +59,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
-    public final AnimationState walkTest = new AnimationState();
+    public final AnimationState tongue = new AnimationState();
 
     public Giraffe(EntityType<? extends Giraffe> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -175,9 +175,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         super.tick();
         if (level().isClientSide()) {
             if (random.nextInt(30) == 1) {
-                playAnimation("tounge");
-            } else if (random.nextInt(20) == 1) {
-                stopAnimation("tounge");
+                tongue.start(tickCount());
             }
         } else {
             if (isInWater() && isVehicle()){

@@ -6,6 +6,27 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class GiraffeAnimations {
+    public static final AnimationDefinition GIRAFFE_TOUNGE = AnimationDefinition.Builder.withLength(1.08333f)
+            .addAnimation("tongue",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.5f, KeyframeAnimations.posVec(0f, 0f, -12f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
+            .addAnimation("tongue",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR),
+                            new Keyframe(0.2917f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR),
+                            new Keyframe(0.4167f, KeyframeAnimations.degreeVec(10f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR),
+                            new Keyframe(0.5417f, KeyframeAnimations.degreeVec(-17.5f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR),
+                            new Keyframe(0.6667f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR))).build();
     public static final AnimationDefinition GIRAFFE_WALK = AnimationDefinition.Builder.withLength(1.79167f).looping()
             .addAnimation("tail",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,
