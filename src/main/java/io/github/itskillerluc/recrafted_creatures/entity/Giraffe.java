@@ -174,7 +174,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     public void tick() {
         super.tick();
         if (level().isClientSide()) {
-            if (random.nextInt(30) == 1) {
+            if (random.nextFloat() < 0.005) {
                 tongue.start(tickCount());
             }
         } else {

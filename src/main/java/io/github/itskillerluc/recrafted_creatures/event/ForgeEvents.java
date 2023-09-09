@@ -26,7 +26,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void interactEvent(PlayerInteractEvent.EntityInteract event) {
         if (event.getTarget() instanceof Frog frog) {
-            bucketMobPickup(event.getEntity(), event.getHand(), frog);
+            event.setCancellationResult(bucketMobPickup(event.getEntity(), event.getHand(), frog).get());
             event.setCanceled(true);
         }
     }
@@ -47,7 +47,7 @@ public class ForgeEvents {
             pEntity.discard();
             return Optional.of(InteractionResult.sidedSuccess(level.isClientSide));
         } else {
-            return Optional.empty();
+            return Optional.of(InteractionResult.FAIL);
         }
     }
 }
