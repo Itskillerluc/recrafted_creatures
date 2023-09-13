@@ -39,7 +39,8 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
             ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot = pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
             ((Ducling) getAnyDescendantWithName("head").orElseThrow()).yRot = pNetHeadYaw * ((float) Math.PI / 180F);
         }
-        if (pEntity.hasPose(Pose.SITTING)){
+        if (pEntity.hasPose(Pose.SITTING) && !this.young){
+            this.root().offsetPos(new Vector3f(0, 5, 10));
             return;
         }
 

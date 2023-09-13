@@ -57,6 +57,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     private UUID persistentAngerTarget;
     public final AnimationState stomp = new AnimationState();
     public final AnimationState attack = new AnimationState();
+    public final AnimationState idle = new AnimationState();
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -247,7 +248,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public void tick() {
-        animateWhen("idle", hasPose(Pose.STANDING));
+        idle.animateWhen(hasPose(Pose.STANDING), tickCount());
         super.tick();
     }
 

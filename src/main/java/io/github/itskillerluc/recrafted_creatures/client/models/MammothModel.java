@@ -31,6 +31,7 @@ public class MammothModel extends AnimatableDucModel<Mammoth> {
         this.animateWalk(MammothAnimations.WALK, pLimbSwing, pLimbSwingAmount, 1f, 2f);
         this.animate(pEntity.stomp, MammothAnimations.MAMMOTH_STOMP, pAgeInTicks);
         this.animate(pEntity.attack, MammothAnimations.MAMMOTH_ATTACK, pAgeInTicks);
+        this.animate(pEntity.idle, MammothAnimations.MAMMOTH_IDLE, pAgeInTicks);
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
             root().offsetPos(new Vector3f(0f, 7f, 0f));

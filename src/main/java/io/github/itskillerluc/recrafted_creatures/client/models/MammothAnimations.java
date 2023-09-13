@@ -268,6 +268,45 @@ public class MammothAnimations {
                                     AnimationChannel.Interpolations.CATMULLROM),
                             new Keyframe(1.5f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.CATMULLROM))).build();
+
+    public static final AnimationDefinition MAMMOTH_IDLE = AnimationDefinition.Builder.withLength(2f).looping()
+            .addAnimation("Head",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1f, KeyframeAnimations.posVec(0f, -1f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(2f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
+            .addAnimation("Trunk1",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-2.5f, 0.44f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.5f, KeyframeAnimations.degreeVec(-2.5f, 0.44f, -2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1f, KeyframeAnimations.degreeVec(2.5f, 0.44f, -2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1.5f, KeyframeAnimations.degreeVec(2.5f, 0.44f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(2f, KeyframeAnimations.degreeVec(-2.5f, 0.44f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
+            .addAnimation("Trunk2",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-2.5f, 0f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(0.5f, KeyframeAnimations.degreeVec(0f, 0f, -2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1f, KeyframeAnimations.degreeVec(2.5f, 0f, -2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(1.5f, KeyframeAnimations.degreeVec(0f, 0f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM),
+                            new Keyframe(2f, KeyframeAnimations.degreeVec(-2.5f, 0f, 2.5f),
+                                    AnimationChannel.Interpolations.CATMULLROM)))
+            .addAnimation("Tail",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-60f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR))).build();
+
     public static final AnimationDefinition MAMMOTH_ATTACK = AnimationDefinition.Builder.withLength(0.79167f)
             .addAnimation("Head",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
