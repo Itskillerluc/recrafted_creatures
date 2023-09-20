@@ -328,8 +328,10 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         super.setInSittingPose(pSitting);
         if (pSitting) {
             this.setPose(Pose.SITTING);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         } else {
             this.setPose(Pose.STANDING);
+            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         }
     }
 

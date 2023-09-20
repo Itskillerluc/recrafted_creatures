@@ -6,7 +6,7 @@
       "bones": {
         "root": {
           "rotation": [-35, 0, 0],
-          "position": [0, 0, 0]
+          "position": [0, -5, 10]
         },
         "tail": {
           "rotation": [45, 0, 0]

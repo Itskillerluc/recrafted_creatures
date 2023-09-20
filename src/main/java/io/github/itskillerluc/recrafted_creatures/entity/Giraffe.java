@@ -54,7 +54,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(Items.WHEAT, Items.HAY_BLOCK.asItem(), Items.CARROT, Items.GOLDEN_CARROT), Ingredient.of(ItemTags.LEAVES)));
     private static final EntityDataAccessor<Boolean> SADDLED = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.BOOLEAN);
-
+    private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.BOOLEAN);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
@@ -63,13 +63,6 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     public Giraffe(EntityType<? extends Giraffe> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        System.out.println(GiraffeAnimations.GIRAFFE_WALK.boneAnimations().entrySet().stream()
-                .map(entry -> Map.entry(entry.getKey(), entry.getValue().stream()
-                        .flatMap(e -> Arrays.stream(e.keyframes()).sorted(Comparator.comparingDouble(Keyframe::timestamp)).map(Keyframe::target)).toList())).toList());
-
-        System.out.println(ANIMATION.getAnimations().get("animation.giraffe.walk").animation().boneAnimations().entrySet().stream()
-                .map(entry -> Map.entry(entry.getKey(), entry.getValue().stream()
-                        .flatMap(e -> Arrays.stream(e.keyframes()).sorted(Comparator.comparingDouble(Keyframe::timestamp)).map(Keyframe::target)).toList())).toList());
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -83,6 +76,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(SADDLED, false);
+        entityData.define(HAS_TARGET, false);
     }
 
     @Override
@@ -104,6 +98,10 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 super.start();
             }
         });
+    }
+
+    public boolean getHasTarget() {
+        return entityData.get(HAS_TARGET);
     }
 
     @Override
@@ -173,6 +171,13 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     @Override
     public void tick() {
         super.tick();
+        if (!level().isClientSide()) {
+            if (getTarget() != null) {
+                entityData.set(HAS_TARGET, true);
+            } else {
+                entityData.set(HAS_TARGET, false);
+            }
+        }
         if (level().isClientSide()) {
             if (random.nextFloat() < 0.005) {
                 tongue.start(tickCount());

@@ -63,6 +63,10 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
         super(pEntityType, pLevel);
     }
 
+    @Override
+    public boolean wantsToAttack(LivingEntity pTarget, LivingEntity pOwner) {
+        return !(pTarget instanceof OwnableEntity entity) || entity.getOwner() == null || !entity.getOwner().is(pOwner);
+    }
 
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
