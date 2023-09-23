@@ -11,7 +11,7 @@
         "tail": {
           "rotation": [45, 0, 0]
         },
-        "head": {
+        "fake_head": {
           "rotation": [35, 0, 0],
           "position": [0, -1, -2]
         },

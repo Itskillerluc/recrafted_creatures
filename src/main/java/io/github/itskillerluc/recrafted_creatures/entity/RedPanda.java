@@ -27,12 +27,10 @@ import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -328,10 +326,8 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         super.setInSittingPose(pSitting);
         if (pSitting) {
             this.setPose(Pose.SITTING);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         } else {
             this.setPose(Pose.STANDING);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
         }
     }
 
@@ -351,7 +347,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (entityData.get(SLEEPING)) {
             var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
             if (goal.isPresent()) {

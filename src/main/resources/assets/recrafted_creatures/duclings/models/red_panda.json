@@ -43,6 +43,11 @@
 					]
 				},
 				{
+					"name": "fake_head",
+					"parent": "root",
+					"pivot": [0, 9, -4]
+				},
+				{
 					"name": "leg3",
 					"parent": "root",
 					"pivot": [2, 4, 4],

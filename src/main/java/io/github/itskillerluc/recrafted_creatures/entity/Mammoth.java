@@ -28,6 +28,8 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.DyeItem;
@@ -44,6 +46,7 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -98,7 +101,33 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class));
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class){
+            @Override
+            public boolean canUse() {
+                if (!this.animal.isInLove()) {
+                    return false;
+                } else {
+                    this.partner = this.getFreePartner();
+                    return this.partner != null;
+                }
+            }
+
+            private Animal getFreePartner() {
+                List<? extends Animal> list = this.level.getNearbyEntities(Mammoth.class, TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight(), this.animal, this.animal.getBoundingBox().inflate(8.0D));
+                double d0 = Double.MAX_VALUE;
+                Animal animal = null;
+
+                for(Animal animal1 : list) {
+                    if (this.animal.canMate(animal1) && this.animal.distanceToSqr(animal1) < d0) {
+                        animal = animal1;
+                        d0 = this.animal.distanceToSqr(animal1);
+                    }
+                }
+
+                return animal;
+            }
+
+        });
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
