@@ -46,7 +46,7 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
         if (this.young){
             if (pEntity.hasPose(Pose.SITTING)) {
               this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
-              this.root().offsetPos(new Vector3f(0, 9f, 6));
+              this.root().offsetPos(new Vector3f(0, 6f, -2));
             } else if (!pEntity.isRedPandaSleeping()) {
                 this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
                 this.root().offsetPos(new Vector3f(0, 7f, 0));
