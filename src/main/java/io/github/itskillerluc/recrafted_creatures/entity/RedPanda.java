@@ -15,6 +15,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,20 +25,24 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.control.BodyRotationControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Map;
 import java.util.Optional;
@@ -47,33 +53,45 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
-    public static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.BOOLEAN);
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(SLEEPING, false);
-        entityData.define(LAST_POSE_CHANGE_TICK, 0L);
-    }
-
+    public final AnimationState sleepState = new AnimationState();
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private boolean isTargeted = false;
 
     public RedPanda(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.lookControl = new LookControl(this) {
-            public void tick() {
-                if (!RedPanda.this.entityData.get(SLEEPING)) {
-                    super.tick();
-                }
-            }
-        };
+        this.moveControl = new RedPandaMoveControl();
+        GroundPathNavigation groundPathNavigation = (GroundPathNavigation) this.getNavigation();
+        groundPathNavigation.setCanFloat(true);
+        groundPathNavigation.setCanWalkOverFences(true);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("isTargeted", isTargeted);
+        pCompound.putLong("LastPoseTick", entityData.get(LAST_POSE_CHANGE_TICK));
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        long i = pCompound.getLong("LastPoseTick");
+        if (i < 0L) {
+            this.setPose(Pose.SLEEPING);
+        }
+        isTargeted = pCompound.getBoolean("isTargeted");
+        this.resetLastPoseChangeTick(i);
     }
 
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 14)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
+    }
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(LAST_POSE_CHANGE_TICK, 0L);
     }
 
     @Override
@@ -93,25 +111,8 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     @Override
     public void setJumping(boolean pJumping) {
-        super.setJumping(pJumping && !entityData.get(SLEEPING));
+        super.setJumping(pJumping && !isRedPandaSleeping());
     }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("isTargeted", isTargeted);
-        pCompound.putBoolean("sleeping", entityData.get(SLEEPING));
-        pCompound.putLong("last_pose_change_tick", entityData.get(LAST_POSE_CHANGE_TICK));
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        isTargeted = pCompound.getBoolean("isTargeted");
-        entityData.set(SLEEPING, pCompound.getBoolean("sleeping"));
-        entityData.set(LAST_POSE_CHANGE_TICK, pCompound.getLong("last_pose_change_tick"));
-    }
-
     @Override
     public ResourceLocation getModelLocation() {
         return LOCATION;
@@ -121,7 +122,6 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     public DucAnimation getAnimation() {
         return ANIMATION;
     }
-
     @Override
     public Lazy<Map<String, AnimationState>> getAnimations() {
         return animations;
@@ -207,7 +207,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
          */
         public boolean canUse() {
             if (xxa == 0.0F && yya == 0.0F && zza == 0.0F) {
-                return !RedPanda.this.isInFluidType() && (this.canSleep() || isSleeping()) && !isTargeted;
+                return !RedPanda.this.isInFluidType() && (this.canSleep() || isRedPandaSleeping()) && !isTargeted;
             } else {
                 return false;
             }
@@ -234,23 +234,15 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
          */
         public void stop() {
             this.countdown = random.nextInt(WAIT_TIME_BEFORE_SLEEP);
-            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-            RedPanda.this.setPose(Pose.STANDING);
-            entityData.set(SLEEPING, false);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
+            RedPanda.this.wakeUp();
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
         public void start() {
-            if (!entityData.get(SLEEPING)) {
-                RedPanda.this.setPose(Pose.STANDING);
-                entityData.set(SLEEPING, true);
-                entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
-                RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
-                RedPanda.this.getNavigation().stop();
-                RedPanda.this.getMoveControl().setWantedPosition(getX(), getY(), getZ(), 0.0D);
+            if (!isRedPandaSleeping()) {
+                fallAsleep();
             }
         }
     }
@@ -291,34 +283,66 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         return InteractionResult.FAIL;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (entityData.get(SLEEPING)) {
-            if (level().getGameTime() - entityData.get(LAST_POSE_CHANGE_TICK) < 30L) {
-                playAnimation("falling_asleep");
-            } else {
-                stopAnimation("falling_asleep");
-                playAnimation("sleep");
-            }
-        } else {
-            if (level().getGameTime() - entityData.get(LAST_POSE_CHANGE_TICK) < 30L) {
-                stopAnimation("sleep");
-                playAnimation("waking_up");
-            } else {
-                stopAnimation("waking_up");
-            }
-        }
-        animateWhen("sit", hasPose(Pose.SITTING));
+    private void clampHeadRotationToBody(Entity p_265624_, float p_265541_) {
+        float f = p_265624_.getYHeadRot();
+        float f1 = Mth.wrapDegrees(this.yBodyRot - f);
+        float f2 = Mth.clamp(Mth.wrapDegrees(this.yBodyRot - f), -p_265541_, p_265541_);
+        float f3 = f + f1 - f2;
+        p_265624_.setYHeadRot(f3);
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        if (entityData.get(SLEEPING)) {
-            this.xxa = 0.0F;
-            this.zza = 0.0F;
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide()) {
+            this.setupAnimationStates();
         }
+
+        if (this.refuseToMove()){
+            this.clampHeadRotationToBody(this, 30.0F);
+        }
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.resetLastPoseChangeTickToFullStand(pLevel.getLevel().getGameTime());
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    private void resetLastPoseChangeTickToFullStand(long p_265447_) {
+        this.resetLastPoseChangeTick(Math.max(0L, p_265447_ - 30L - 1L));
+    }
+    private void setupAnimationStates() {
+        if (this.isRedPandaVisuallySleeping()) {
+            stopAnimation("waking_up");
+            if (this.isVisuallySleeping()) {
+                sleepState.stop();
+                playAnimation("falling_asleep");
+            } else {
+                sleepState.startIfStopped(tickCount);
+                stopAnimation("falling_asleep");
+            }
+        } else {
+            sleepState.stop();
+            stopAnimation("falling_asleep");
+            animateWhen("waking_up", this.isInPoseTransition() && this.getPoseTime() >= 0L);
+            animateWhen("sit", hasPose(Pose.SITTING));
+        }
+    }
+
+    @Override
+    public void travel(Vec3 pTravelVector) {
+        if (this.refuseToMove() && this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.0D, 1.0D, 0.0D));
+            pTravelVector = pTravelVector.multiply(0.0D, 1.0D, 0.0D);
+        }
+
+        super.travel(pTravelVector);
+    }
+
+    public boolean refuseToMove() {
+        return this.isRedPandaSleeping() || this.isInPoseTransition();
     }
 
     @Override
@@ -331,32 +355,95 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         }
     }
 
+    public boolean isRedPandaSleeping() {
+        return this.entityData.get(LAST_POSE_CHANGE_TICK) < 0L;
+    }
+
+    public boolean isRedPandaVisuallySleeping() {
+        return this.getPoseTime() < 0L != this.isRedPandaSleeping();
+    }
+
+    public boolean isInPoseTransition() {
+        long i = this.getPoseTime();
+        return i < 30L;
+    }
+
+    private boolean isVisuallySleeping() {
+        return this.isRedPandaSleeping() && this.getPoseTime() < 30L && this.getPoseTime() >= 0L;
+    }
+
+    public void fallAsleep() {
+        if (!this.isRedPandaSleeping()) {
+            this.setPose(Pose.SLEEPING);
+            this.resetLastPoseChangeTick(-this.level().getGameTime());
+        }
+    }
+
+    public void wakeUp() {
+        if (this.isRedPandaSleeping()) {
+            this.setPose(Pose.STANDING);
+            this.resetLastPoseChangeTick(this.level().getGameTime());
+        }
+    }
+
+    @VisibleForTesting
+    public void resetLastPoseChangeTick(long lastPoseChangeTick) {
+        this.entityData.set(LAST_POSE_CHANGE_TICK, lastPoseChangeTick);
+    }
+
+    public long getPoseTime() {
+        return this.level().getGameTime() - Math.abs(this.entityData.get(LAST_POSE_CHANGE_TICK));
+    }
+
+    @Override
+    protected BodyRotationControl createBodyControl() {
+        return new RedPandaBodyRotationControl(this);
+    }
+
+    class RedPandaBodyRotationControl extends BodyRotationControl {
+        public RedPandaBodyRotationControl(RedPanda panda) {
+            super(panda);
+        }
+
+        public void clientTick() {
+            if (!RedPanda.this.refuseToMove()) {
+                super.clientTick();
+            }
+        }
+    }
+
+    class RedPandaMoveControl extends MoveControl {
+        public RedPandaMoveControl() {
+            super(RedPanda.this);
+        }
+
+        public void tick() {
+            if (this.operation == Operation.MOVE_TO && !RedPanda.this.isLeashed() && RedPanda.this.isRedPandaSleeping() && !RedPanda.this.isRedPandaSleeping() && !RedPanda.this.isInPoseTransition()) {
+                RedPanda.this.wakeUp();
+            }
+            super.tick();
+        }
+    }
     @Override
     public void push(double pX, double pY, double pZ) {
         super.push(pX, pY, pZ);
-        if (entityData.get(SLEEPING)) {
+        if (isRedPandaSleeping()) {
             var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
             if (goal.isPresent()) {
                 random.nextInt(WAIT_TIME_BEFORE_SLEEP);
             }
-            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-            RedPanda.this.setPose(Pose.STANDING);
-            entityData.set(SLEEPING, false);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
+            wakeUp();
         }
     }
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (entityData.get(SLEEPING)) {
+        if (isRedPandaSleeping()) {
             var goal = goalSelector.getRunningGoals().filter(g -> g.getGoal() instanceof SleepGoal).findFirst();
             if (goal.isPresent()) {
                 random.nextInt(WAIT_TIME_BEFORE_SLEEP);
             }
-            RedPanda.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-            RedPanda.this.setPose(Pose.STANDING);
-            entityData.set(SLEEPING, false);
-            entityData.set(LAST_POSE_CHANGE_TICK, level().getGameTime());
+            wakeUp();
         }
         return super.hurt(pSource, pAmount);
     }

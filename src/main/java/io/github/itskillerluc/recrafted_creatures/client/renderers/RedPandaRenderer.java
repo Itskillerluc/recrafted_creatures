@@ -19,7 +19,12 @@ public class RedPandaRenderer extends MobRenderer<RedPanda, RedPandaModel> {
     }
 
     @Override
+    protected float getFlipDegrees(RedPanda pLivingEntity) {
+        return 0;
+    }
+
+    @Override
     public @NotNull ResourceLocation getTextureLocation(RedPanda pEntity) {
-        return pEntity.getEntityData().get(RedPanda.SLEEPING) ? LOCATION_SLEEPING : LOCATION;
+        return pEntity.isRedPandaSleeping() ? LOCATION_SLEEPING : LOCATION;
     }
 }
