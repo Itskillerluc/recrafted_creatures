@@ -413,7 +413,7 @@
 				}
 			}
 		},
-		"walk": {
+		"animation.mammoth.walk": {
 			"loop": true,
 			"animation_length": 1,
 			"bones": {

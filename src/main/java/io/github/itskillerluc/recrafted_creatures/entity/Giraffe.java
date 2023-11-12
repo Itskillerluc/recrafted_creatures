@@ -4,9 +4,7 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
-import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeAnimations;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
-import net.minecraft.client.animation.Keyframe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,10 +16,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
@@ -31,15 +27,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -59,7 +52,6 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
-    public final AnimationState tongue = new AnimationState();
 
     public Giraffe(EntityType<? extends Giraffe> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -180,7 +172,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         }
         if (level().isClientSide()) {
             if (random.nextFloat() < 0.005) {
-                tongue.start(tickCount());
+                replayAnimation("tongue");
             }
         } else {
             if (isInWater() && isVehicle()){
@@ -356,31 +348,6 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
     public int tickCount() {
         return tickCount;
     }
-
-    /*
-    @Override
-    public int getAmbientSoundInterval() {
-        return 400;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundRegistry.GIRAFFE_HURT.get();
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return SoundRegistry.GIRAFFE_DEATH.get();
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundRegistry.GIRAFFE_SOUND.get();
-    }
-    */
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {

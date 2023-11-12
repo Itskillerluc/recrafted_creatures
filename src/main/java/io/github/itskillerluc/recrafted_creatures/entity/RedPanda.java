@@ -53,7 +53,6 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
-    public final AnimationState sleepState = new AnimationState();
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private boolean isTargeted = false;
 
@@ -317,14 +316,14 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
         if (this.isRedPandaVisuallySleeping()) {
             stopAnimation("waking_up");
             if (this.isVisuallySleeping()) {
-                sleepState.stop();
+                stopAnimation("sleep");
                 playAnimation("falling_asleep");
             } else {
-                sleepState.startIfStopped(tickCount);
+                playAnimation("sleep");
                 stopAnimation("falling_asleep");
             }
         } else {
-            sleepState.stop();
+            stopAnimation("sleep");
             stopAnimation("falling_asleep");
             animateWhen("waking_up", this.isInPoseTransition() && this.getPoseTime() >= 0L);
             animateWhen("sit", hasPose(Pose.SITTING));

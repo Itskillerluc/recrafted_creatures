@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.Collections;
 import java.util.Set;
 
 public class GiraffeModel extends AnimatableDucModel<Giraffe> {
@@ -21,14 +20,18 @@ public class GiraffeModel extends AnimatableDucModel<Giraffe> {
     }
 
     @Override
+    protected Set<String> excludeAnimations() {
+        return Set.of("animation.giraffe.run", "animation.giraffe.walk");
+    }
+
+    @Override
     public void setupAnim(@NotNull Giraffe pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
         if (pEntity.hasControllingPassenger() || pEntity.getHasTarget()) {
-            this.animateWalk(GiraffeAnimations.GIRAFFE_RUN, pLimbSwing, pLimbSwingAmount, 1, 2f);
+            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.giraffe.run").animation(), pLimbSwing, pLimbSwingAmount, 1, 2f);
         } else {
-            this.animateWalk(GiraffeAnimations.GIRAFFE_WALK, pLimbSwing, pLimbSwingAmount, 1, 2);
+            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.giraffe.walk").animation(), pLimbSwing, pLimbSwingAmount, 1, 2);
         }
-        this.animate(pEntity.tongue, GiraffeAnimations.GIRAFFE_TOUNGE, pAgeInTicks);
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
             root().offsetPos(new Vector3f(0f, 7f, 0f));

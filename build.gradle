@@ -131,7 +131,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.20-46.0.14'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
-    implementation fg.deobf("io.github.itskillerluc.duclib:duclib-1.20:1.0")
+    implementation fg.deobf("io.github.itskillerluc.duclib:duclib-1.20:1.1")
 
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")

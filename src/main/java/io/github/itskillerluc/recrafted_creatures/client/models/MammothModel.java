@@ -22,16 +22,13 @@ public class MammothModel extends AnimatableDucModel<Mammoth> {
 
     @Override
     protected Set<String> excludeAnimations() {
-        return Set.of("walk");
+        return Set.of("animation.mammoth.walk");
     }
 
     @Override
     public void setupAnim(@NotNull Mammoth pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        this.animateWalk(MammothAnimations.WALK, pLimbSwing, pLimbSwingAmount, 1f, 2f);
-        this.animate(pEntity.stomp, MammothAnimations.MAMMOTH_STOMP, pAgeInTicks);
-        this.animate(pEntity.attack, MammothAnimations.MAMMOTH_ATTACK, pAgeInTicks);
-        this.animate(pEntity.idle, MammothAnimations.MAMMOTH_IDLE, pAgeInTicks);
+        this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.mammoth.walk").animation(), pLimbSwing, pLimbSwingAmount, 1f, 2f);
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
             root().offsetPos(new Vector3f(0f, 7f, 0f));

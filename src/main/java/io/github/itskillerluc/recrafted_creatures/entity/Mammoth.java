@@ -58,8 +58,6 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
-    public final AnimationState stomp = new AnimationState();
-    public final AnimationState attack = new AnimationState();
     public final AnimationState idle = new AnimationState();
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
@@ -457,9 +455,9 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     public void handleEntityEvent(byte pId) {
 
         if (pId == -4) {
-            attack.start(this.tickCount());
+            replayAnimation("attack");
         } else if (pId == -6){
-            stomp.start(this.tickCount());
+            replayAnimation("stomp");
         } else {
             super.handleEntityEvent(pId);
         }

@@ -33,16 +33,7 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
 
     @Override
     public void setupAnim(@NotNull RedPanda pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        //super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        for (Map.Entry<String, AnimationState> stringAnimationStateEntry : pEntity.getAnimations().get().entrySet()) {
-            if (!excludeAnimations().contains(stringAnimationStateEntry.getKey())) {
-                AnimationHolder animation = pEntity.getAnimation().getAnimations().get(stringAnimationStateEntry.getKey());
-                this.animate(stringAnimationStateEntry.getValue(), animation.animation(), pAgeInTicks, animation.speed());
-            }
-        }
-        animate(pEntity.sleepState, RED_PANDA_SLEEP, pAgeInTicks);
+        super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
         if (this.young){
             if (pEntity.hasPose(Pose.SITTING)) {
               this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
@@ -69,103 +60,10 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
             return;
         }
         if (!pEntity.isRedPandaSleeping()) {
-
             ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;
             ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float) Math.PI) * 1.4F * pLimbSwingAmount;
             ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float) Math.PI) * 1.4F * pLimbSwingAmount;
             ((Ducling) getAnyDescendantWithName("leg2").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;
         }
     }
-
-    public static final AnimationDefinition RED_PANDA_SLEEP = AnimationDefinition.Builder.withLength(4f).looping()
-            .addAnimation("body",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(2f, KeyframeAnimations.posVec(0f, 0.13f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("body",
-                    new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(1f, 1f, 1f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(2f, KeyframeAnimations.scaleVec(1f, 1.03f, 1f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.scaleVec(1f, 1f, 1f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("tail",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(-2.5f, 0f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(2f, KeyframeAnimations.degreeVec(-5f, 0f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(-2.5f, 0f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("head",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, -1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("head",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(9.85f, -1.73f, 9.85f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(2f, KeyframeAnimations.degreeVec(11.31f, -1.97f, 11.08f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(9.85f, -1.73f, 9.85f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg3",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg3",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(17.5f, 0f, -90f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(17.5f, 0f, -90f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg2",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg2",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, -90f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(0f, 0f, -90f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg1",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 1f, -0.02f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, 1f, -0.02f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg1",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(17.5f, 0f, 90f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(17.5f, 0f, 90f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg0",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.posVec(0f, 1f, 0f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("leg0",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 90f),
-                                    AnimationChannel.Interpolations.CATMULLROM),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(0f, 0f, 90f),
-                                    AnimationChannel.Interpolations.CATMULLROM)))
-            .addAnimation("root",
-                    new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -4f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR))).build();
 }
