@@ -6,7 +6,7 @@ plugins {
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-version = '1.2.1-1.20'
+version = '1.3.0-1.20'
 group = 'io.github.itskillerluc.recrafted_creatures' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'recrafted_creatures'
 
@@ -28,7 +28,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
+    mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
@@ -50,6 +50,7 @@ minecraft {
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
             arg "-mixin.config=mixins.recrafted_creatures.json"
+            args "--username", "Dev####"
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'recrafted_creatures'
@@ -131,7 +132,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.20-46.0.14'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
-    implementation fg.deobf("io.github.itskillerluc.duclib:duclib-1.20:1.1")
+    implementation fg.deobf("io.github.itskillerluc.duclib:duclib-1.20:1.1.2")
 
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")

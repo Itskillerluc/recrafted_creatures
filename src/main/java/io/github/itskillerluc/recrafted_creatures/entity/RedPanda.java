@@ -3,7 +3,6 @@ package io.github.itskillerluc.recrafted_creatures.entity;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
-import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
@@ -53,7 +52,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
-    private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
+    private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> RedPandaModel.createStateMap(getAnimation()));
     private boolean isTargeted = false;
 
     public RedPanda(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -462,6 +461,6 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundRegistry.RED_PANDA_SOUND.get();
+        return SoundRegistry.RED_PANDA_AMBIENCE.get();
     }
 }

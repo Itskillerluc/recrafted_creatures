@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "hff",
+    " lf"
+  ],
+  "key": {
+    "h": {
+      "item": "minecraft:hopper"
+    },
+    "f": {
+      "item": "recrafted_creatures:megaphone_fragment"
+    },
+    "l": {
+      "item": "minecraft:lever"
+    }
+  },
+  "result": {
+    "item": "recrafted_creatures:megaphone"
+  }
+}

@@ -12,12 +12,12 @@
       "recrafted_creatures:red_panda_hurt2_2_1"
     ]
   },
-  "entity.red_panda_sound": {
-    "subtitle": "subtitle.recrafted_creatures.red_panda_sound",
+  "entity.red_panda_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.red_panda_ambience",
     "sounds": [
-      "recrafted_creatures:red_panda_sound2_1_1",
-      "recrafted_creatures:red_panda_sound3_1_1",
-      "recrafted_creatures:red_panda_sound111"
+      "recrafted_creatures:red_panda_ambience1",
+      "recrafted_creatures:red_panda_ambience2",
+      "recrafted_creatures:red_panda_ambience3"
     ]
   },
   "entity.mammoth_death": {
@@ -33,11 +33,11 @@
       "recrafted_creatures:mammoth_trumpet_2"
     ]
   },
-  "entity.mammoth_sound": {
-    "subtitle": "subtitle.recrafted_creatures.mammoth_sound",
+  "entity.mammoth_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.mammoth_ambience",
     "sounds": [
-      "recrafted_creatures:mammoth_sound_1",
-      "recrafted_creatures:mammoth_sound_2"
+      "recrafted_creatures:mammoth_ambience_1",
+      "recrafted_creatures:mammoth_ambience_2"
     ]
   },
   "entity.mammoth_trumpet": {
@@ -45,6 +45,64 @@
     "sounds": [
       "recrafted_creatures:mammoth_trumpet",
       "recrafted_creatures:mammoth_trumpet_2"
+    ]
+  },
+  "entity.chameleon_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.chameleon_hurt",
+    "sounds": [
+      "recrafted_creatures:chameleon_hurt",
+      "recrafted_creatures:chameleon_hurt_2"
+    ]
+  },
+  "entity.marmot_alert": {
+    "subtitle": "subtitle.recrafted_creatures.marmot_alert",
+    "sounds": [
+      "recrafted_creatures:marmot_alert_1",
+      "recrafted_creatures:marmot_alert_2"
+    ]
+  },
+  "entity.marmot_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.marmot_ambience",
+    "sounds": [
+      "recrafted_creatures:marmot_ambience_1",
+      "recrafted_creatures:marmot_ambience_2",
+      "recrafted_creatures:marmot_ambience_3",
+      "recrafted_creatures:marmot_ambience_4"
+    ]
+  },
+  "entity.marmot_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.marmot_hurt",
+    "sounds": [
+      "recrafted_creatures:marmot_hurt"
+    ]
+  },
+  "entity.owl_death": {
+    "subtitle": "subtitle.recrafted_creatures.owl_death",
+    "sounds": [
+      "recrafted_creatures:owl_death"
+    ]
+  },
+  "entity.owl_hoot": {
+    "subtitle": "subtitle.recrafted_creatures.owl_hoot",
+    "sounds": [
+      "recrafted_creatures:owl_hoot_1",
+      "recrafted_creatures:owl_hoot_2"
+    ]
+  },
+  "entity.owl_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.owl_ambience",
+    "sounds": [
+      "recrafted_creatures:owl_ambience_1",
+      "recrafted_creatures:owl_ambience_2"
+    ]
+  },
+  "item.megaphone_sound": {
+    "subtitle": "subtitle.recrafted_creatures.megaphone_sound",
+    "sounds": [
+      "recrafted_creatures:megaphone_sound_1",
+      "recrafted_creatures:megaphone_sound_2",
+      "recrafted_creatures:megaphone_sound_3",
+      "recrafted_creatures:megaphone_sound_4"
     ]
   }
 }

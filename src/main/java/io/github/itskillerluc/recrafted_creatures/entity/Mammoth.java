@@ -58,7 +58,6 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
-    public final AnimationState idle = new AnimationState();
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -279,7 +278,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public void tick() {
-        idle.animateWhen(hasPose(Pose.STANDING), tickCount());
+        animateWhen("idle", hasPose(Pose.STANDING));
         super.tick();
     }
 
@@ -448,7 +447,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return random.nextFloat() < 0.3 ? SoundRegistry.MAMMOTH_TRUMPET.get() : SoundRegistry.MAMMOTH_SOUND.get();
+        return random.nextFloat() < 0.3 ? SoundRegistry.MAMMOTH_TRUMPET.get() : SoundRegistry.MAMMOTH_AMBIENCE.get();
     }
 
     @Override

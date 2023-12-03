@@ -1,0 +1,59 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "owl_egg",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "owl_eggs",
+		"particle": "owl_eggs"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 6, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 3], "texture": "#0"},
+				"east": {"uv": [2, 0, 4, 3], "texture": "#0"},
+				"south": {"uv": [0, 3, 2, 6], "texture": "#0"},
+				"west": {"uv": [2, 3, 4, 6], "texture": "#0"},
+				"up": {"uv": [6, 2, 4, 0], "texture": "#0"},
+				"down": {"uv": [6, 2, 4, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 0, 4],
+			"to": [5, 5, 7],
+			"faces": {
+				"north": {"uv": [4, 4, 5.5, 6.5], "texture": "#0"},
+				"east": {"uv": [5.5, 4, 7, 6.5], "texture": "#0"},
+				"south": {"uv": [0, 6, 1.5, 8.5], "texture": "#0"},
+				"west": {"uv": [6, 0, 7.5, 2.5], "texture": "#0"},
+				"up": {"uv": [3, 7.5, 1.5, 6], "texture": "#0"},
+				"down": {"uv": [7.5, 2.5, 6, 4], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "eggs",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"nbt": "{}",
+			"children": [
+				{
+					"name": "egg1",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"nbt": "{}",
+					"children": [0]
+				},
+				{
+					"name": "egg2",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"nbt": "{}",
+					"children": [1]
+				}
+			]
+		}
+	]
+}

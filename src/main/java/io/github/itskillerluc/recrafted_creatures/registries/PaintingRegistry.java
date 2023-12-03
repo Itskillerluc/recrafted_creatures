@@ -11,4 +11,10 @@ public class PaintingRegistry {
 
     public static final RegistryObject<PaintingVariant> SAFARI = PAINTINGS.register("safari",
             () -> new PaintingVariant(64, 48));
+
+    public static final RegistryObject<PaintingVariant> GLOBAL_WARMING = PAINTINGS.register("global_warming",
+            () -> new PaintingVariant(64, 64));
+
+    public static final RegistryObject<PaintingVariant> POP_ART = PAINTINGS.register("pop_art",
+            () -> new PaintingVariant(64, 64));
 }

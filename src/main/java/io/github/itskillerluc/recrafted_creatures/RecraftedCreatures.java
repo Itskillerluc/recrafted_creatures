@@ -1,9 +1,8 @@
 package io.github.itskillerluc.recrafted_creatures;
 
 import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
-import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
-import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
-import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
+import io.github.itskillerluc.recrafted_creatures.entity.*;
+import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.registries.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -28,6 +27,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -44,14 +44,16 @@ public class RecraftedCreatures
         modEventBus.addListener(this::addEntityAttributes);
         modEventBus.addListener(this::registerSpawnPlacement);
         modEventBus.addListener(this::postInit);
+        modEventBus.addListener(this::commonSetup);
 
         BannerPatternRegistry.BANNER_PATTERNS.register(modEventBus);
         SoundRegistry.SOUNDS.register(modEventBus);
-        CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         PaintingRegistry.PAINTINGS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
+        InstrumentRegistry.INSTRUMENTS.register(modEventBus);
+        CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -67,7 +69,13 @@ public class RecraftedCreatures
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityRegistry.MAMMOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityRegistry.MARMOT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityRegistry.CHAMELEON.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityRegistry.OWL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
     private void addEntityAttributes(EntityAttributeCreationEvent event){
@@ -75,6 +83,9 @@ public class RecraftedCreatures
         event.put(EntityRegistry.RED_PANDA.get(), RedPanda.attributes().build());
         event.put(EntityRegistry.ZEBRA.get(), Horse.createBaseHorseAttributes().build());
         event.put(EntityRegistry.MAMMOTH.get(), Mammoth.attributes().build());
+        event.put(EntityRegistry.MARMOT.get(), Marmot.attributes().build());
+        event.put(EntityRegistry.CHAMELEON.get(), Chameleon.attributes().build());
+        event.put(EntityRegistry.OWL.get(), Owl.attributes().build());
     }
 
     private void postInit(FMLLoadCompleteEvent event) {
@@ -96,5 +107,9 @@ public class RecraftedCreatures
                 }
             }
         });
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+        NetworkChannel.register();
     }
 }

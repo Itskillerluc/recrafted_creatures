@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:meadow",
+  "spawners":
+  {
+    "type": "recrafted_creatures:marmot",
+    "weight": 10,
+    "minCount": 2,
+    "maxCount": 4
+  }
+}

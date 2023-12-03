@@ -1,11 +1,19 @@
 {
   "type": "forge:add_spawns",
   "biomes": "#minecraft:is_jungle",
-  "spawners":
-  {
-    "type": "recrafted_creatures:red_panda",
-    "weight": 130,
-    "minCount": 1,
-    "maxCount": 3
-  }
+  "spawners": [
+    {
+      "type": "recrafted_creatures:red_panda",
+      "weight": 130,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "recrafted_creatures:chameleon",
+      "weight": 170,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+
 }

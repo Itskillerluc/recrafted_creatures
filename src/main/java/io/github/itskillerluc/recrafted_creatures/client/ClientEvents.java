@@ -2,14 +2,11 @@ package io.github.itskillerluc.recrafted_creatures.client;
 
 import io.github.itskillerluc.duclib.client.model.BaseDucModel;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
-import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
-import io.github.itskillerluc.recrafted_creatures.client.models.MammothModel;
-import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
+import io.github.itskillerluc.recrafted_creatures.client.models.*;
+import io.github.itskillerluc.recrafted_creatures.entity.*;
+import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
-import io.github.itskillerluc.recrafted_creatures.entity.Giraffe;
-import io.github.itskillerluc.recrafted_creatures.entity.Mammoth;
-import io.github.itskillerluc.recrafted_creatures.entity.RedPanda;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -28,6 +25,9 @@ public class ClientEvents {
         EntityRenderers.register(EntityRegistry.RED_PANDA.get(), RedPandaRenderer::new);
         EntityRenderers.register(EntityRegistry.ZEBRA.get(), ZebraRenderer::new);
         EntityRenderers.register(EntityRegistry.MAMMOTH.get(), MammothRenderer::new);
+        EntityRenderers.register(EntityRegistry.MARMOT.get(), MarmotRenderer::new);
+        EntityRenderers.register(EntityRegistry.CHAMELEON.get(), ChameleonRenderer::new);
+        EntityRenderers.register(EntityRegistry.OWL.get(), OwlRenderer::new);
     }
 
     @SubscribeEvent
@@ -35,6 +35,9 @@ public class ClientEvents {
         event.registerLayerDefinition(GiraffeModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Giraffe.LOCATION));
         event.registerLayerDefinition(RedPandaModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(RedPanda.LOCATION));
         event.registerLayerDefinition(MammothModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Mammoth.LOCATION));
+        event.registerLayerDefinition(MarmotModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Marmot.LOCATION));
+        event.registerLayerDefinition(ChameleonModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Chameleon.LOCATION));
+        event.registerLayerDefinition(OwlModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Owl.LOCATION));
         event.registerLayerDefinition(ZebraRenderer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(CubeDeformation.NONE), 64, 64));
         event.registerLayerDefinition(ZebraArmorLayer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(new CubeDeformation(0.1F)), 64, 64));
     }

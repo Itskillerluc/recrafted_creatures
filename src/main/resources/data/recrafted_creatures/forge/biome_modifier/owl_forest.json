@@ -1,0 +1,13 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#recrafted_creatures:owl_forest",
+  "spawners": [
+    {
+      "type": "recrafted_creatures:owl",
+      "weight": 130,
+      "minCount": 1,
+      "maxCount": 3
+    }
+  ]
+
+}

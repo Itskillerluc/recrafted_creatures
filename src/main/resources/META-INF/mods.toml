@@ -66,6 +66,6 @@ A simple mod adding four new mobs to the game!'''
 [[dependencies.recrafted_creatures]]
     modId="duclib"
     mandatory=true
-    versionRange="[1.0,)"
+    versionRange="[1.1.2,)"
     ordering="BEFORE"
-    side="BOTH"
+    side="CLIENT"
