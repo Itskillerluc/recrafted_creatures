@@ -35,7 +35,7 @@ public class MarmotModel extends AnimatableDucModel<Marmot> {
 
         if (this.young){
             root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
-            root().offsetPos(new Vector3f(0f, 7f, 0f));
+            root().offsetPos(new Vector3f(0f, 8.5f, 0f));
         }
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot -= pHeadPitch * ((float) Math.PI / 180F);
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).yRot += pNetHeadYaw * ((float) Math.PI / 180F);

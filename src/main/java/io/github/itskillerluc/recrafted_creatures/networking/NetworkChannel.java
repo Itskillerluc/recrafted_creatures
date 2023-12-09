@@ -1,6 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures.networking;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.DancePacket;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.DeliveryPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -22,6 +23,12 @@ public class NetworkChannel {
                 .encoder(DeliveryPacket::encoder)
                 .decoder(DeliveryPacket::decoder)
                 .consumerMainThread(DeliveryPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(DancePacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DancePacket::encoder)
+                .decoder(DancePacket::decoder)
+                .consumerMainThread(DancePacket::handle)
                 .add();
     }
 }

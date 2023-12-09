@@ -5,6 +5,7 @@ import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -265,7 +266,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                 this.setOrderedToSit(!isOrderedToSit());
             }
             return InteractionResult.SUCCESS;
-        } else if (this.getOwner() == null && pPlayer.getItemInHand(pHand).is(Items.BAMBOO)){
+        } else if (this.getOwner() == null && (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();

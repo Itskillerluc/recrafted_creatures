@@ -4,9 +4,12 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.MarmotModel;
+import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.DancePacket;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,28 +35,31 @@ import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Marmot extends Animal implements Animatable<MarmotModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "marmot");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     protected boolean canLook = true;
-    protected boolean isDancing = false;
+    public boolean isDancing = false;
+    public ItemEntity itemTarget;
 
     private static final EntityDataAccessor<Integer> EATING = SynchedEntityData.defineId(Marmot.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> EXPLODE = SynchedEntityData.defineId(Marmot.class, EntityDataSerializers.INT);
@@ -114,12 +120,12 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(3, new MoveToFoodGoal(this, 1, 5));
+        this.goalSelector.addGoal(5, new MarmotAlertGoal(400));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 5));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(5, new MarmotAlertGoal(400));
-
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 50, true, false, mob -> (mob instanceof Enemy || mob instanceof Player) && !mob.hasEffect(MobEffects.GLOWING)));
     }
 
@@ -325,6 +331,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
 
     public void setRecordPlayingNearby(BlockPos pPos, boolean pIsPartying) {
         isDancing = pIsPartying;
+        NetworkChannel.CHANNEL.sendToServer(new DancePacket(this.getUUID(), pIsPartying));
     }
 
     @Override
@@ -332,6 +339,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
         if (pSource.is(DamageTypes.FALLING_ANVIL) && entityData.get(ANVIL) == 0) {
             playAnimation("anvil");
             entityData.set(ANVIL, (byte) 1);
+            setNoAi(true);
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -356,6 +364,68 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
             playSound(SoundRegistry.MARMOT_ALERT.get());
             level().broadcastEntityEvent(Marmot.this, (byte) 1);
             setTarget(null);
+        }
+    }
+
+    protected class MoveToFoodGoal extends Goal {
+        private final PathfinderMob mob;
+        private double wantedX;
+        private double wantedY;
+        private double wantedZ;
+        private final double speedModifier;
+        private final float within;
+
+        public MoveToFoodGoal(PathfinderMob pMob, double pSpeedModifier, float pWithin) {
+            this.mob = pMob;
+            this.speedModifier = pSpeedModifier;
+            this.within = pWithin;
+        }
+
+        /**
+         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+         * method as well.
+         */
+        public boolean canUse() {
+            if (itemTarget == null) {
+                var list = level().getEntitiesOfClass(ItemEntity.class, AABB.ofSize(position(), within, 3, within));
+                list.sort(Comparator.comparingDouble(mob::distanceToSqr));
+                Optional<ItemEntity> optional = list.stream().filter((p_26706_) -> mob.wantsToPickUp(p_26706_.getItem())).filter((p_26701_) -> p_26701_.closerThan(mob, 32.0D)).filter(mob::hasLineOfSight).findFirst();
+                optional.ifPresent(itemEntity -> itemTarget = itemEntity);
+                return itemTarget != null;
+            } else if (itemTarget.distanceToSqr(this.mob) > (double)(this.within * this.within)) {
+                return false;
+            } else {
+                Vec3 vec3 = DefaultRandomPos.getPosTowards(this.mob, 16, 7, itemTarget.position(), (double)((float)Math.PI / 2F));
+                if (vec3 == null) {
+                    return false;
+                } else {
+                    this.wantedX = vec3.x;
+                    this.wantedY = vec3.y;
+                    this.wantedZ = vec3.z;
+                    return true;
+                }
+            }
+        }
+
+        /**
+         * Returns whether an in-progress EntityAIBase should continue executing
+         */
+        public boolean canContinueToUse() {
+            return !this.mob.getNavigation().isDone() && itemTarget != null && itemTarget.isAlive() && itemTarget.distanceToSqr(this.mob) < (double)(this.within * this.within);
+        }
+
+        /**
+         * Reset the task's internal state. Called when this task is interrupted by another one
+         */
+        public void stop() {
+            itemTarget = null;
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void start() {
+            this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
         }
     }
 }

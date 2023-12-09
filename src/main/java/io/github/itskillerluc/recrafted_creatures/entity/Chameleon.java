@@ -4,10 +4,10 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.ChameleonModel;
-import io.github.itskillerluc.recrafted_creatures.client.models.MarmotModel;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -24,13 +24,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Turtle;
-import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -50,6 +49,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+;
+
 public class Chameleon extends Animal implements Animatable<ChameleonModel> {
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(Chameleon.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Chameleon.class, EntityDataSerializers.BOOLEAN);
@@ -63,6 +64,24 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel> {
 
     public Chameleon(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        moveControl = new MoveControl(this) {
+
+            @Override
+            public void setWantedPosition(double pX, double pY, double pZ, double pSpeed) {
+                var blockOn = Stream.of(Direction.NORTH,
+                                Direction.EAST,
+                                Direction.SOUTH,
+                                Direction.WEST,
+                                Direction.DOWN
+                        ).filter(dir -> level().getBlockState(blockPosition().relative(dir)).isSolidRender(level(), blockPosition().relative(dir)))
+                        .findFirst();
+                if (blockOn.isEmpty()) return;
+                switch (blockOn.get()) {
+                    case NORTH, SOUTH -> super.setWantedPosition(pX, pY, ((int) pZ) + 0.5, pSpeed);
+                    case WEST, EAST -> super.setWantedPosition(((int) pX) + 0.5, pY, pZ, pSpeed);
+                }
+            }
+        };
     }
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
@@ -151,8 +170,7 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel> {
         super.tick();
         animateWhen("idle", hasPose(Pose.STANDING));
         if (random.nextInt(TIME_BEFORE_COLOR_CHANGE) == 1) {
-            Stream.of(
-                            blockPosition().north(),
+            Stream.of(blockPosition().north(),
                             blockPosition().east(),
                             blockPosition().south(),
                             blockPosition().west(),
@@ -174,6 +192,14 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel> {
         if (navigation.isDone() && isClimbing()) {
             setDeltaMovement(Vec3.ZERO);
         }
+        setOnGround(Stream.of(
+                blockPosition().north(),
+                blockPosition().east(),
+                blockPosition().south(),
+                blockPosition().west(),
+                blockPosition().below()
+        ).anyMatch(pos -> level().getBlockState(pos).isSolidRender(level(), pos)));
+
         super.aiStep();
     }
 
@@ -259,17 +285,6 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel> {
     @Override
     protected SoundEvent getDeathSound() {
         return SoundRegistry.CHAMELEON_HURT.get();
-    }
-
-    @Override
-    public boolean onGround() {
-        return Stream.of(
-                blockPosition().north(),
-                blockPosition().east(),
-                blockPosition().south(),
-                blockPosition().west(),
-                blockPosition().below()
-        ).anyMatch(pos -> level().getBlockState(pos).isSolidRender(level(), pos));
     }
 
     class ChameleonNavigation extends WallClimberNavigation {

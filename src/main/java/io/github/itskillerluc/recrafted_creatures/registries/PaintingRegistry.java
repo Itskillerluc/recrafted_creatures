@@ -13,8 +13,8 @@ public class PaintingRegistry {
             () -> new PaintingVariant(64, 48));
 
     public static final RegistryObject<PaintingVariant> GLOBAL_WARMING = PAINTINGS.register("global_warming",
-            () -> new PaintingVariant(64, 64));
+            () -> new PaintingVariant(16, 16));
 
     public static final RegistryObject<PaintingVariant> POP_ART = PAINTINGS.register("pop_art",
-            () -> new PaintingVariant(64, 64));
+            () -> new PaintingVariant(32, 32));
 }
