@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "chameleon_eggs=1,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/one_chameleon_egg_uncracked"
+      }
+    ],
+    "chameleon_eggs=1,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/one_chameleon_egg_slightly_cracked"
+      }
+    ],
+    "chameleon_eggs=1,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/one_chameleon_egg_very_cracked"
+      }
+    ],
+    "chameleon_eggs=2,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/two_chameleon_eggs_uncracked"
+      }
+    ],
+    "chameleon_eggs=2,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/two_chameleon_eggs_slightly_cracked"
+      }
+    ],
+    "chameleon_eggs=2,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/two_chameleon_eggs_very_cracked"
+      }
+    ],
+    "chameleon_eggs=3,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/three_chameleon_eggs_uncracked"
+      }
+    ],
+    "chameleon_eggs=3,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/three_chameleon_eggs_slightly_cracked"
+      }
+    ],
+    "chameleon_eggs=3,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/three_chameleon_eggs_very_cracked"
+      }
+    ],
+    "chameleon_eggs=4,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/four_chameleon_eggs_uncracked"
+      }
+    ],
+    "chameleon_eggs=4,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/four_chameleon_eggs_slightly_cracked"
+      }
+    ],
+    "chameleon_eggs=4,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/four_chameleon_eggs_very_cracked"
+      }
+    ]
+  }
+}

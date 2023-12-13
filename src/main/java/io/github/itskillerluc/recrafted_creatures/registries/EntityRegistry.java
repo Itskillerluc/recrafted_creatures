@@ -33,7 +33,7 @@ public class EntityRegistry {
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "marmot").toString()));
 
     public static final RegistryObject<EntityType<Chameleon>> CHAMELEON = ENTITY_TYPES.register("chameleon",
-            () -> EntityType.Builder.of(Chameleon::new, MobCategory.CREATURE).sized(0.5f, 0.5f)
+            () -> EntityType.Builder.of(Chameleon::new, MobCategory.CREATURE).sized(.9f, 0.5f)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "chameleon").toString()));
 
     public static final RegistryObject<EntityType<Owl>> OWL = ENTITY_TYPES.register("owl",

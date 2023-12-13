@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:owl_envelope"
+    },
+    "title": "Natural Postal Service",
+    "description": "Mail something with an Owl",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "deliver": {
+      "trigger": "recrafted_creatures:owl_delivery"
+    }
+  },
+  "requirements": [
+    [
+      "deliver"
+    ]
+  ]
+}

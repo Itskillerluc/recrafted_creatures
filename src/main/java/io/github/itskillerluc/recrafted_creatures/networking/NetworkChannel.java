@@ -25,7 +25,7 @@ public class NetworkChannel {
                 .consumerMainThread(DeliveryPacket::handle)
                 .add();
 
-        CHANNEL.messageBuilder(DancePacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
+        CHANNEL.messageBuilder(DancePacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(DancePacket::encoder)
                 .decoder(DancePacket::decoder)
                 .consumerMainThread(DancePacket::handle)

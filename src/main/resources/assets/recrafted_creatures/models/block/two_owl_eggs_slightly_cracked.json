@@ -1,0 +1,33 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"7": "recrafted_creatures:block/slightly_cracked_owl_eggs",
+		"particle": "recrafted_creatures:block/slightly_cracked_owl_eggs"
+	},
+	"elements": [
+		{
+			"from": [10, 0, 6],
+			"to": [13, 4, 9],
+			"faces": {
+				"north": {"uv": [3, 6, 6, 10], "texture": "#7"},
+				"east": {"uv": [6, 6, 9, 10], "texture": "#7"},
+				"south": {"uv": [9, 0, 12, 4], "texture": "#7"},
+				"west": {"uv": [9, 4, 12, 8], "texture": "#7"},
+				"up": {"uv": [12, 11, 9, 8], "texture": "#7"},
+				"down": {"uv": [6, 10, 3, 13], "texture": "#7"}
+			}
+		},
+		{
+			"from": [6, 0, 11],
+			"to": [8, 4, 13],
+			"faces": {
+				"north": {"uv": [0, 12, 2, 16], "texture": "#7"},
+				"east": {"uv": [12, 0, 14, 4], "texture": "#7"},
+				"south": {"uv": [12, 4, 14, 8], "texture": "#7"},
+				"west": {"uv": [12, 8, 14, 12], "texture": "#7"},
+				"up": {"uv": [14, 14, 12, 12], "texture": "#7"},
+				"down": {"uv": [4, 13, 2, 15], "texture": "#7"}
+			}
+		}
+	]
+}

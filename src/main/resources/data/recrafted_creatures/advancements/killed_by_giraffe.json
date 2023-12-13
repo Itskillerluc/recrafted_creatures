@@ -6,7 +6,7 @@
     "title": "Giraffes aren't my spirit animal",
     "description": "get killed by a giraffe",
     "frame": "task",
-    "show_toast": false,
+    "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
   },

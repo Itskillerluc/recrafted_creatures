@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "owl_eggs=1,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/one_owl_egg_uncracked"
+      }
+    ],
+    "owl_eggs=1,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/one_owl_egg_slightly_cracked"
+      }
+    ],
+    "owl_eggs=1,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/one_owl_egg_very_cracked"
+      }
+    ],
+    "owl_eggs=2,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/two_owl_eggs_uncracked"
+      }
+    ],
+    "owl_eggs=2,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/two_owl_eggs_slightly_cracked"
+      }
+    ],
+    "owl_eggs=2,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/two_owl_eggs_very_cracked"
+      }
+    ],
+    "owl_eggs=3,hatch=0": [
+      {
+        "model": "recrafted_creatures:block/three_owl_eggs_uncracked"
+      }
+    ],
+    "owl_eggs=3,hatch=1": [
+      {
+        "model": "recrafted_creatures:block/three_owl_eggs_slightly_cracked"
+      }
+    ],
+    "owl_eggs=3,hatch=2": [
+      {
+        "model": "recrafted_creatures:block/three_owl_eggs_very_cracked"
+      }
+    ]
+  }
+}

@@ -44,9 +44,14 @@
   "item.recrafted_creatures.small_leaf": "Small Leaf",
   "item.recrafted_creatures.leaf_picker": "Leaf Picker",
   "item.recrafted_creatures.apple_slice": "Apple Slice",
+  "item.recrafted_creatures.owl_envelope": "Owl Envelope",
+  "item.recrafted_creatures.rainbow_gel": "Owl Envelope",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
+  "block.recrafted_creatures.chameleon_egg_block": "Chameleon Egg",
+  "block.recrafted_creatures.owl_egg_block": "Owl Egg",
+  "block.recrafted_creatures.rainbow_gel": "Rainbow gel",
 
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.white": "White Zebra",
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_gray": "Light Gray Zebra",

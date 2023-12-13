@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.itskillerluc.recrafted_creatures.entity.Owl;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.DeliveryPacket;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -40,7 +41,7 @@ public class DeliveryEntry extends ContainerObjectSelectionList.Entry<DeliveryEn
     public DeliveryEntry(Owl owl, Minecraft minecraft, UUID pId, String playerName, Supplier<ResourceLocation> skinGetter) {
         this.minecraft = minecraft;
         this.id = pId;
-        this.canSend = () -> !owl.getMainHandItem().isEmpty();
+        this.canSend = owl::canDeliver;
         this.playerName = playerName;
         this.skinGetter = skinGetter;
         boolean flag1 = !minecraft.player.getUUID().equals(pId);

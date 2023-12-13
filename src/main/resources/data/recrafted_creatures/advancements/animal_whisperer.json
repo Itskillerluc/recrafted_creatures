@@ -4,7 +4,7 @@
       "item": "recrafted_creatures:red_panda_spawn_egg"
     },
     "title": "Animal Whisperer",
-    "description": "Tame all animals in Recrafted Creatures",
+    "description": "Tame all tamable animals in Recrafted Creatures",
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
@@ -43,6 +43,14 @@
           "type": "recrafted_creatures:giraffe"
         }
       }
+    },
+    "owl": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:owl"
+        }
+      }
     }
   },
   "requirements": [
@@ -57,6 +65,9 @@
     ],
     [
       "giraffe"
+    ],
+    [
+      "owl"
     ]
   ],
   "rewards": {

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class OwlRenderer extends MobRenderer<Owl, OwlModel> {
     public OwlRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new OwlModel((Ducling) pContext.bakeLayer(OwlModel.LAYER_LOCATION)), 0.5f);
+        addLayer(new OwlHoldsItemLayer(this, pContext.getItemInHandRenderer()));
     }
     @Override
     public @NotNull ResourceLocation getTextureLocation(Owl pEntity) {

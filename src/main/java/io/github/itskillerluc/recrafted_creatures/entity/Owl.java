@@ -3,9 +3,17 @@ package io.github.itskillerluc.recrafted_creatures.entity;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
+import io.github.itskillerluc.recrafted_creatures.block.ChameleonEggBlock;
+import io.github.itskillerluc.recrafted_creatures.block.OwlEggBlock;
 import io.github.itskillerluc.recrafted_creatures.client.models.ChameleonModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.OwlModel;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLaying;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLayingBreedGoal;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.LayEggGoal;
+import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.util.ClientHelper;
 import net.minecraft.core.BlockPos;
@@ -62,30 +70,38 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal {
+public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal, EggLaying {
     private static final EntityDataSerializer<OwlVariant> OWL_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(OwlVariant.class);
     private static final EntityDataAccessor<Optional<UUID>> DELIVERY_TARGET = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<UUID>> SENDER = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.BOOLEAN);
-
-    static {
-        EntityDataSerializers.registerSerializer(OWL_VARIANT_SERIALIZER);
-    }
+    private static final EntityDataAccessor<Boolean> CAN_DELIVER = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> LAYING_EGG = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.BOOLEAN);
 
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "owl");
     private static final EntityDataAccessor<OwlVariant> VARIANT = SynchedEntityData.defineId(Owl.class, OWL_VARIANT_SERIALIZER);
 
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> OwlModel.createStateMap(getAnimation()));
+    int layEggCounter;
+
+
+    static {
+        EntityDataSerializers.registerSerializer(OWL_VARIANT_SERIALIZER);
+    }
+
 
     public Owl(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new OwlMoveControl();
         this.setCanPickUpLoot(true);
     }
+
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8)
-                .add(Attributes.MOVEMENT_SPEED, 0.2D)
+                .add(Attributes.MOVEMENT_SPEED, 0.1D)
                 .add(Attributes.ATTACK_DAMAGE, 4)
                 .add(Attributes.FOLLOW_RANGE, 40)
                 .add(Attributes.FLYING_SPEED, 0.4F);
@@ -98,6 +114,9 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         if (entityData.get(DELIVERY_TARGET).isPresent()) {
             pCompound.putUUID("deliveryTarget", entityData.get(DELIVERY_TARGET).get());
         }
+        if (entityData.get(SENDER).isPresent()) {
+            pCompound.putUUID("sender", entityData.get(SENDER).get());
+        }
         pCompound.putBoolean("isSleeping", isSleeping());
     }
 
@@ -105,11 +124,8 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         setVariant(OwlVariant.valueOf(pCompound.getString("variant")));
-        if (pCompound.hasUUID("deliveryTarget")) {
-            entityData.set(DELIVERY_TARGET, Optional.of(pCompound.getUUID("deliveryTarget")));
-        } else {
-            entityData.set(DELIVERY_TARGET, Optional.empty());
-        }
+        entityData.set(DELIVERY_TARGET, pCompound.hasUUID("deliveryTarget") ? Optional.of(pCompound.getUUID("deliveryTarget")) : Optional.empty());
+        entityData.set(SENDER, pCompound.hasUUID("sender") ? Optional.of(pCompound.getUUID("sender")) : Optional.empty());
         setSleeping(pCompound.getBoolean("isSleeping"));
     }
 
@@ -126,6 +142,10 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         entityData.define(VARIANT, OwlVariant.HORNED);
         entityData.define(DELIVERY_TARGET, Optional.empty());
         entityData.define(SLEEPING, false);
+        entityData.define(HAS_EGG, false);
+        entityData.define(LAYING_EGG, false);
+        entityData.define(CAN_DELIVER, false);
+        entityData.define(SENDER, Optional.empty());
     }
 
     protected PathNavigation createNavigation(Level pLevel) {
@@ -143,6 +163,8 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         this.goalSelector.addGoal(2, createOwlGoal(new SitWhenOrderedToGoal(this)));
         this.goalSelector.addGoal(2, createOwlGoal(new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, true)));
         this.goalSelector.addGoal(3, createOwlGoal(new SleepGoal(this, 1, 20, 20)));
+        this.goalSelector.addGoal(3, createOwlGoal(new EggLayingBreedGoal<>(this, 1.0D)));
+        this.goalSelector.addGoal(4, createOwlGoal(new LayEggGoal<>(this, 1, BlockRegistry.OWL_EGG_BLOCK.get().defaultBlockState().setValue(OwlEggBlock.EGGS, random.nextInt(OwlEggBlock.MAX_EGGS) + OwlEggBlock.MIN_EGGS), (level, pos) -> level.getBlockState(pos).is(BlockTags.LEAVES))));
         this.goalSelector.addGoal(4, createOwlGoal(new OwlWanderGoal(this, 1.0D)));
         this.goalSelector.addGoal(4, createOwlGoal(new MeleeAttackGoal(this, 1, false)));
         this.goalSelector.addGoal(7, createOwlGoal(new BreedGoal(this, 1.0D)));
@@ -169,7 +191,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     @Override
     public void tick() {
         super.tick();
-        if (navigation.isDone() && getDeliveryTarget().isPresent()) {
+        if (navigation.isDone() && getDeliveryTarget().isPresent() && !level().isClientSide()) {
             if (getDeliveryTarget().get().distanceToSqr(this) < 4) {
                 if (isReturning()) {
                     finishDelivery();
@@ -180,23 +202,25 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
                 var pos = getDeliveryTarget().get().position();
                 navigation.moveTo(pos.x(), pos.y() + 1, pos.z(), 1);
             } else {
-                if (getOwner() != null && getOwner().distanceToSqr(this) < 225) {
-                    var playerPos = getOwner().position();
+                if (entityData.get(SENDER).isPresent() && level().getServer().getPlayerList().getPlayer(entityData.get(SENDER).get()).distanceToSqr(this) < 225) {
+                    var playerPos = level().getServer().getPlayerList().getPlayer(entityData.get(SENDER).get()).position();
                     navigation.moveTo(playerPos.x() + random.nextInt(-5, 5), playerPos.y() + 25 + random.nextInt(0, 10), playerPos.z() + random.nextInt(-5, 5), 1);
                 } else {
                     teleportNearTarget();
                 }
             }
         }
-        if (random.nextFloat() > 0.999f && this.onGround()) {
+        if (random.nextFloat() > 0.999f && this.onGround() && level().isClientSide()) {
             replayAnimation("neck_rotate");
         }
-        animateWhen("holding", hasItemInSlot(EquipmentSlot.MAINHAND));
+        if (level().isClientSide()) {
+            animateWhen("holding", hasItemInSlot(EquipmentSlot.MAINHAND));
 
-        animateWhen("idle", !isMoving(this) && onGround() && !isSleeping());
-        animateWhen("sleep", isSleeping());
+            animateWhen("idle", !isMoving(this) && onGround() && !isSleeping());
+            animateWhen("sleep", isSleeping());
 
-        animateWhen("fly", isFlying() && isMoving(this));
+            animateWhen("fly", isFlying() && isMoving(this));
+        }
     }
 
     public Optional<Player> getDeliveryTarget() {
@@ -224,6 +248,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         var item = getItemBySlot(EquipmentSlot.MAINHAND);
         this.spawnAtLocation(item);
         this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        entityData.set(SENDER, entityData.get(DELIVERY_TARGET));
         entityData.set(DELIVERY_TARGET, Optional.ofNullable(getOwnerUUID()));
     }
 
@@ -244,7 +269,9 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         Vec3 vec3 = this.getDeltaMovement();
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, target != null || entityData.get(DELIVERY_TARGET).isPresent() ? 0.9D : 0.6D, 1.0D));
-            animateWhen("grab_swoop", target != null || entityData.get(DELIVERY_TARGET).isPresent());
+            if (level().isClientSide()) {
+                animateWhen("grab_swoop", target != null || entityData.get(DELIVERY_TARGET).isPresent());
+            }
         }
     }
 
@@ -313,6 +340,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
 
     @Override
     public boolean canTakeItem(ItemStack pItemstack) {
+        if (isReturning()) return false;
         EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(pItemstack);
         if (!this.getItemBySlot(equipmentSlot).isEmpty()) {
             return false;
@@ -334,12 +362,19 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     }
 
     public void sendItem(UUID player) {
+        OwlDeliveryTrigger.INSTANCE.trigger(getServer().getPlayerList().getPlayer(player), getItemBySlot(EquipmentSlot.MAINHAND));
         entityData.set(DELIVERY_TARGET, Optional.of(player));
+        entityData.set(SENDER, Optional.ofNullable(getOwnerUUID()));
         navigation.stop();
+        entityData.set(CAN_DELIVER, false);
     }
 
     boolean canMove() {
         return !this.isSleeping();
+    }
+
+    public boolean canDeliver() {
+        return entityData.get(CAN_DELIVER);
     }
 
     @Override
@@ -349,8 +384,22 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
             ClientHelper.openDeliveryScreen(this);
             return InteractionResult.SUCCESS;
         }
+        if (itemstack.is(ItemRegistry.OWL_ENVELOPE.get()) && Objects.equals(getOwnerUUID(), pPlayer.getUUID())) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
+            this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
+            pPlayer.getItemInHand(pHand).shrink(1);
+            entityData.set(CAN_DELIVER, true);
+        }
+        if (itemstack.isEmpty() && !pPlayer.isCrouching() && this.getItemBySlot(EquipmentSlot.MAINHAND).is(ItemRegistry.OWL_ENVELOPE.get())  && Objects.equals(getOwnerUUID(), pPlayer.getUUID())) {
+            var stack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+            pPlayer.setItemInHand(pHand, stack);
+            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            entityData.set(CAN_DELIVER, false);
+        }
         if (itemstack.is(Items.COOKED_RABBIT)) {
-            replayAnimation("eating");
+            if (level().isClientSide()) {
+                replayAnimation("eating");
+            }
             if (this.getHealth() < this.getMaxHealth()) {
                 if (!pPlayer.getAbilities().instabuild) {
                     pPlayer.getItemInHand(pHand).shrink(1);
@@ -367,7 +416,9 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
             return InteractionResult.SUCCESS;
         }
         if (!this.isTame() && itemstack.is(Items.RABBIT)) {
-            replayAnimation("eating");
+            if (level().isClientSide()) {
+                replayAnimation("eating");
+            }
             if (!pPlayer.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
@@ -395,6 +446,36 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
+    }
+
+    @Override
+    public boolean hasEgg() {
+        return this.entityData.get(HAS_EGG);
+    }
+
+    @Override
+    public void setHasEgg(boolean hasEgg) {
+        this.entityData.set(HAS_EGG, hasEgg);
+    }
+
+    @Override
+    public int getEggLayCounter() {
+        return layEggCounter;
+    }
+
+    @Override
+    public void setEggLayCounter(int count) {
+        layEggCounter = count;
+    }
+
+    @Override
+    public void setEggLaying(boolean isLayingEgg) {
+        this.entityData.set(LAYING_EGG, isLayingEgg);
+    }
+
+    @Override
+    public boolean getEggLaying() {
+        return entityData.get(LAYING_EGG);
     }
 
     static class OwlWanderGoal extends WaterAvoidingRandomFlyingGoal {
@@ -494,12 +575,6 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     }
 
     class SleepGoal extends MoveToBlockGoal {
-
-
-        public SleepGoal(PathfinderMob pMob, double pSpeedModifier, int pSearchRange) {
-            super(pMob, pSpeedModifier, pSearchRange);
-        }
-
         public SleepGoal(PathfinderMob pMob, double pSpeedModifier, int pSearchRange, int verticalSearch) {
             super(pMob, pSpeedModifier, pSearchRange, verticalSearch);
         }

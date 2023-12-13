@@ -1,17 +1,17 @@
 package io.github.itskillerluc.recrafted_creatures;
 
-import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
+import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
+import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.registries.*;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DispensibleContainerItem;
@@ -20,7 +20,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -52,6 +51,7 @@ public class RecraftedCreatures
         ItemRegistry.ITEMS.register(modEventBus);
         PaintingRegistry.PAINTINGS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
+        BlockEntityRegistry.BLOCK_ENTITY_TYPES.register(modEventBus);
         InstrumentRegistry.INSTRUMENTS.register(modEventBus);
         CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
 
@@ -111,5 +111,8 @@ public class RecraftedCreatures
 
     private void commonSetup(FMLCommonSetupEvent event) {
         NetworkChannel.register();
+        event.enqueueWork(() -> {
+            OwlDeliveryTrigger.INSTANCE = CriteriaTriggers.register(new OwlDeliveryTrigger());
+        });
     }
 }

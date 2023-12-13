@@ -1,10 +1,9 @@
 package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
-import io.github.itskillerluc.recrafted_creatures.block.BlockRegistry;
+import io.github.itskillerluc.recrafted_creatures.block.OwlEnvelope;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BannerPatternTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -80,6 +79,18 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> SMALL_LEAF = ITEMS.register("small_leaf",
             () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> OWL_ENVELOPE = ITEMS.register("owl_envelope",
+            () -> new OwlEnvelope(new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> CHAMELEON_EGG = ITEMS.register("chameleon_egg",
+            () -> new BlockItem(BlockRegistry.CHAMELEON_EGG_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> OWL_EGG = ITEMS.register("owl_egg",
+            () -> new BlockItem(BlockRegistry.OWL_EGG_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> RAINBOW_GEL = ITEMS.register("rainbow_gel",
+            () -> new BlockItem(BlockRegistry.RAINBOW_GEL.get(), new Item.Properties()));
 
     public static final RegistryObject<InstrumentItem> MEGAPHONE = ITEMS.register("megaphone",
             () -> new InstrumentItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1), Tags.MEGAPHONE) {

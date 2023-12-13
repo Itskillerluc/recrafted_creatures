@@ -12,17 +12,25 @@ public class Util {
             return pPos;
         } else {
             BlockPos blockpos;
-            for(blockpos = pPos.above(); blockpos.getY() < pMaxY && pPosPredicate.test(blockpos); blockpos = blockpos.above()) {
+            blockpos = pPos.relative(direction);
+            while (Math.abs(pPos.get(direction.getAxis()) - blockpos.get(direction.getAxis())) < pMaxY && pPosPredicate.test(blockpos)) {
+                blockpos = blockpos.relative(direction);
             }
-
             return blockpos;
         }
     }
 
-//    public static BlockPos moveOutOfSolidClose(BlockPos pos, int maxY, Predicate<BlockPos> predicate, Entity entity) {
-//        Direction dir = directionBetweenPos(pos, entity.blockPosition());
-//
-//    }
+    public static BlockPos moveOutOfSolidClose(BlockPos pos, int maxY, Predicate<BlockPos> predicate, Entity entity) {
+        Direction dir = directionBetweenPos(pos, entity.blockPosition());
+
+        BlockPos up = moveOutOfSolid(pos, maxY, predicate, Direction.UP);
+        BlockPos directional = moveOutOfSolid(pos, maxY, predicate, dir);
+
+        int distanceUp = up.distManhattan(pos);
+        int distanceDirectional = directional.distManhattan(pos);
+
+        return distanceUp > distanceDirectional ? up : directional;
+    }
 
     public static Direction directionBetweenPos(BlockPos pos1, BlockPos pos2) {
         int xDiff = pos1.getX() - pos2.getX();

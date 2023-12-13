@@ -221,15 +221,16 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
     @Override
     public void tick() {
         super.tick();
-        animateWhen("eat", isEating());
         if (!getAnimationState("anvil").get().isStarted() && getEntityData().get(ANVIL) == 1) {
             getEntityData().set(ANVIL, (byte) 2);
         }
-        animateWhen("squashed", getEntityData().get(ANVIL) == 2);
         if (!level().isClientSide()) {
             handleEating();
+        } else {
+            animateWhen("eat", isEating());
+            animateWhen("squashed", getEntityData().get(ANVIL) == 2);
+            animateWhen("boing", isDancing);
         }
-        animateWhen("boing", isDancing);
         explode();
     }
 

@@ -278,8 +278,10 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public void tick() {
-        animateWhen("idle", hasPose(Pose.STANDING));
         super.tick();
+        if (level().isClientSide()) {
+            animateWhen("idle", hasPose(Pose.STANDING));
+        }
     }
 
     @Override

@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:tnt"
+    },
+    "title": "Hehehe",
+    "description": "Feed a marmot tnt",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:thrown_item_picked_up_by_entity",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:marmot"
+        },
+        "item": {
+          "items": [
+            "minecraft:tnt"
+          ]
+        }
+      }
+    }
+  }
+}
