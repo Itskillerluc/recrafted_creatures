@@ -64,7 +64,7 @@ public class OwlEggBlock extends EggBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new EggBlockEntity<>(BlockEntityRegistry.OWL_EGG.get(), pPos, pState, 4500, level -> EntityRegistry.OWL.get().create(level), 2);
+        return new EggBlockEntity<>(BlockEntityRegistry.OWL_EGG.get(), pPos, pState, 4500, level -> EntityRegistry.OWL.get().create(level), 2, EGGS);
     }
 
     @Nullable

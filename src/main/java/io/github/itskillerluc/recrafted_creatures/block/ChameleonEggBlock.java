@@ -63,7 +63,7 @@ public class ChameleonEggBlock extends EggBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new EggBlockEntity<>(BlockEntityRegistry.CHAMELEON_EGG.get(), pPos, pState, 4500, level -> EntityRegistry.CHAMELEON.get().create(level), 2);
+        return new EggBlockEntity<>(BlockEntityRegistry.CHAMELEON_EGG.get(), pPos, pState, 4500, level -> EntityRegistry.CHAMELEON.get().create(level), 2, EGGS);
     }
 
     @Nullable

@@ -106,6 +106,11 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel>, Egg
     }
 
     @Override
+    public void setInLoveTime(int pInLove) {
+        super.setInLoveTime(pInLove);
+    }
+
+    @Override
     public void setEggLaying(boolean isLayingEgg) {
         this.layEggCounter = isLayingEgg ? 1 : 0;
         this.entityData.set(LAYING_EGG, isLayingEgg);

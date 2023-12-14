@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
@@ -21,12 +22,14 @@ public class EggBlockEntity <T extends AgeableMob> extends BlockEntity {
     private final int stages;
     private int hatchTimer;
     private final Function<Level, T> entity;
+    private final IntegerProperty property;
 
-    public EggBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pPos, BlockState pBlockState, int maxHatchTime, Function<Level, T> entity, int stages) {
+    public EggBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pPos, BlockState pBlockState, int maxHatchTime, Function<Level, T> entity, int stages, IntegerProperty property) {
         super(blockEntityType, pPos, pBlockState);
         this.maxHatchTime = maxHatchTime;
         this.entity = entity;
         this.stages = stages;
+        this.property = property;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class EggBlockEntity <T extends AgeableMob> extends BlockEntity {
             level.playSound(null, getBlockPos(), SoundEvents.TURTLE_EGG_CRACK, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
         }
         if (hatchTimer > maxHatchTime){
-            for (int i = 0; i < this.getBlockState().getValue(BlockRegistry.OWL_EGG_BLOCK.get().getEggs()); i++) {
+            for (int i = 0; i < this.getBlockState().getValue(property); i++) {
                 var entityInstance = entity.apply(this.getLevel());
                 entityInstance.setPos(new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
                 entityInstance.setAge(-24000);

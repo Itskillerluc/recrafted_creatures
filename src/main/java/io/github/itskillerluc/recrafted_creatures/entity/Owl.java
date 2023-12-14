@@ -179,6 +179,10 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     }
 
     @Override
+    public void setInLoveTime(int pInLove) {
+        super.setInLoveTime(pInLove);
+    }
+    @Override
     protected int calculateFallDamage(float pFallDistance, float pDamageMultiplier) {
         return 0;
     }
