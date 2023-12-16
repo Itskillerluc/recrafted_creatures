@@ -10,9 +10,9 @@
     },
     {
       "type": "recrafted_creatures:chameleon",
-      "weight": 170,
+      "weight": 130,
       "minCount": 1,
-      "maxCount": 1
+      "maxCount": 3
     }
   ]
 

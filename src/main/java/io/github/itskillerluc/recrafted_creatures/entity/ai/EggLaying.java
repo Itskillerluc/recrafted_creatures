@@ -7,5 +7,5 @@ public interface EggLaying {
     void setEggLayCounter(int count);
     void setEggLaying(boolean isLayingEgg);
     boolean getEggLaying();
-    void setInLoveTime(int time);
+    void setInLove(int time);
 }

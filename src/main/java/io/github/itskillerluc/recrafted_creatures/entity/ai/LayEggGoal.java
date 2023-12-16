@@ -43,7 +43,7 @@ public class LayEggGoal <T extends PathfinderMob & EggLaying> extends MoveToBloc
                 level.gameEvent(GameEvent.BLOCK_PLACE, blockpos1, GameEvent.Context.of(entity, eggs));
                 entity.setHasEgg(false);
                 entity.setEggLaying(false);
-                entity.setInLoveTime(600);
+                entity.setInLove(600);
             }
 
             if (entity.getEggLaying()) {

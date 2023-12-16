@@ -33,7 +33,7 @@ public class OwlHoldsItemLayer extends RenderLayer<Owl, OwlModel> {
         poseStack.pushPose();
         poseStack.mulPose(new Quaternionf().rotateAxis(Mth.PI, new Vector3f(1, 0, 0)));
         poseStack.scale(0.8f, 0.8f, 0.8f);
-        poseStack.translate(0, 0, 0.5);
+        poseStack.translate(0, -2.05, 0.4);
         var tag = new CompoundTag();
         new ItemStack(Items.STONE).save(tag);
         this.itemInHandRenderer.renderItem(pLivingEntity, new ItemStack(ItemRegistry.OWL_ENVELOPE.get(), 1, tag), ItemDisplayContext.GROUND, false, poseStack, pBuffer, pPackedLight);

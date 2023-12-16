@@ -106,7 +106,7 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel>, Egg
     }
 
     @Override
-    public void setInLoveTime(int pInLove) {
+    public void setInLove(int pInLove) {
         super.setInLoveTime(pInLove);
     }
 
@@ -148,7 +148,7 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel>, Egg
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(3, new EggLayingBreedGoal<>(this, 1.0D));
-        this.goalSelector.addGoal(5, new EatEntityGoal(entity -> entity instanceof Silverfish || entity instanceof CaveSpider || entity instanceof Slime));
+        this.goalSelector.addGoal(5, new EatEntityGoal(entity -> entity instanceof Silverfish || entity instanceof CaveSpider || (entity instanceof Slime slime && slime.isTiny())));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
             @javax.annotation.Nullable
             protected Vec3 getPosition() {

@@ -1,16 +1,18 @@
 package io.github.itskillerluc.recrafted_creatures.entity;
 
+import com.google.common.graph.Network;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
-import io.github.itskillerluc.recrafted_creatures.block.ChameleonEggBlock;
 import io.github.itskillerluc.recrafted_creatures.block.OwlEggBlock;
 import io.github.itskillerluc.recrafted_creatures.client.models.ChameleonModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.OwlModel;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLaying;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLayingBreedGoal;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.LayEggGoal;
+import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOwlPacket;
 import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
@@ -28,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
@@ -39,17 +40,13 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Rabbit;
-import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -57,12 +54,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
@@ -85,6 +78,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> OwlModel.createStateMap(getAnimation()));
     int layEggCounter;
+    public int scared = 0;
 
 
     static {
@@ -179,7 +173,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     }
 
     @Override
-    public void setInLoveTime(int pInLove) {
+    public void setInLove(int pInLove) {
         super.setInLoveTime(pInLove);
     }
     @Override
@@ -195,6 +189,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     @Override
     public void tick() {
         super.tick();
+        if (scared > 0) scared--;
         if (navigation.isDone() && getDeliveryTarget().isPresent() && !level().isClientSide()) {
             if (getDeliveryTarget().get().distanceToSqr(this) < 4) {
                 if (isReturning()) {
@@ -308,6 +303,19 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
         return SoundRegistry.OWL_DEATH.get();
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.getEntity() != null) {
+            scared = 200;
+            NetworkChannel.CHANNEL.sendToServer(new ScareOwlPacket(getUUID(), 200));
+            Vec3 posAway = LandRandomPos.getPosAway(this, 10, 5, pSource.getEntity().position());
+            if (posAway != null) {
+                navigation.moveTo(posAway.x(), posAway.y(), posAway.z(), 1);
+            }
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Nullable
@@ -585,7 +593,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
 
         @Override
         public boolean canUse() {
-            if (level().isNight()) {
+            if (level().isNight() || scared > 0) {
                 Owl.this.setSleeping(false);
                 return false;
             } else {
@@ -596,11 +604,13 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         @Override
         public void tick() {
             super.tick();
-            if (level().isNight()) {
+            if (level().isNight() || scared > 0) {
                 stop();
+                setSleeping(false);
+                return;
             }
 
-            if (isReachedTarget() || Owl.this.onGround() && Owl.this.getBlockStateOn().is(BlockTags.LEAVES)) {
+            if ((isReachedTarget() || Owl.this.onGround() && Owl.this.getBlockStateOn().is(BlockTags.LEAVES)) && scared == 0) {
                 Owl.this.setJumping(false);
                 Owl.this.setSleeping(true);
                 Owl.this.getNavigation().stop();
@@ -610,7 +620,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
 
         @Override
         public boolean canContinueToUse() {
-            return super.canContinueToUse() && level().isDay();
+            return super.canContinueToUse() && level().isDay() && scared == 0;
         }
 
         @Override

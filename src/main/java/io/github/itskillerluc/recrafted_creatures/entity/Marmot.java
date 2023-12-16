@@ -211,7 +211,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
 
     @Override
     public void aiStep() {
-        if (getEntityData().get(ANVIL) > 0 || isDancing) {
+        if (getEntityData().get(ANVIL) > 0 || isDancing || isPrimed()) {
             canLook = false;
             navigation.stop();
         }
@@ -388,7 +388,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
          */
         public boolean canUse() {
             if (itemTarget == null) {
-                var list = level().getEntitiesOfClass(ItemEntity.class, AABB.ofSize(position(), within, 3, within));
+                var list = level().getEntitiesOfClass(ItemEntity.class, AABB.ofSize(position(), 10, 3, 10));
                 list.sort(Comparator.comparingDouble(mob::distanceToSqr));
                 Optional<ItemEntity> optional = list.stream().filter((p_26706_) -> mob.wantsToPickUp(p_26706_.getItem())).filter((p_26701_) -> p_26701_.closerThan(mob, 32.0D)).filter(mob::hasLineOfSight).findFirst();
                 optional.ifPresent(itemEntity -> itemTarget = itemEntity);
@@ -412,7 +412,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean canContinueToUse() {
-            return !this.mob.getNavigation().isDone() && itemTarget != null && itemTarget.isAlive() && itemTarget.distanceToSqr(this.mob) < (double)(this.within * this.within);
+            return itemTarget != null && itemTarget.isAlive() && itemTarget.distanceToSqr(this.mob) < (double)(this.within * this.within);
         }
 
         /**
@@ -426,6 +426,10 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
          * Execute a one shot task or start executing a continuous task
          */
         public void start() {
+            wantedX = itemTarget.getX();
+            wantedY = itemTarget.getY();
+            wantedZ = itemTarget.getZ();
+
             this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
         }
     }

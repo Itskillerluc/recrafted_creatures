@@ -46,7 +46,7 @@ public class EggBlockEntity <T extends AgeableMob> extends BlockEntity {
 
     public void tick(){
         hatchTimer++;
-        if (hatchTimer % (maxHatchTime / stages) == 0) {
+        if ((hatchTimer % (maxHatchTime / stages) == 0) && getBlockState().getValue(EggBlock.HATCH) < 2) {
             var stage = getBlockState().getValue(EggBlock.HATCH);
             level.setBlock(getBlockPos(), getBlockState().setValue(EggBlock.HATCH, stage + 1), 2);
             level.playSound(null, getBlockPos(), SoundEvents.TURTLE_EGG_CRACK, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
