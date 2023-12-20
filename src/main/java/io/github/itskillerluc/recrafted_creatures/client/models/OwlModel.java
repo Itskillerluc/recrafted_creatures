@@ -29,7 +29,7 @@ public class OwlModel extends AnimatableDucModel<Owl> {
         if (pEntity.isFlying()) {
             this.animate(pEntity.getAnimations().get().get("animation.owl.fly"), pEntity.getAnimation().getAnimations().get("animation.owl.fly").animation(), pAgeInTicks, 1);
         } else {
-            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.owl.walk").animation(), pLimbSwing, pLimbSwingAmount, 2, 1);
+            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.owl.walk").animation(), pLimbSwing, pLimbSwingAmount, 1, 10);
         }
     }
 }

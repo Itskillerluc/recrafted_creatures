@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -95,7 +96,7 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
     public static AttributeSupplier.Builder attributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8)
-                .add(Attributes.MOVEMENT_SPEED, 0.1D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.ATTACK_DAMAGE, 4)
                 .add(Attributes.FOLLOW_RANGE, 40)
                 .add(Attributes.FLYING_SPEED, 0.4F);
@@ -452,6 +453,8 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         } else if (!this.isFlying() && this.isTame() && this.isOwnedBy(pPlayer)) {
             if (!this.level().isClientSide) {
                 this.setOrderedToSit(!this.isOrderedToSit());
+            } else {
+                pPlayer.displayClientMessage(isInSittingPose() ? Component.translatableWithFallback("entity.recrafted_creatures.owl.follow","Owl is following") : Component.translatableWithFallback("entity.recrafted_creatures.owl.sit","Owl is staying"), true);
             }
 
             return InteractionResult.sidedSuccess(this.level().isClientSide);
