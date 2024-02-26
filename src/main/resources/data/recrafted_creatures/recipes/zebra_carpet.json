@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "carpet",
+  "pattern": [
+    "hh"
+  ],
+  "key": {
+    "h": {
+      "item": "recrafted_creatures:zebra_hide"
+    }
+  },
+  "result": {
+    "item": "recrafted_creatures:zebra_carpet"
+  }
+}

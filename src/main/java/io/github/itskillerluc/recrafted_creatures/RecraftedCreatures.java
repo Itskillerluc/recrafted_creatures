@@ -47,6 +47,8 @@ public class RecraftedCreatures
 
         BannerPatternRegistry.BANNER_PATTERNS.register(modEventBus);
         SoundRegistry.SOUNDS.register(modEventBus);
+        SensorRegistry.SENSORS.register(modEventBus);
+        MemoryModuleRegistry.MEMORIES.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         PaintingRegistry.PAINTINGS.register(modEventBus);
@@ -81,7 +83,7 @@ public class RecraftedCreatures
     private void addEntityAttributes(EntityAttributeCreationEvent event){
         event.put(EntityRegistry.GIRAFFE.get(), Giraffe.attributes().build());
         event.put(EntityRegistry.RED_PANDA.get(), RedPanda.attributes().build());
-        event.put(EntityRegistry.ZEBRA.get(), Horse.createBaseHorseAttributes().build());
+        event.put(EntityRegistry.ZEBRA.get(), Zebra.attributes().build());
         event.put(EntityRegistry.MAMMOTH.get(), Mammoth.attributes().build());
         event.put(EntityRegistry.MARMOT.get(), Marmot.attributes().build());
         event.put(EntityRegistry.CHAMELEON.get(), Chameleon.attributes().build());

@@ -8,6 +8,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.material.Fluids;
@@ -103,4 +104,14 @@ public class ItemRegistry {
                     }
                 }
             });
+
+
+    public static final RegistryObject<Item> RAW_ZEBRA_MEAT = ITEMS.register("raw_zebra_meat",
+            () -> new Item(new Item.Properties().food(Foods.BEEF)));
+
+    public static final RegistryObject<Item> COOKED_ZEBRA_MEAT = ITEMS.register("cooked_zebra_meat",
+            () -> new Item(new Item.Properties().food(Foods.COOKED_BEEF)));
+
+    public static final RegistryObject<BlockItem> ZEBRA_CARPET = ITEMS.register("zebra_carpet",
+            () -> new BlockItem(BlockRegistry.ZEBRA_CARPET.get(), new Item.Properties()));
 }

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "group": "food",
+  "ingredient": {
+    "item": "recrafted_creatures:raw_zebra_meat"
+  },
+  "result": "recrafted_creatures:cooked_zebra_meat",
+  "experience": 0.7,
+  "cookingtime": 100
+}

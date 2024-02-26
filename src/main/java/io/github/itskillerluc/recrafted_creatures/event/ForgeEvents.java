@@ -1,6 +1,9 @@
 package io.github.itskillerluc.recrafted_creatures.event;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.capability.HerdCap;
+import io.github.itskillerluc.recrafted_creatures.capability.HerdProvider;
+import io.github.itskillerluc.recrafted_creatures.capability.IHerd;
 import io.github.itskillerluc.recrafted_creatures.mixin.FrogMixin;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -49,5 +54,15 @@ public class ForgeEvents {
         } else {
             return Optional.of(InteractionResult.FAIL);
         }
+    }
+
+    @SubscribeEvent
+    public static void onAttachCapabilitiesLevel(AttachCapabilitiesEvent<Level> event) {
+        event.addCapability(HerdProvider.IDENTIFIER, new HerdProvider());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(IHerd.class);
     }
 }

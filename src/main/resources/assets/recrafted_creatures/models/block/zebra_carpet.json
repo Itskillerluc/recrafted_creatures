@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/carpet",
+  "textures": {
+    "wool": "recrafted_creatures:block/zebra_carpet"
+  }
+}

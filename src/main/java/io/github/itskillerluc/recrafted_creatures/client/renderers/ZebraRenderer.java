@@ -1,25 +1,25 @@
 package io.github.itskillerluc.recrafted_creatures.client.renderers;
 
+import io.github.itskillerluc.duclib.client.model.Ducling;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.client.models.ZebraModel;
 import io.github.itskillerluc.recrafted_creatures.entity.Zebra;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ZebraRenderer extends AbstractHorseRenderer<Zebra, HorseModel<Zebra>> {
-    public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/zebra.png");
-    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "horse_armor"), "main");
+public class ZebraRenderer extends MobRenderer<Zebra, ZebraModel> {
     public ZebraRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new HorseModel<>(pContext.bakeLayer(ModelLayers.HORSE)), 1.1F);
-        this.addLayer(new ZebraArmorLayer(this, pContext.getModelSet()));
+        super(pContext, new ZebraModel(((Ducling) pContext.bakeLayer(ZebraModel.LAYER_LOCATION))), 1.1F);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Zebra pEntity) {
-        return LOCATION;
+        return pEntity.getVariant().getTexture(pEntity.isSaddled(), pEntity.hasChest());
     }
 }

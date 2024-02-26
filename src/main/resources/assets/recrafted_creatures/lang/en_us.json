@@ -25,6 +25,9 @@
   "subtitle.recrafted_creatures.owl_death": "Owl Death",
   "subtitle.recrafted_creatures.owl_hoot": "Owl Hoot",
   "subtitle.recrafted_creatures.owl_ambience": "Owl Ambient",
+  "subtitle.recrafted_creatures.zebra_ambience": "Zebra Ambient",
+  "subtitle.recrafted_creatures.zebra_death": "Zebra Death",
+  "subtitle.recrafted_creatures.zebra_hurt": "Zebra Hurt",
 
   "item.recrafted_creatures.giraffe_spawn_egg": "Giraffe Spawn Egg",
   "item.recrafted_creatures.red_panda_spawn_egg": "Red Panda Spawn Egg",
@@ -45,13 +48,15 @@
   "item.recrafted_creatures.leaf_picker": "Leaf Picker",
   "item.recrafted_creatures.apple_slice": "Apple Slice",
   "item.recrafted_creatures.owl_envelope": "Owl Envelope",
-  "item.recrafted_creatures.rainbow_gel": "Owl Envelope",
+  "item.recrafted_creatures.raw_zebra_meat": "Raw Zebra Meat",
+  "item.recrafted_creatures.cooked_zebra_meat": "Cooked Zebra Meat",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
   "block.recrafted_creatures.chameleon_egg_block": "Chameleon Egg",
   "block.recrafted_creatures.owl_egg_block": "Owl Egg",
   "block.recrafted_creatures.rainbow_gel": "Rainbow gel",
+  "block.recrafted_creatures.zebra_carpet": "Zebra Carpet",
 
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.white": "White Zebra",
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_gray": "Light Gray Zebra",

@@ -38,7 +38,6 @@ public class ClientEvents {
         event.registerLayerDefinition(MarmotModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Marmot.LOCATION));
         event.registerLayerDefinition(ChameleonModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Chameleon.LOCATION));
         event.registerLayerDefinition(OwlModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Owl.LOCATION));
-        event.registerLayerDefinition(ZebraRenderer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(CubeDeformation.NONE), 64, 64));
-        event.registerLayerDefinition(ZebraArmorLayer.LAYER, () -> LayerDefinition.create(HorseModel.createBodyMesh(new CubeDeformation(0.1F)), 64, 64));
+        event.registerLayerDefinition(ZebraModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Zebra.LOCATION));
     }
 }

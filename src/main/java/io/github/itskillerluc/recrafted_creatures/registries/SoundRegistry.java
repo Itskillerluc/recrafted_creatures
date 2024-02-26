@@ -29,6 +29,10 @@ public class SoundRegistry{
         public static final RegistryObject<SoundEvent> OWL_HOOT = register("entity.owl_hoot");
         public static final RegistryObject<SoundEvent> OWL_AMBIENCE = register("entity.owl_ambience");
 
+        public static final RegistryObject<SoundEvent> ZEBRA_DEATH = register("entity.zebra_death");
+        public static final RegistryObject<SoundEvent> ZEBRA_HURT = register("entity.zebra_hurt");
+        public static final RegistryObject<SoundEvent> ZEBRA_AMBIENCE = register("entity.zebra_ambience");
+
         public static final RegistryObject<SoundEvent> MEGAPHONE_SOUND = register("item.megaphone_sound");
 
 

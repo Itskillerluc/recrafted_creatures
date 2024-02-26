@@ -96,6 +96,26 @@
       "recrafted_creatures:owl_ambience_2"
     ]
   },
+  "entity.zebra_death": {
+    "subtitle": "subtitle.recrafted_creatures.zebra_death",
+    "sounds": [
+      "recrafted_creatures:zebra_death"
+    ]
+  },
+  "entity.zebra_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.zebra_hurt",
+    "sounds": [
+      "recrafted_creatures:zebra_hurt_1",
+      "recrafted_creatures:zebra_hurt_2"
+    ]
+  },
+  "entity.zebra_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.zebra_ambience",
+    "sounds": [
+      "recrafted_creatures:zebra_ambience_1",
+      "recrafted_creatures:zebra_ambience_2"
+    ]
+  },
   "item.megaphone_sound": {
     "subtitle": "subtitle.recrafted_creatures.megaphone_sound",
     "sounds": [
