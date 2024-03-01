@@ -1,6 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures;
 
 import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
+import io.github.itskillerluc.recrafted_creatures.config.Configs;
 import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
@@ -25,7 +26,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -60,6 +63,8 @@ public class RecraftedCreatures
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.CLIENT_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC);
     }
 
     public void registerSpawnPlacement(SpawnPlacementRegisterEvent event) {

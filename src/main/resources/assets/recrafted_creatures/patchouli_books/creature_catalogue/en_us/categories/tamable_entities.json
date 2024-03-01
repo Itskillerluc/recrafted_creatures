@@ -1,0 +1,6 @@
+{
+  "name": "Tamable Entities",
+  "description": "These are all the entities you can tame.",
+  "parent": "recrafted_creatures:entities",
+  "icon": "recrafted_creatures:red_panda_spawn_egg"
+}

@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<MammothModel>, PlayerRideable {
+public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<MammothModel>, PlayerRideable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "mammoth");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> MammothModel.createStateMap(getAnimation()));
@@ -125,7 +125,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             }
 
         });
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+        });
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -195,15 +205,12 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level().isClientSide()){
-            return InteractionResult.FAIL;
-        }
-        if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
+        if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER && !level().isClientSide()) {
             entityData.set(COLOR, 0xFF0000);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.GLASS_BOTTLE));
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() != null && pPlayer.getItemInHand(pHand).is(Tags.Items.DYES)) {
+        if (this.getOwner() != null && pPlayer.getItemInHand(pHand).is(Tags.Items.DYES) && !level().isClientSide()) {
             DyeItem item = ((DyeItem) pPlayer.getItemInHand(pHand).getItem());
             int existingColor = getColor();
             int dyeColor = item.getDyeColor().getTextColor();
@@ -212,17 +219,17 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
             entityData.set(COLOR, resultColor);
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK)) {
+        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK) && !level().isClientSide()) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
-        if (this.isBaby() && isFood(pPlayer.getItemInHand(pHand))) {
+        if (this.isBaby() && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()) {
             pPlayer.getItemInHand(pHand).shrink(1);
             this.ageUp(getSpeedUpSecondsWhenFeeding(-getAge()), true);
             return InteractionResult.SUCCESS;
         }
-        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0 && !level().isClientSide()) {
             if (pPlayer.isShiftKeyDown()){
                 var itemStack = pPlayer.getItemInHand(pHand);
                 if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
@@ -237,7 +244,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
                 return InteractionResult.SUCCESS;
             }
         }
-        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
@@ -252,7 +259,7 @@ public class Mammoth extends TamableAnimal implements NeutralMob, Animatable<Mam
 
             return InteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return super.mobInteract(pPlayer, pHand);
     }
 
     private int blendColors(int baseColor, int addedColor) {

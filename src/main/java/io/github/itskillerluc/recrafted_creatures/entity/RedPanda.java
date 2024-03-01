@@ -51,7 +51,7 @@ import java.util.Optional;
 
 import static io.github.itskillerluc.recrafted_creatures.entity.RedPanda.SleepGoal.WAIT_TIME_BEFORE_SLEEP;
 
-public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel> {
+public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "red_panda");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
@@ -99,7 +99,17 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.4D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.4D, 10.0F, 2.0F, false) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+        });
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 5));
@@ -250,10 +260,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level().isClientSide()){
-            return InteractionResult.CONSUME;
-        }
-        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0 && !level().isClientSide()) {
             if (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) && this.getHealth() < this.getMaxHealth()) {
                 if (!pPlayer.getAbilities().instabuild) {
                     pPlayer.getItemInHand(pHand).shrink(1);
@@ -264,11 +271,12 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
                     this.setInLove(pPlayer);
                     pPlayer.getItemInHand(pHand).shrink(1);
                     return InteractionResult.SUCCESS;
+                } else {
+                    return super.mobInteract(pPlayer, pHand);
                 }
-                this.setOrderedToSit(!isOrderedToSit());
             }
             return InteractionResult.SUCCESS;
-        } else if (this.getOwner() == null && (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
+        } else if (this.getOwner() == null && !level().isClientSide() && (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
@@ -281,7 +289,7 @@ public class RedPanda extends TamableAnimal implements Animatable<RedPandaModel>
 
             return InteractionResult.SUCCESS;
         }
-        return InteractionResult.FAIL;
+        return super.mobInteract(pPlayer, pHand);
     }
 
     private void clampHeadRotationToBody(Entity p_265624_, float p_265541_) {

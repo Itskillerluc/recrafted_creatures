@@ -1,0 +1,15 @@
+{
+  "name": "Mammoth",
+  "icon": "recrafted_creatures:mammoth_spawn_egg",
+  "category": "recrafted_creatures:tamable_entities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "this is a Mammoth"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "recrafted_creatures:mammoth"
+    }
+  ]
+}

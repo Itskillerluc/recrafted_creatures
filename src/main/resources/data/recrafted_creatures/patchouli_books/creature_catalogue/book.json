@@ -1,0 +1,8 @@
+{
+  "name": "Creature Catalogue",
+  "landing_text": "Welcome to Recrafted Creatures, this mod contains many new features including blocks, items and Mobs! This guidebook will hopefully help you understand the features and appreciate what this mod has to offer.",
+  "version": 1,
+  "creative_tab": "recrafted_creatures:recrafted_creatures",
+  "use_resource_pack": true,
+  "model": "recrafted_creatures:creature_catalogue"
+}

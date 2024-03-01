@@ -64,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal, EggLaying {
+public class Owl extends TamableRCMob implements Animatable<ChameleonModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal, EggLaying {
     private static final EntityDataSerializer<OwlVariant> OWL_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(OwlVariant.class);
     private static final EntityDataAccessor<Optional<UUID>> DELIVERY_TARGET = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Optional<UUID>> SENDER = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -156,7 +156,17 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
         this.goalSelector.addGoal(0, createOwlGoal(new PanicGoal(this, 1.25D)));
         this.goalSelector.addGoal(0, createOwlGoal(new FloatGoal(this)));
         this.goalSelector.addGoal(2, createOwlGoal(new SitWhenOrderedToGoal(this)));
-        this.goalSelector.addGoal(2, createOwlGoal(new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, true)));
+        this.goalSelector.addGoal(2, createOwlGoal(new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, true) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+        }));
         this.goalSelector.addGoal(3, createOwlGoal(new SleepGoal(this, 1, 20, 20)));
         this.goalSelector.addGoal(3, createOwlGoal(new EggLayingBreedGoal<>(this, 1.0D)));
         this.goalSelector.addGoal(4, createOwlGoal(new LayEggGoal<>(this, 1, BlockRegistry.OWL_EGG_BLOCK.get().defaultBlockState().setValue(OwlEggBlock.EGGS, random.nextInt(OwlEggBlock.MAX_EGGS) + OwlEggBlock.MIN_EGGS), (level, pos) -> level.getBlockState(pos).is(BlockTags.LEAVES))));
@@ -447,14 +457,6 @@ public class Owl extends TamableAnimal implements Animatable<ChameleonModel>, Va
                 } else {
                     this.level().broadcastEntityEvent(this, (byte)6);
                 }
-            }
-
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
-        } else if (!this.isFlying() && this.isTame() && this.isOwnedBy(pPlayer)) {
-            if (!this.level().isClientSide) {
-                this.setOrderedToSit(!this.isOrderedToSit());
-            } else {
-                pPlayer.displayClientMessage(isInSittingPose() ? Component.translatableWithFallback("entity.recrafted_creatures.owl.follow","Owl is following") : Component.translatableWithFallback("entity.recrafted_creatures.owl.sit","Owl is staying"), true);
             }
 
             return InteractionResult.sidedSuccess(this.level().isClientSide);

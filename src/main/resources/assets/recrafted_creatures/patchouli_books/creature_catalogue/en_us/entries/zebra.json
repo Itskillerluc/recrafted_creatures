@@ -1,0 +1,15 @@
+{
+  "name": "Zebra",
+  "icon": "recrafted_creatures:zebra_spawn_egg",
+  "category": "recrafted_creatures:tamable_entities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "this is a zebra"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "recrafted_creatures:zebra"
+    }
+  ]
+}

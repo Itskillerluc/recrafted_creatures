@@ -1,0 +1,6 @@
+{
+  "name": "Non Tamable Entities",
+  "description": "These are all the entities you cannot tame.",
+  "parent": "recrafted_creatures:entities",
+  "icon": "recrafted_creatures:marmot_spawn_egg"
+}

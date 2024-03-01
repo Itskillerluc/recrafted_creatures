@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
+public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "giraffe");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(Items.WHEAT, Items.HAY_BLOCK.asItem(), Items.CARROT, Items.GOLDEN_CARROT), Ingredient.of(ItemTags.LEAVES)));
@@ -76,7 +76,17 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Giraffe.class));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+            }
+        });
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -118,10 +128,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level().isClientSide()){
-            return InteractionResult.FAIL;
-        }
-        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0 && !level().isClientSide()) {
             if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty() && pPlayer.isShiftKeyDown()) {
                 setSaddled(false);
                 pPlayer.setItemInHand(pHand, new ItemStack(Items.SADDLE));
@@ -139,12 +146,12 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
                 pPlayer.startRiding(this);
             }
         }
-        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand))) {
+        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
@@ -157,7 +164,7 @@ public class Giraffe extends TamableAnimal implements NeutralMob, Animatable<Gir
 
             return InteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return super.mobInteract(pPlayer, pHand);
     }
 
     @Override

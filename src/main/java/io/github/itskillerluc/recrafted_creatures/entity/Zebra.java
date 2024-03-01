@@ -10,6 +10,7 @@ import io.github.itskillerluc.recrafted_creatures.entity.ai.zebra.ZebraAI;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,6 +22,7 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
@@ -47,12 +49,12 @@ public class Zebra extends AbstractChestedHorse implements NeutralMob, Animatabl
 
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> ZebraModel.createStateMap(getAnimation()));
     private static final EntityDataSerializer<ZebraVariant> VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(ZebraVariant.class);
-
     public static final EntityDataAccessor<Optional<UUID>> RUN_AWAY_FROM = SynchedEntityData.defineId(Zebra.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<ZebraVariant> VARIANT = SynchedEntityData.defineId(Zebra.class, VARIANT_SERIALIZER);
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
+
 
     public Zebra(EntityType<? extends AbstractChestedHorse> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -64,6 +66,16 @@ public class Zebra extends AbstractChestedHorse implements NeutralMob, Animatabl
         super.defineSynchedData();
         entityData.define(RUN_AWAY_FROM, Optional.empty());
         entityData.define(VARIANT, ZebraVariant.NORMAL);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
     }
 
     @Nullable
