@@ -18,6 +18,7 @@ import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.util.ClientHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,6 +51,7 @@ import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -655,9 +657,11 @@ public class Owl extends TamableRCMob implements Animatable<ChameleonModel>, Var
     public enum OwlVariant {
         HORNED(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/owl_horned_awake.png"), new ResourceLocation(RecraftedCreatures.MODID,"textures/entity/owl_horned_asleep.png")),
         SNOWY(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/owl_snowy_awake.png"), new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/owl_snowy_asleep.png"));
-
         public final ResourceLocation awake;
         public final ResourceLocation sleeping;
+        private static final ResourceLocation ROWLET_ASLEEP = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/rowlet_asleep.png");
+        private static final ResourceLocation ROWLET_AWAKE = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/rowlet_awake.png");
+
 
         OwlVariant(ResourceLocation awake, ResourceLocation sleeping) {
             this.awake = awake;
@@ -665,6 +669,12 @@ public class Owl extends TamableRCMob implements Animatable<ChameleonModel>, Var
         }
 
         public ResourceLocation getTexture(Owl owl) {
+            if (owl.hasCustomName()) {
+                String s = ChatFormatting.stripFormatting(owl.getName().getString());
+                if ("Rowlet".equals(s)) {
+                    return owl.isSleeping() ? ROWLET_ASLEEP : ROWLET_AWAKE;
+                }
+            }
             return owl.isSleeping() ? sleeping : awake;
         }
     }

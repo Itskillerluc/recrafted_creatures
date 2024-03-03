@@ -17,4 +17,7 @@ public class PaintingRegistry {
 
     public static final RegistryObject<PaintingVariant> POP_ART = PAINTINGS.register("pop_art",
             () -> new PaintingVariant(32, 32));
+
+    public static final RegistryObject<PaintingVariant> NOT_LIKE_THE_OTHER_ORANGES = PAINTINGS.register("not_like_the_other_oranges",
+            () -> new PaintingVariant(32, 32));
 }
