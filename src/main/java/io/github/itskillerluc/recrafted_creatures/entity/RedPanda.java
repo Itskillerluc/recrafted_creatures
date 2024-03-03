@@ -4,6 +4,7 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.RedPandaPlayGoal;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
@@ -57,7 +58,7 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(RedPanda.class, EntityDataSerializers.LONG);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> RedPandaModel.createStateMap(getAnimation()));
     private boolean isTargeted = false;
-
+    public boolean isPlaying = false;
     public RedPanda(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new RedPandaMoveControl();
@@ -110,6 +111,7 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
                 return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
             }
         });
+        this.goalSelector.addGoal(4, new RedPandaPlayGoal(this, 100, 600));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 5));
@@ -152,6 +154,14 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
         return EntityRegistry.RED_PANDA.get().create(pLevel);
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        super.handleEntityEvent(pId);
+        if (pId == 8) {
+            replayAnimation("stand");
+        }
     }
 
     class DistractEntityGoal<T extends Mob> extends Goal {
@@ -303,7 +313,6 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
     @Override
     public void tick() {
         super.tick();
-
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
         }

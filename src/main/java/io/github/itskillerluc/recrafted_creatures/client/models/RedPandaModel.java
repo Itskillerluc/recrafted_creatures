@@ -32,6 +32,11 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
 
 
     @Override
+    public @NotNull Ducling root() {
+        return super.root().getChild("root");
+    }
+
+    @Override
     public void setupAnim(@NotNull RedPanda pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
         if (this.young){
@@ -40,7 +45,7 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
               this.root().offsetPos(new Vector3f(0, 6f, -2));
             } else if (!pEntity.isRedPandaSleeping()) {
                 this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
-                this.root().offsetPos(new Vector3f(0, 7f, 0));
+                this.root().offsetPos(new Vector3f(0, 2f, 0));
             } else if (pEntity.isRedPandaSleeping()){
                 this.root().offsetScale(new Vector3f(-0.3f, -0.3f, -0.3f));
                 this.root().offsetPos(new Vector3f(0, 6f, 0));
@@ -59,7 +64,7 @@ public class RedPandaModel extends AnimatableDucModel<RedPanda> {
         if (pEntity.hasPose(Pose.SITTING)){
             return;
         }
-        if (!pEntity.isRedPandaSleeping()) {
+        if (!pEntity.isRedPandaSleeping() && !pEntity.getAnimationState("stand").get().isStarted()) {
             ((Ducling) getAnyDescendantWithName("leg1").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount;
             ((Ducling) getAnyDescendantWithName("leg3").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float) Math.PI) * 1.4F * pLimbSwingAmount;
             ((Ducling) getAnyDescendantWithName("leg0").orElseThrow()).xRot = Mth.cos(pLimbSwing * 0.6662F + (float) Math.PI) * 1.4F * pLimbSwingAmount;
