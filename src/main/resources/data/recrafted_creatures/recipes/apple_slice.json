@@ -1,0 +1,49 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "farmersdelight"
+        }
+      ],
+      "recipe": {
+        "type": "farmersdelight:cutting",
+        "ingredients": [
+          {
+            "item": "minecraft:apple"
+          }
+        ],
+        "result": [
+          {
+            "count": 4,
+            "item": "recrafted_creatures:apple_slice"
+          }
+        ],
+        "tool": {
+          "tag": "forge:tools/knives"
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type":"forge:true"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:apple"
+          }
+        ],
+        "result": {
+          "item": "recrafted_creatures:apple_slice",
+          "count": 4
+        }
+      }
+    }
+  ]
+}

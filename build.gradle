@@ -122,7 +122,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven { url = "https://maven.matyrobbrt.com/releases" }
     maven { url = "https://maven.blamejared.com" }
-
 }
 
 dependencies {
