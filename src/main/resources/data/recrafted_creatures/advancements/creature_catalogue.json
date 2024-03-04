@@ -1,0 +1,45 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "patchouli"
+        }
+      ],
+      "advancement": {
+        "display": {
+          "icon": {
+            "item": "patchouli:guide_book",
+            "nbt": "{\"patchouli:book\":\"recrafted_creatures:creature_catalogue\"}"
+          },
+          "title": "Knowledge at your fingertips",
+          "description": "Obtain the Creature Catalogue",
+          "frame": "task",
+          "show_toast": true,
+          "announce_to_chat": true,
+          "hidden": false
+        },
+        "parent": "recrafted_creatures:root",
+        "criteria": {
+          "book": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "patchouli:guide_book",
+                  "nbt": "{\"patchouli:book\":\"recrafted_creatures:creature_catalogue\"}"
+                }
+              ]
+            }
+          }
+        },
+        "requirements": [
+          [
+            "book"
+          ]
+        ]
+      }
+    }
+  ]
+}

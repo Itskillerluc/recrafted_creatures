@@ -1,0 +1,28 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "patchouli"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:book"
+          },
+          {
+            "item": "recrafted_creatures:zebra_hide"
+          }
+        ],
+        "result": {
+          "item": "patchouli:guide_book",
+          "nbt": "{\"patchouli:book\":\"recrafted_creatures:creature_catalogue\"}"
+        }
+      }
+    }
+  ]
+}
