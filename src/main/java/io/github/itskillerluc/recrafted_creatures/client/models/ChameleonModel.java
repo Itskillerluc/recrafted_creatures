@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 import java.util.Set;
 
 public class ChameleonModel extends AnimatableDucModel<Chameleon> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "chameleon_accents.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "chameleon"), "accents");
 
     public ChameleonModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

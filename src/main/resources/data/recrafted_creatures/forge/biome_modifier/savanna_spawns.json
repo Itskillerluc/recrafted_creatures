@@ -13,6 +13,12 @@
       "weight": 40,
       "minCount": 3,
       "maxCount": 5
+    },
+    {
+      "type": "recrafted_creatures:secretarybird",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
     }
   ]
 }

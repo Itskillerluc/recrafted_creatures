@@ -43,6 +43,15 @@ public abstract class EggBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(HATCH, 0).setValue(getEggs(), minEggs));
     }
 
+    public EggBlock(Properties pProperties, int maxHatchLevel, VoxelShape oneEggAABB) {
+        super(pProperties);
+        this.maxHatchLevel = maxHatchLevel;
+        this.minEggs = 1;
+        this.maxEggs = 1;
+        this.oneEggAABB = oneEggAABB;
+        this.multipleEggAABB = oneEggAABB;
+    }
+
     abstract protected Block getEggBlock();
 
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {

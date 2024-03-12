@@ -17,7 +17,7 @@ import org.joml.Vector3f;
 import java.util.Set;
 
 public class MarmotModel extends AnimatableDucModel<Marmot> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "marmot.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "marmot"), "main");
 
     public MarmotModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

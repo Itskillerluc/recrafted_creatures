@@ -13,7 +13,7 @@ import org.joml.Vector3f;
 import java.util.Set;
 
 public class GiraffeModel extends AnimatableDucModel<Giraffe> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "giraffe.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "giraffe"), "main");
 
     public GiraffeModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

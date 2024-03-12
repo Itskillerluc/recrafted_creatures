@@ -1,12 +1,10 @@
 package io.github.itskillerluc.recrafted_creatures.entity;
 
-import com.google.common.graph.Network;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
 import io.github.itskillerluc.recrafted_creatures.block.OwlEggBlock;
-import io.github.itskillerluc.recrafted_creatures.client.models.ChameleonModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.OwlModel;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLaying;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLayingBreedGoal;
@@ -23,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -51,7 +48,6 @@ import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -66,7 +62,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Owl extends TamableRCMob implements Animatable<ChameleonModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal, EggLaying {
+public class Owl extends TamableRCMob implements Animatable<OwlModel>, VariantHolder<Owl.OwlVariant>, FlyingAnimal, EggLaying {
     private static final EntityDataSerializer<OwlVariant> OWL_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(OwlVariant.class);
     private static final EntityDataAccessor<Optional<UUID>> DELIVERY_TARGET = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Optional<UUID>> SENDER = SynchedEntityData.defineId(Owl.class, EntityDataSerializers.OPTIONAL_UUID);

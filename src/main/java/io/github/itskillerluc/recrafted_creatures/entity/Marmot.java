@@ -335,6 +335,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel> {
         NetworkChannel.CHANNEL.sendToServer(new DancePacket(this.getUUID(), pIsPartying));
     }
 
+
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypes.FALLING_ANVIL) && entityData.get(ANVIL) == 0) {

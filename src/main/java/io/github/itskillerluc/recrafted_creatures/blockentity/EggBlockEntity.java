@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public class EggBlockEntity <T extends AgeableMob> extends BlockEntity {
@@ -52,7 +53,7 @@ public class EggBlockEntity <T extends AgeableMob> extends BlockEntity {
             level.playSound(null, getBlockPos(), SoundEvents.TURTLE_EGG_CRACK, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
         }
         if (hatchTimer > maxHatchTime){
-            for (int i = 0; i < this.getBlockState().getValue(property); i++) {
+            for (int i = 0; i < (property != null ? this.getBlockState().getValue(property) : 1); i++) {
                 var entityInstance = entity.apply(this.getLevel());
                 entityInstance.setPos(new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
                 entityInstance.setAge(-24000);

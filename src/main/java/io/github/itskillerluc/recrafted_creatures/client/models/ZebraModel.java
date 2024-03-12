@@ -18,7 +18,7 @@ import org.joml.Vector3f;
 import java.util.Set;
 
 public class ZebraModel extends AnimatableDucModel<Zebra> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "zebra.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "zebra"), "main");
 
     public ZebraModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

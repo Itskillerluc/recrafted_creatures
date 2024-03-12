@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class OwlModel extends AnimatableDucModel<Owl> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "owl.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "owl"), "main");
 
     public OwlModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);
@@ -20,7 +20,7 @@ public class OwlModel extends AnimatableDucModel<Owl> {
 
     @Override
     protected Set<String> excludeAnimations() {
-        return Set.of("animation.owl.fly", "animation.owl.walk");
+        return Set.of("animation.owl.walk");
     }
 
     @Override

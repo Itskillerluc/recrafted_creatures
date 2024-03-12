@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class RedPandaModel extends AnimatableDucModel<RedPanda> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "red_panda.png"), "all");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(RecraftedCreatures.MODID, "red_panda"), "main");
 
     public RedPandaModel(Ducling ducling) {
         super(ducling, RenderType::entityCutoutNoCull);

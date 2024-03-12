@@ -84,6 +84,8 @@ public class RecraftedCreatures
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityRegistry.OWL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityRegistry.SECRETARYBIRD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
     private void addEntityAttributes(EntityAttributeCreationEvent event){
         event.put(EntityRegistry.GIRAFFE.get(), Giraffe.attributes().build());
@@ -93,6 +95,7 @@ public class RecraftedCreatures
         event.put(EntityRegistry.MARMOT.get(), Marmot.attributes().build());
         event.put(EntityRegistry.CHAMELEON.get(), Chameleon.attributes().build());
         event.put(EntityRegistry.OWL.get(), Owl.attributes().build());
+        event.put(EntityRegistry.SECRETARYBIRD.get(), Secretarybird.attributes().build());
     }
 
     private void postInit(FMLLoadCompleteEvent event) {

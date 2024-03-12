@@ -6,6 +6,7 @@
   "entity.recrafted_creatures.marmot": "Marmot",
   "entity.recrafted_creatures.chameleon": "Chameleon",
   "entity.recrafted_creatures.owl": "Owl",
+  "entity.recrafted_creatures.secretarybird": "Secretarybird",
 
   "subtitle.recrafted_creatures.giraffe_death": "Giraffe Death",
   "subtitle.recrafted_creatures.giraffe_hurt": "Giraffe Hurt",
@@ -50,10 +51,12 @@
   "item.recrafted_creatures.owl_envelope": "Owl Envelope",
   "item.recrafted_creatures.raw_zebra_meat": "Raw Zebra Meat",
   "item.recrafted_creatures.cooked_zebra_meat": "Cooked Zebra Meat",
+  "item.recrafted_creatures.secretarybird_spawn_egg": "Secretarybird Spawn Egg",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
   "block.recrafted_creatures.chameleon_egg_block": "Chameleon Egg",
+  "block.recrafted_creatures.secretarybird_egg_block": "Secretarybird Egg",
   "block.recrafted_creatures.owl_egg_block": "Owl Egg",
   "block.recrafted_creatures.rainbow_gel": "Rainbow gel",
   "block.recrafted_creatures.zebra_carpet": "Zebra Carpet",

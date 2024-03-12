@@ -19,4 +19,9 @@ public class BlockEntityRegistry {
             () -> BlockEntityType.Builder.of((pPos, pState) ->
                     new EggBlockEntity<>(BlockEntityRegistry.OWL_EGG.get(), pPos, pState, 9000, level ->
                             EntityRegistry.OWL.get().create(level), 2, BlockRegistry.OWL_EGG_BLOCK.get().getEggs()), BlockRegistry.OWL_EGG_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<?>> SECRETARYBIRD_EGG = BLOCK_ENTITY_TYPES.register("secretarybird_egg",
+            () -> BlockEntityType.Builder.of((pPos, pState) ->
+                    new EggBlockEntity<>(BlockEntityRegistry.SECRETARYBIRD_EGG.get(), pPos, pState, 45000, level ->
+                            EntityRegistry.SECRETARYBIRD.get().create(level), 2, BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get().getEggs()), BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get()).build(null));
 }

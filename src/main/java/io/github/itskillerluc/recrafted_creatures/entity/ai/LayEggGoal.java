@@ -53,6 +53,6 @@ public class LayEggGoal <T extends PathfinderMob & EggLaying> extends MoveToBloc
 
     }
     protected boolean isValidTarget(LevelReader pLevel, BlockPos pPos) {
-        return !pLevel.isEmptyBlock(pPos.above()) ? false : isValidPos.test(pLevel, pPos);
+        return pLevel.isEmptyBlock(pPos.above()) && isValidPos.test(pLevel, pPos);
     }
 }
