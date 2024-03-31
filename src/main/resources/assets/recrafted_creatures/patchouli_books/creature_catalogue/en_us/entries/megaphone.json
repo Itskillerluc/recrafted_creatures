@@ -8,8 +8,8 @@
       "text": "Megaphones are crafted with three Megaphone Fragments, a Hopper and a Leaver. They don't have a use and are a joke item."
     },
     {
-      "type": "patchouli:item",
-      "entity": "recrafted_creatures:megaphone"
+      "type": "patchouli:spotlight",
+      "item": "recrafted_creatures:megaphone"
     }
   ]
 }

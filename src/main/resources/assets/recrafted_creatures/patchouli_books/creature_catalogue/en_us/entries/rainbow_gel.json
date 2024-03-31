@@ -8,8 +8,8 @@
       "text": "When a Chameleon eats a Silverfish, Small Slime or Magma Cube, or Cave Spider, it will spit out this block. \n Rainbow Gel is a good decorative block which constantly changes color."
     },
     {
-      "type": "patchouli:block",
-      "block": "recrafted_creatures:rainbow_gel"
+      "type": "patchouli:spotlight",
+      "item": "recrafted_creatures:rainbow_gel"
     }
   ]
 }

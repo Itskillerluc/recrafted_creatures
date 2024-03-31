@@ -8,7 +8,7 @@
       "text": "Zebra Hide is obviously dropped from Zebras. \n Using two Zebra hide layed on the side you can make a Zebra Carpet! \n More importantly, you can craft one hide with a book to make the Creature Catalog!"
     },
     {
-      "type": "patchouli:item",
+      "type": "patchouli:spotlight",
       "item": "recrafted_creatures:zebra_hide"
     }
   ]

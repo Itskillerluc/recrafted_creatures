@@ -8,7 +8,7 @@
       "text": "There are a few ways to obtain Apple Slices. \n If you have Farmer's Delight installed you can use a cutting board and a knife, and without you can craft one Apple to get four slices. \n You can also get them by trading with Orangutans or as an extremely rare drop from Red Pandas. \n They are mostly a joke item but can be used as an alternative for taming Red Pandas."
     },
     {
-      "type": "patchouli:block",
+      "type": "patchouli:spotlight",
       "item": "recrafted_creatures:apple_slice"
     }
   ]

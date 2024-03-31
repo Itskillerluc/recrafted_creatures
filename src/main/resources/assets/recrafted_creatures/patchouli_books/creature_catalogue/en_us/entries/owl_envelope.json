@@ -8,7 +8,7 @@
       "text": "The Envelope can be crafted with two Paper in any shape. \n It can store one item and up to a stack of said item. \n You can give a tamed owl one to hold and deliver it."
     },
     {
-      "type": "patchouli:item",
+      "type": "patchouli:spotlight",
       "item": "recrafted_creatures:owl_envelope"
     }
   ]
