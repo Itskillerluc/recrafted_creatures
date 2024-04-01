@@ -44,6 +44,9 @@ public class ItemRegistry {
     public static final RegistryObject<ForgeSpawnEggItem> SECRETARYBIRD_SPAWN_EGG = ITEMS.register("secretarybird_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.SECRETARYBIRD, 0xEDEADE, 0xEBF5FB, new Item.Properties()));
 
+    public static final RegistryObject<ForgeSpawnEggItem> ORANGUTAN_SPAWN_EGG = ITEMS.register("orangutan_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityRegistry.ORANGUTAN, 0xd65e09, 0x808080, new Item.Properties()));
+
     public static final RegistryObject<BlockItem> MAMMOTH_MEAT = ITEMS.register("raw_mammoth_meat",
             () -> new BlockItem(BlockRegistry.RAW_MAMMOTH_MEAT.get(), new Item.Properties()));
 

@@ -3,6 +3,7 @@ package io.github.itskillerluc.recrafted_creatures.networking;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.DancePacket;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.DeliveryPacket;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOrangutanPacket;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOwlPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -36,6 +37,12 @@ public class NetworkChannel {
                 .encoder(ScareOwlPacket::encoder)
                 .decoder(ScareOwlPacket::decoder)
                 .consumerMainThread(ScareOwlPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(ScareOrangutanPacket.class, 2, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ScareOrangutanPacket::encoder)
+                .decoder(ScareOrangutanPacket::decoder)
+                .consumerMainThread(ScareOrangutanPacket::handle)
                 .add();
     }
 }

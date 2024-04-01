@@ -59,6 +59,7 @@ public class RecraftedCreatures
         BlockEntityRegistry.BLOCK_ENTITY_TYPES.register(modEventBus);
         InstrumentRegistry.INSTRUMENTS.register(modEventBus);
         CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
+        PoolEntryTypeRegistry.LOOT_POOL_ENTRY_TYPES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -96,6 +97,7 @@ public class RecraftedCreatures
         event.put(EntityRegistry.CHAMELEON.get(), Chameleon.attributes().build());
         event.put(EntityRegistry.OWL.get(), Owl.attributes().build());
         event.put(EntityRegistry.SECRETARYBIRD.get(), Secretarybird.attributes().build());
+        event.put(EntityRegistry.ORANGUTAN.get(), Orangutan.attributes().build());
     }
 
     private void postInit(FMLLoadCompleteEvent event) {

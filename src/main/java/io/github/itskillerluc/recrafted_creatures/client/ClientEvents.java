@@ -29,6 +29,7 @@ public class ClientEvents {
         EntityRenderers.register(EntityRegistry.CHAMELEON.get(), ChameleonRenderer::new);
         EntityRenderers.register(EntityRegistry.OWL.get(), OwlRenderer::new);
         EntityRenderers.register(EntityRegistry.SECRETARYBIRD.get(), SecretarybirdRenderer::new);
+        EntityRenderers.register(EntityRegistry.ORANGUTAN.get(), OrangutanRenderer::new);
     }
 
     @SubscribeEvent
@@ -41,5 +42,6 @@ public class ClientEvents {
         event.registerLayerDefinition(OwlModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Owl.LOCATION));
         event.registerLayerDefinition(ZebraModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Zebra.LOCATION));
         event.registerLayerDefinition(SecretarybirdModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Secretarybird.LOCATION));
+        event.registerLayerDefinition(OrangutanModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Orangutan.LOCATION));
     }
 }

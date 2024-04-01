@@ -6,7 +6,7 @@
 				"identifier": "geometry.giraffe",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 5,
+				"visible_bounds_width": 4,
 				"visible_bounds_height": 6.5,
 				"visible_bounds_offset": [0, 2.75, 0]
 			},
@@ -16,16 +16,24 @@
 					"pivot": [0, 34, -1]
 				},
 				{
-					"name": "tail",
+					"name": "body_1",
 					"parent": "giraffe",
-					"pivot": [0, 41, 13],
+					"pivot": [0, 35, -1],
 					"cubes": [
-						{"origin": [0, 22, 13], "size": [0, 20, 7], "uv": [0, 0]}
+						{"origin": [-8, 28, -15], "size": [16, 17, 28], "inflate": 0.001, "pivot": [0, 38, -15], "rotation": [-2.5, 0, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "Saddle",
+					"parent": "body_1",
+					"pivot": [0, 35, -1],
+					"cubes": [
+						{"origin": [-8.5, 31.5, -4], "size": [17, 13, 16], "pivot": [0, 35, -1], "rotation": [-2.5, 0, 0], "uv": [62, 99]}
 					]
 				},
 				{
 					"name": "body_2",
-					"parent": "giraffe",
+					"parent": "body_1",
 					"pivot": [0, 40, -10],
 					"cubes": [
 						{"origin": [-6, 35, -17], "size": [12, 16, 13], "uv": [49, 59]},
@@ -56,19 +64,11 @@
 					]
 				},
 				{
-					"name": "body_1",
-					"parent": "giraffe",
-					"pivot": [0, 35, -1],
-					"cubes": [
-						{"origin": [-8, 28, -15], "size": [16, 17, 28], "pivot": [0, 38, -15], "rotation": [-2.5, 0, 0], "uv": [0, 0]}
-					]
-				},
-				{
-					"name": "Saddle",
+					"name": "tail",
 					"parent": "body_1",
-					"pivot": [0, 35, -1],
+					"pivot": [0, 41, 13],
 					"cubes": [
-						{"origin": [-8.5, 31.5, -3], "size": [17, 13, 14], "pivot": [0, 35, -1], "rotation": [-2.5, 0, 0], "uv": [0, 45]}
+						{"origin": [0, 22, 13], "size": [0, 20, 7], "uv": [0, 0]}
 					]
 				},
 				{

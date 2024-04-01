@@ -43,4 +43,8 @@ public class EntityRegistry {
     public static final RegistryObject<EntityType<Secretarybird>> SECRETARYBIRD = ENTITY_TYPES.register("secretarybird",
             () -> EntityType.Builder.of(Secretarybird::new, MobCategory.CREATURE).sized(1f, 1.2f)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "secretarybird").toString()));
+
+    public static final RegistryObject<EntityType<Orangutan>> ORANGUTAN = ENTITY_TYPES.register("orangutan",
+            () -> EntityType.Builder.of(Orangutan::new, MobCategory.CREATURE).sized(1f, 1.2f)
+                    .build(new ResourceLocation(RecraftedCreatures.MODID, "orangutan").toString()));
 }

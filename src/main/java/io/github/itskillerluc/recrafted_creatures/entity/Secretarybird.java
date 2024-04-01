@@ -3,7 +3,6 @@ package io.github.itskillerluc.recrafted_creatures.entity;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
-import io.github.itskillerluc.recrafted_creatures.block.SecretarybirdEggBlock;
 import io.github.itskillerluc.recrafted_creatures.client.models.SecretarybirdModel;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.DefendTargetGoal;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.EggLaying;
@@ -13,6 +12,8 @@ import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -51,10 +52,7 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -72,7 +70,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     private final MoveControl walkingControl = new MoveControl(this);
     boolean goToTree = false;
     int layEggCounter;
-    List<Supplier<MobEffectInstance>> effect = null;
+    List<Supplier<MobEffectInstance>> effect = new ArrayList<>();
     boolean isDancing = false;
 
 
@@ -100,13 +98,23 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putString("variant", getVariant().name());
-        pCompound.putBoolean("isSleeping", isSleeping());
+        ListTag listTag = new ListTag();
+        for (Supplier<MobEffectInstance> mobEffectInstanceSupplier : effect) {
+            listTag.add(mobEffectInstanceSupplier.get().save(new CompoundTag()));
+        }
+        pCompound.put("effect", listTag);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         setVariant(SecretarybirdVariant.valueOf(pCompound.getString("variant")));
+        ListTag listTag = pCompound.getList("effect", Tag.TAG_COMPOUND);
+        for (int i = 0; i < listTag.size(); i++) {
+            var instance = MobEffectInstance.load(listTag.getCompound(i));
+            if (instance == null) continue;
+            effect.add(() -> new MobEffectInstance(instance));
+        }
     }
 
     @Override
@@ -197,30 +205,6 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
                 goToTree = false;
                 moveControl = flyingControl;
             }
-
-//            @Override
-//            protected boolean findNearestBlock() {
-//                int i = 16;
-//                int j = 16;
-//                BlockPos blockpos = this.mob.blockPosition();
-//                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-//
-//                for(int k = j - this.verticalSearchStart; k >= 0; k = k > 0 ? -k : 1 - k) {
-//                    for(int l = 0; l < i; ++l) {
-//                        for(int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
-//                            for(int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
-//                                blockpos$mutableblockpos.setWithOffset(blockpos, i1, k - 1, j1);
-//                                if (this.mob.isWithinRestriction(blockpos$mutableblockpos) && this.isValidTarget(this.mob.level(), blockpos$mutableblockpos)) {
-//                                    this.blockPos = blockpos$mutableblockpos;
-//                                    return true;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                return false;
-//            }
         });
         this.goalSelector.addGoal(4, new LayEggGoal<>(this, 1, BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get().defaultBlockState(), (level, pos) -> level.getBlockState(pos).is(BlockTags.LEAVES)));
         this.goalSelector.addGoal(4, new SecretarybirdWanderGoal(this, 1.0D));

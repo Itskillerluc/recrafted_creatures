@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
@@ -52,6 +53,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
+    private boolean foundWater = false;
 
     public Giraffe(EntityType<? extends Giraffe> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -88,6 +90,31 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
             }
         });
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
+        this.goalSelector.addGoal(5, new TryFindWaterGoal(this) {
+
+            @Override
+            public boolean canUse() {
+                return random.nextFloat() > 0.02f && super.canUse() && !foundWater;
+            }
+
+            @Override
+            public void start() {
+                BlockPos blockpos = null;
+
+                for(BlockPos blockpos1 : BlockPos.betweenClosed(Mth.floor(Giraffe.this.getX() - 2.0D), Mth.floor(Giraffe.this.getY() - 2.0D), Mth.floor(Giraffe.this.getZ() - 2.0D), Mth.floor(Giraffe.this.getX() + 2.0D), Giraffe.this.getBlockY(), Mth.floor(Giraffe.this.getZ() + 2.0D))) {
+                    if (Giraffe.this.level().getFluidState(blockpos1).is(FluidTags.WATER)) {
+                        blockpos = blockpos1;
+                        break;
+                    }
+                }
+
+                if (blockpos != null) {
+                    Giraffe.this.getMoveControl().setWantedPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 1.0D);
+                    foundWater = true;
+                    level().broadcastEntityEvent(Giraffe.this, (byte) 1);
+                }
+            }
+        });
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));
@@ -170,6 +197,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     public void tick() {
         super.tick();
+
         if (!level().isClientSide()) {
             if (getTarget() != null) {
                 entityData.set(HAS_TARGET, true);
@@ -179,7 +207,10 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
         }
         if (level().isClientSide()) {
             if (random.nextFloat() < 0.005) {
-                replayAnimation("tongue");
+                playAnimation("tongue");
+            }
+            if (random.nextFloat() < 0.01) {
+                replayAnimation("tail");
             }
         } else {
             if (isInWater() && isVehicle()){
@@ -366,5 +397,13 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         setSaddled(pCompound.getBoolean("saddled"));
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        super.handleEntityEvent(pId);
+        if (pId == 1) {
+            foundWater = true;
+        }
     }
 }

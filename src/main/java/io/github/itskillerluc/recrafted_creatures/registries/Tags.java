@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Instrument;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
@@ -14,4 +15,6 @@ public class Tags {
     public static final TagKey<Instrument> MEGAPHONE = TagKey.create(Registries.INSTRUMENT, new ResourceLocation(RecraftedCreatures.MODID, "megaphone"));
 
     public static final TagKey<Biome> OWL_FOREST = TagKey.create(Registries.BIOME, new ResourceLocation(RecraftedCreatures.MODID, "owl_forest"));
+
+    public static final TagKey<Item> ORANGUTAN_BARTERING = TagKey.create(Registries.ITEM, new ResourceLocation(RecraftedCreatures.MODID, "orangutan_bartering"));
 }
