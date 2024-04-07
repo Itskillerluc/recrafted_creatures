@@ -1,15 +1,13 @@
 package io.github.itskillerluc.recrafted_creatures.client;
 
 import io.github.itskillerluc.duclib.client.model.BaseDucModel;
+import io.github.itskillerluc.duclib.client.model.Ducling;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.*;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
-import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
+import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
-import net.minecraft.client.model.HorseModel;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -43,5 +41,11 @@ public class ClientEvents {
         event.registerLayerDefinition(ZebraModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Zebra.LOCATION));
         event.registerLayerDefinition(SecretarybirdModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Secretarybird.LOCATION));
         event.registerLayerDefinition(OrangutanModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Orangutan.LOCATION));
+        event.registerLayerDefinition(JungleStaffModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(JungleStaff.LOCATION));
+    }
+
+    @SubscribeEvent
+    public static void addLayers(final EntityRenderersEvent.AddLayers event) {
+        ItemRenderer.INSTANCE.models.put(JungleStaff.LOCATION, new JungleStaffModel(((Ducling) event.getContext().bakeLayer(JungleStaffModel.LAYER_LOCATION))));
     }
 }

@@ -2,6 +2,7 @@ package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.block.OwlEnvelope;
+import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
@@ -120,4 +121,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<BlockItem> ZEBRA_CARPET = ITEMS.register("zebra_carpet",
             () -> new BlockItem(BlockRegistry.ZEBRA_CARPET.get(), new Item.Properties()));
+
+    public static final RegistryObject<JungleStaff> JUNGLE_STAFF = ITEMS.register("jungle_staff",
+            () -> new JungleStaff(new Item.Properties().durability(20)));
 }

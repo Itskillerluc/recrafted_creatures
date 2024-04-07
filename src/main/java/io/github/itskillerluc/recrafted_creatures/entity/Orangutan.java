@@ -5,10 +5,12 @@ import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.OrangutanModel;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.OrangutanBabyRidePacket;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOrangutanPacket;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.Tags;
 import io.github.itskillerluc.recrafted_creatures.util.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -48,6 +51,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,10 +63,10 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "orangutan");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> OrangutanModel.createStateMap(getAnimation()));
-    private static final EntityDataAccessor<Boolean> ON_BACK = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> ON_BACK = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BOOLEAN);
-    private int curiosity;
-    private int missingMommy;
+    public int curiosity;
+    public int missingMommy;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int remainingPersistentAngerTime;
     @javax.annotation.Nullable
@@ -122,8 +126,6 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
             animateWhen("idle", !isMoving(this) && onGround() && !isSleeping());
             animateWhen("sleep", isSleeping());
             animateWhen("climb", isClimbing() && isMoving(this));
-            animateWhen("idle_hang", !isMoving(this) && !level().isEmptyBlock(blockPosition().above(2)));
-            animateWhen("walk_hang", isMoving(this) && !level().isEmptyBlock(blockPosition().above(2)));
             animateWhen("tree_jump", !onGround());
             animateWhen("trade", !getMainHandItem().isEmpty());
         } else {
@@ -160,7 +162,6 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     public void aiStep() {
         super.aiStep();
         setDiscardFriction(!onGround());
-        setNoGravity(!level().isEmptyBlock(blockPosition().above(2)));
         if (!this.level().isClientSide) {
             this.updatePersistentAnger((ServerLevel)this.level(), true);
 
@@ -279,11 +280,11 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     }
 
     class BarterGoal extends Goal {
-        static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/orangutan_bartering");
+        static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/orangutan_barter");
 
         @Override
         public boolean canUse() {
-            return !getMainHandItem().isEmpty() && random.nextFloat() > 0.99f;
+            return !getMainHandItem().isEmpty() && random.nextFloat() > 0.9f;
         }
 
         @Override
@@ -296,12 +297,10 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
                 for (ItemStack itemStack : list) {
                     spawnAtLocation(itemStack);
                 }
-                stopAnimation("trade");
                 level().broadcastEntityEvent(Orangutan.this, (byte)1);
             } else {
                 spawnAtLocation(getMainHandItem());
                 setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                stopAnimation("trade");
                 level().broadcastEntityEvent(Orangutan.this, (byte)2);
             }
         }
@@ -486,6 +485,10 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         }
     }
 
+    @Override
+    public boolean wantsToPickUp(ItemStack pStack) {
+        return pickupCooldown <= 0 && super.wantsToPickUp(pStack);
+    }
 
     @Override
     public boolean canHoldItem(ItemStack pStack) {
@@ -541,6 +544,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
             startRiding(availableParent);
             missingMommy = random.nextInt(2000, 8000);
             curiosity = 0;
+            NetworkChannel.CHANNEL.send(PacketDistributor.ALL.noArg(),  new OrangutanBabyRidePacket(availableParent.getId(), getId()));
         }
 
         private boolean isAvailableParentNear() {

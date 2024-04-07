@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "top=false": [
+      {
+        "model": "recrafted_creatures:block/thornwall_middle"
+      }
+    ],
+    "top=true": [
+      {
+        "model": "recrafted_creatures:block/thornwall_top"
+      }
+    ]
+  }
+}

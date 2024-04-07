@@ -1,10 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures.networking;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
-import io.github.itskillerluc.recrafted_creatures.networking.packets.DancePacket;
-import io.github.itskillerluc.recrafted_creatures.networking.packets.DeliveryPacket;
-import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOrangutanPacket;
-import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOwlPacket;
+import io.github.itskillerluc.recrafted_creatures.networking.packets.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -39,10 +36,16 @@ public class NetworkChannel {
                 .consumerMainThread(ScareOwlPacket::handle)
                 .add();
 
-        CHANNEL.messageBuilder(ScareOrangutanPacket.class, 2, NetworkDirection.PLAY_TO_SERVER)
+        CHANNEL.messageBuilder(ScareOrangutanPacket.class, 3, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(ScareOrangutanPacket::encoder)
                 .decoder(ScareOrangutanPacket::decoder)
                 .consumerMainThread(ScareOrangutanPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(OrangutanBabyRidePacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(OrangutanBabyRidePacket::encoder)
+                .decoder(OrangutanBabyRidePacket::decoder)
+                .consumerMainThread(OrangutanBabyRidePacket::handle)
                 .add();
     }
 }

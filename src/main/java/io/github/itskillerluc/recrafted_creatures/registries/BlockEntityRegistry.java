@@ -2,6 +2,7 @@ package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.blockentity.EggBlockEntity;
+import io.github.itskillerluc.recrafted_creatures.blockentity.ThornBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,4 +25,8 @@ public class BlockEntityRegistry {
             () -> BlockEntityType.Builder.of((pPos, pState) ->
                     new EggBlockEntity<>(BlockEntityRegistry.SECRETARYBIRD_EGG.get(), pPos, pState, 45000, level ->
                             EntityRegistry.SECRETARYBIRD.get().create(level), 2, BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get().getEggs()), BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<?>> THORN_BLOCK = BLOCK_ENTITY_TYPES.register("thorn_block",
+            () -> BlockEntityType.Builder.of((pos, state) ->
+                    new ThornBlockEntity(BlockEntityRegistry.THORN_BLOCK.get(), pos, state, 200), BlockRegistry.THORN_BLOCK.get()).build(null));
 }
