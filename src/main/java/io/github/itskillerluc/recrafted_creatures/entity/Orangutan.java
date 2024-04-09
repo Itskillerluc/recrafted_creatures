@@ -10,7 +10,6 @@ import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOrangu
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.Tags;
 import io.github.itskillerluc.recrafted_creatures.util.Util;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,7 +17,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -36,14 +34,11 @@ import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -102,7 +97,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         super.tick();
         if (!getMainHandItem().isEmpty()) {
             navigation.stop();
-            setDeltaMovement(0, 0, 0);
+            setSpeed(0);
         }
         if (pickupCooldown > 0) pickupCooldown--;
         if (scared > 0) scared--;
@@ -241,15 +236,15 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     }
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Orangutan.class));
-        this.goalSelector.addGoal(3, new ClimbOnBackGoal(7, 2));
-        this.goalSelector.addGoal(3, new SleepGoal(this, 1, 20, 20));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(1, new OrangutanGoal(new FloatGoal(this)));
+        this.goalSelector.addGoal(2, new OrangutanGoal(new BreedGoal(this, 1.0D, Orangutan.class)));
+        this.goalSelector.addGoal(3, new OrangutanGoal(new ClimbOnBackGoal(7, 2)));
+        this.goalSelector.addGoal(3, new OrangutanGoal(new SleepGoal(this, 1, 20, 20)));
+        this.goalSelector.addGoal(6, new OrangutanGoal(new WaterAvoidingRandomStrollGoal(this, 0.7D)));
+        this.goalSelector.addGoal(7, new OrangutanGoal(new LookAtPlayerGoal(this, Player.class, 6.0F)));
         this.goalSelector.addGoal(9, new BarterGoal());
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.9f, true) {
+        this.goalSelector.addGoal(8, new OrangutanGoal(new RandomLookAroundGoal(this)));
+        this.goalSelector.addGoal(2, new OrangutanGoal(new MeleeAttackGoal(this, 0.9f, true) {
             @Override
             protected double getAttackReachSqr(@NotNull LivingEntity pAttackTarget) {
                 return super.getAttackReachSqr(pAttackTarget) / 2;
@@ -273,10 +268,68 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
 
 
             }
-        });
-        this.goalSelector.addGoal(3, new NavigationGoal());
-        this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, false));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        }));
+        this.goalSelector.addGoal(3, new OrangutanGoal(new NavigationGoal()));
+        this.targetSelector.addGoal(4, new OrangutanGoal(new ResetUniversalAngerTargetGoal<>(this, false)));
+        this.targetSelector.addGoal(2, new OrangutanGoal(new HurtByTargetGoal(this)));
+    }
+
+    private class OrangutanGoal extends Goal {
+        Goal goal;
+
+        public OrangutanGoal(Goal goal) {
+            this.goal = goal;
+        }
+
+        @Override
+        public boolean canUse() {
+            return Orangutan.this.getMainHandItem().isEmpty() && goal.canUse();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return goal.canContinueToUse();
+        }
+
+        @Override
+        public boolean isInterruptable() {
+            return goal.isInterruptable();
+        }
+
+        @Override
+        public void start() {
+            goal.start();
+        }
+
+        @Override
+        public void stop() {
+            goal.stop();
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return goal.requiresUpdateEveryTick();
+        }
+
+        @Override
+        public void tick() {
+            goal.tick();
+        }
+
+        @Override
+        public void setFlags(EnumSet<Flag> pFlagSet) {
+            goal.setFlags(pFlagSet);
+        }
+
+        @Override
+        public String toString() {
+            return goal.toString();
+        }
+
+        @Override
+        public EnumSet<Flag> getFlags() {
+            return goal.getFlags();
+        }
     }
 
     class BarterGoal extends Goal {

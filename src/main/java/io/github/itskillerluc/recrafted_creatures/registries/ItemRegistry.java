@@ -18,6 +18,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.rmi.registry.Registry;
+
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RecraftedCreatures.MODID);
 
@@ -118,6 +120,9 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> COOKED_ZEBRA_MEAT = ITEMS.register("cooked_zebra_meat",
             () -> new Item(new Item.Properties().food(Foods.COOKED_BEEF)));
+
+    public static final RegistryObject<Item> FRUIT_KEBAB = ITEMS.register("fruit_kebab",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationMod(0.7f).build())));
 
     public static final RegistryObject<BlockItem> ZEBRA_CARPET = ITEMS.register("zebra_carpet",
             () -> new BlockItem(BlockRegistry.ZEBRA_CARPET.get(), new Item.Properties()));

@@ -98,6 +98,7 @@ public class RecraftedCreatures
         event.put(EntityRegistry.OWL.get(), Owl.attributes().build());
         event.put(EntityRegistry.SECRETARYBIRD.get(), Secretarybird.attributes().build());
         event.put(EntityRegistry.ORANGUTAN.get(), Orangutan.attributes().build());
+        event.put(EntityRegistry.BEAVER.get(), Beaver.attributes().build());
     }
 
     private void postInit(FMLLoadCompleteEvent event) {
