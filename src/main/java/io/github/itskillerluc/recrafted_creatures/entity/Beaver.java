@@ -8,6 +8,7 @@ import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.Tags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -30,11 +31,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,6 +51,8 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "beaver");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final int MAX_TRADE_TIME = 40;
+    static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/beaver_barter");
+
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> RedPandaModel.createStateMap(getAnimation()));
     private int pickupCooldown;
     private int tradeTimer;
@@ -114,8 +122,8 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel> {
 
     @Override
     protected void pickUpItem(ItemEntity pItemEntity) {
-        //TODO broadcast the animation.
         if (this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
+            level().broadcastEntityEvent(this, (byte) 1);
             this.onItemPickup(pItemEntity);
             ItemStack itemstack = removeOneItemFromItemEntity(pItemEntity);
             this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
@@ -134,6 +142,14 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel> {
         }
 
         return itemstack1;
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        super.handleEntityEvent(pId);
+        if (pId == 1) {
+            playAnimation("observing_trade");
+        }
     }
 
     @Override
@@ -286,6 +302,29 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel> {
         super.tick();
         if (!getMainHandItem().isEmpty()) {
             navigation.stop();
+            if (tradeTimer++ > (level().isClientSide() ? MAX_TRADE_TIME - 1 : MAX_TRADE_TIME)) {
+                pickupCooldown = 200;
+                tradeTimer = 0;
+                if (getMainHandItem().is(Tags.BEAVER_BARTERING)) {
+                    if (level().isClientSide()) {
+                        playAnimation("trade_likes");
+                    } else {
+                        getMainHandItem().shrink(1);
+                        LootTable loottable = level().getServer().getLootData().getLootTable(LOOT);
+                        List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel) level())).withParameter(LootContextParams.THIS_ENTITY, Beaver.this).create(LootContextParamSets.PIGLIN_BARTER));
+                        for (ItemStack itemStack : list) {
+                            spawnAtLocation(itemStack);
+                        }
+                    }
+                } else {
+                    if (level().isClientSide()) {
+                        playAnimation("trade_dislikes");
+                    } else {
+                        spawnAtLocation(getMainHandItem());
+                        setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                    }
+                }
+            }
         }
         if (this.level().isClientSide()) {
             animateWhen("idle", !isMoving(this));

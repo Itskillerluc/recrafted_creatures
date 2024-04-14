@@ -2,23 +2,37 @@ package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.block.OwlEnvelope;
+import io.github.itskillerluc.recrafted_creatures.client.models.BuilderHatModel;
+import io.github.itskillerluc.recrafted_creatures.client.models.JungleStaffModel;
+import io.github.itskillerluc.recrafted_creatures.client.renderers.ItemRenderer;
 import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec2;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.rmi.registry.Registry;
+import java.util.function.Consumer;
 
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RecraftedCreatures.MODID);
@@ -38,6 +52,8 @@ public class ItemRegistry {
     public static final RegistryObject<ForgeSpawnEggItem> MARMOT_SPAWN_EGG = ITEMS.register("marmot_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.MARMOT, 0xC08F5F, 0x7C5240, new Item.Properties()));
 
+    public static RegistryObject<ForgeSpawnEggItem> BEAVER_SPAWN_EGG = ITEMS.register("beaver_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityRegistry.BEAVER, 0x7C5240, 0xC08F5F, new Item.Properties()));
     public static final RegistryObject<ForgeSpawnEggItem> CHAMELEON_SPAWN_EGG = ITEMS.register("chameleon_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.CHAMELEON, 0x90EE90, 0x00A432, new Item.Properties()));
 
@@ -102,6 +118,12 @@ public class ItemRegistry {
     public static final RegistryObject<BlockItem> RAINBOW_GEL = ITEMS.register("rainbow_gel",
             () -> new BlockItem(BlockRegistry.RAINBOW_GEL.get(), new Item.Properties()));
 
+    public static final RegistryObject<BlockItem> STICK_BUNDLE = ITEMS.register("stick_bundle",
+            () -> new BlockItem(BlockRegistry.STICK_BUNDLE.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> MUDDY_STICK_BUNDLE = ITEMS.register("muddy_stick_bundle",
+            () -> new BlockItem(BlockRegistry.MUDDY_STICK_BUNDLE.get(), new Item.Properties()));
+
     public static final RegistryObject<InstrumentItem> MEGAPHONE = ITEMS.register("megaphone",
             () -> new InstrumentItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1), Tags.MEGAPHONE) {
                 @Override
@@ -129,4 +151,19 @@ public class ItemRegistry {
 
     public static final RegistryObject<JungleStaff> JUNGLE_STAFF = ITEMS.register("jungle_staff",
             () -> new JungleStaff(new Item.Properties().durability(20)));
+
+    public static BuilderHatModel builderHatModel;
+    public static final RegistryObject<Item> BUILDER_HAT = ITEMS.register("builder_hat",
+            () -> new ArmorItem(ArmorMaterials.BUILDER, ArmorItem.Type.HELMET, new Item.Properties()) {
+                @Override
+                public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+                    consumer.accept(new IClientItemExtensions() {
+                        @Override
+                        public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
+                            builderHatModel.headRotation = new Vec2(original.head.xRot, original.head.yRot);
+                            return builderHatModel;
+                        }
+                    });
+                }
+            });
 }

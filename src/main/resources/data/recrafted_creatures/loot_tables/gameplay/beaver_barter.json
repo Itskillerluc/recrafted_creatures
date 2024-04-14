@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:barter",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "recrafted_creatures:builder_hat",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:barrier",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:large_fern",
+          "weight": 14
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spruce_sapling",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:sweet_berries",
+          "count": 4,
+          "weight": 16
+        },
+        {
+          "type": "minecraft:item",
+          "name": "recrafted_creatures:owl_egg",
+          "weight": 6
+        }
+      ]
+    }
+  ],
+  "random_sequence": "minecraft:gameplay/piglin_bartering"
+}

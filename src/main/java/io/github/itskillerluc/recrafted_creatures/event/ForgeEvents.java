@@ -5,10 +5,12 @@ import io.github.itskillerluc.recrafted_creatures.capability.ExtraTickProvider;
 import io.github.itskillerluc.recrafted_creatures.capability.HerdProvider;
 import io.github.itskillerluc.recrafted_creatures.capability.IExtraTick;
 import io.github.itskillerluc.recrafted_creatures.capability.IHerd;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.frog.Frog;
@@ -19,6 +21,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -65,5 +69,12 @@ public class ForgeEvents {
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         event.register(IHerd.class);
         event.register(IExtraTick.class);
+    }
+
+    @SubscribeEvent
+    public static void livingHurtEvent(final LivingHurtEvent event) {
+        if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).is(ItemRegistry.BUILDER_HAT.get())) {
+            event.setCanceled(true);
+        }
     }
 }

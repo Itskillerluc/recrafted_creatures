@@ -8,6 +8,7 @@
   "entity.recrafted_creatures.owl": "Owl",
   "entity.recrafted_creatures.secretarybird": "Secretarybird",
   "entity.recrafted_creatures.orangutan": "Orangutan",
+  "entity.recrafted_creatures.beaver": "Beaver",
 
   "subtitle.recrafted_creatures.giraffe_death": "Giraffe Death",
   "subtitle.recrafted_creatures.giraffe_hurt": "Giraffe Hurt",
@@ -56,6 +57,7 @@
   "item.recrafted_creatures.orangutan_spawn_egg": "Orangutan Spawn Egg",
   "item.recrafted_creatures.jungle_staff": "Jungle Staff",
   "item.recrafted_creatures.fruit_kebab": "Fruit Kebab",
+  "item.recrafted_creatures.builder_hat": "Builder Hat",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
@@ -65,6 +67,8 @@
   "block.recrafted_creatures.rainbow_gel": "Rainbow gel",
   "block.recrafted_creatures.zebra_carpet": "Zebra Carpet",
   "block.recrafted_creatures.thorn_block": "Thorn Block",
+  "block.recrafted_creatures.stick_bundle": "Stick Bundle",
+  "block.recrafted_creatures.muddy_stick_bundle": "Muddy Stick Bundle",
 
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.white": "White Zebra",
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_gray": "Light Gray Zebra",

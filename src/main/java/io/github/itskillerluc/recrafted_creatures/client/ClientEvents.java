@@ -8,6 +8,7 @@ import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -44,10 +45,12 @@ public class ClientEvents {
         event.registerLayerDefinition(OrangutanModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Orangutan.LOCATION));
         event.registerLayerDefinition(JungleStaffModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(JungleStaff.LOCATION));
         event.registerLayerDefinition(BeaverModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(Beaver.LOCATION));
+        event.registerLayerDefinition(BuilderHatModel.LAYER_LOCATION, () -> BaseDucModel.getLakeDefinition(BuilderHatModel.LOCATION));
     }
 
     @SubscribeEvent
     public static void addLayers(final EntityRenderersEvent.AddLayers event) {
         ItemRenderer.INSTANCE.models.put(JungleStaff.LOCATION, new JungleStaffModel(((Ducling) event.getContext().bakeLayer(JungleStaffModel.LAYER_LOCATION))));
+        ItemRegistry.builderHatModel = new BuilderHatModel(((Ducling) event.getContext().bakeLayer(BuilderHatModel.LAYER_LOCATION)));
     }
 }

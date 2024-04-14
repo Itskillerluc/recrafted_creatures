@@ -17,4 +17,5 @@ public class Tags {
     public static final TagKey<Biome> OWL_FOREST = TagKey.create(Registries.BIOME, new ResourceLocation(RecraftedCreatures.MODID, "owl_forest"));
 
     public static final TagKey<Item> ORANGUTAN_BARTERING = TagKey.create(Registries.ITEM, new ResourceLocation(RecraftedCreatures.MODID, "orangutan_bartering"));
+    public static final TagKey<Item> BEAVER_BARTERING = TagKey.create(Registries.ITEM, new ResourceLocation(RecraftedCreatures.MODID, "beaver_bartering"));
 }

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:river",
+  "features": "recrafted_creatures:beaver_dam",
+  "step": "surface_structures"
+}

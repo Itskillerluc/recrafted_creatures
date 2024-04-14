@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "recrafted_creatures:block/muddy_stick_bundle_top",
+    "side": "recrafted_creatures:block/muddy_stick_bundle_side"
+  }
+}

@@ -60,6 +60,8 @@ public class RecraftedCreatures
         InstrumentRegistry.INSTRUMENTS.register(modEventBus);
         CreativeModeTabRegistry.CREATIVEMODE_TAB_REGISTRY.register(modEventBus);
         PoolEntryTypeRegistry.LOOT_POOL_ENTRY_TYPES.register(modEventBus);
+        FeatureRegistry.FEATURES.register(modEventBus);
+        PlacementModifierTypeRegistry.PLACEMENT_MODIFIERS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
