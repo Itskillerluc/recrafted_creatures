@@ -58,6 +58,7 @@
   "item.recrafted_creatures.jungle_staff": "Jungle Staff",
   "item.recrafted_creatures.fruit_kebab": "Fruit Kebab",
   "item.recrafted_creatures.builder_hat": "Builder Hat",
+  "item.recrafted_creatures.beaver_spawn_egg": "Beaver Spawn Egg",
 
   "block.recrafted_creatures.raw_mammoth_meat": "Raw Mammoth Meat",
   "block.recrafted_creatures.cooked_mammoth_meat": "Cooked Mammoth Meat",
@@ -69,6 +70,7 @@
   "block.recrafted_creatures.thorn_block": "Thorn Block",
   "block.recrafted_creatures.stick_bundle": "Stick Bundle",
   "block.recrafted_creatures.muddy_stick_bundle": "Muddy Stick Bundle",
+  "block.recrafted_creatures.constructor": "Constructor",
 
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.white": "White Zebra",
   "block.minecraft.banner.recrafted_creatures.zebra_pattern.light_gray": "Light Gray Zebra",

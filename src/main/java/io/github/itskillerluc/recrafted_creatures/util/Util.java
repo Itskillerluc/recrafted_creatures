@@ -18,7 +18,9 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.util.LandRandomPos.generateRandomPosTowardDirection;
 import static net.minecraft.world.entity.ai.util.LandRandomPos.movePosUpOutOfSolid;
@@ -168,5 +170,13 @@ public class Util {
         }
 
         return true;
+    }
+
+    public static <F, C> C GetNonNullElseGet(F value, Function<F, C> function, C other) {
+        if (value == null) {
+            return other;
+        } else {
+            return function.apply(value);
+        }
     }
 }

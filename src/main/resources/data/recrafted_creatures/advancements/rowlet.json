@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "recrafted_creatures:owl_spawn_egg"
+    },
+    "title": "I choose you!",
+    "description": "Name an owl \"Rowlet\"",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "recrafted_creatures:root",
+  "criteria": {
+    "rowlet": {
+      "trigger": "minecraft:player_interacted_with_entity",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:name_tag"
+          ],
+          "nbt": "{display:{Name:'{\"text\":\"Rowlet\"}'}}"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rowlet"
+    ]
+  ]
+}

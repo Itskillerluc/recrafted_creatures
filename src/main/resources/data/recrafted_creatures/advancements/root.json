@@ -108,6 +108,45 @@
                     }
                   }
                 }
+              },
+              {
+                "condition": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "type": "minecraft:player",
+                  "type_specific": {
+                    "type": "player",
+                    "looking_at": {
+                      "type": "recrafted_creatures:orangutan"
+                    }
+                  }
+                }
+              },
+              {
+                "condition": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "type": "minecraft:player",
+                  "type_specific": {
+                    "type": "player",
+                    "looking_at": {
+                      "type": "recrafted_creatures:beaver"
+                    }
+                  }
+                }
+              },
+              {
+                "condition": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "type": "minecraft:player",
+                  "type_specific": {
+                    "type": "player",
+                    "looking_at": {
+                      "type": "recrafted_creatures:secretarybird"
+                    }
+                  }
+                }
               }
             ]
           }

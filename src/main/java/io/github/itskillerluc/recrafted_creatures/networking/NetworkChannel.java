@@ -47,5 +47,41 @@ public class NetworkChannel {
                 .decoder(OrangutanBabyRidePacket::decoder)
                 .consumerMainThread(OrangutanBabyRidePacket::handle)
                 .add();
+
+        CHANNEL.messageBuilder(AskColorPacket.class, 5, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(AskColorPacket::encoder)
+                .decoder(AskColorPacket::decoder)
+                .consumerMainThread(AskColorPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(ChangePalettePacket.class, 6, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ChangePalettePacket::encoder)
+                .decoder(ChangePalettePacket::decoder)
+                .consumerMainThread(ChangePalettePacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(SaveStructurePacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SaveStructurePacket::encoder)
+                .decoder(SaveStructurePacket::decoder)
+                .consumerMainThread(SaveStructurePacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(FetchBlocksPacket.class, 8, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(FetchBlocksPacket::encoder)
+                .decoder(FetchBlocksPacket::decoder)
+                .consumerMainThread(FetchBlocksPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(SetBlocksPacket.class, 9, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(SetBlocksPacket::encoder)
+                .decoder(SetBlocksPacket::decoder)
+                .consumerMainThread(SetBlocksPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(SetBeaverSettingsPacket.class, 10, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SetBeaverSettingsPacket::encoder)
+                .decoder(SetBeaverSettingsPacket::decoder)
+                .consumerMainThread(SetBeaverSettingsPacket::handle)
+                .add();
     }
 }

@@ -51,6 +51,22 @@
           "type": "recrafted_creatures:owl"
         }
       }
+    },
+    "secretarybird": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:secretarybird"
+        }
+      }
+    },
+    "beaver": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "recrafted_creatures:beaver"
+        }
+      }
     }
   },
   "requirements": [
@@ -68,6 +84,12 @@
     ],
     [
       "owl"
+    ],
+    [
+      "secretarybird"
+    ],
+    [
+      "beaver"
     ]
   ],
   "rewards": {

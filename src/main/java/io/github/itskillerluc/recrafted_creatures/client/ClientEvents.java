@@ -6,9 +6,14 @@ import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.*;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
+import io.github.itskillerluc.recrafted_creatures.registries.BlockEntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.*;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.MenuRegistry;
+import io.github.itskillerluc.recrafted_creatures.screen.BeaverScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -30,6 +35,8 @@ public class ClientEvents {
         EntityRenderers.register(EntityRegistry.SECRETARYBIRD.get(), SecretarybirdRenderer::new);
         EntityRenderers.register(EntityRegistry.ORANGUTAN.get(), OrangutanRenderer::new);
         EntityRenderers.register(EntityRegistry.BEAVER.get(), BeaverRenderer::new);
+        BlockEntityRenderers.register(BlockEntityRegistry.CONSTRUCTOR.get(), ConstructorRenderer::new);
+        MenuScreens.register(MenuRegistry.BEAVER_MENU.get(), BeaverScreen::new);
     }
 
     @SubscribeEvent

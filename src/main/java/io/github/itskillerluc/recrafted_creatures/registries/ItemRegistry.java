@@ -149,6 +149,9 @@ public class ItemRegistry {
     public static final RegistryObject<BlockItem> ZEBRA_CARPET = ITEMS.register("zebra_carpet",
             () -> new BlockItem(BlockRegistry.ZEBRA_CARPET.get(), new Item.Properties()));
 
+    public static final RegistryObject<BlockItem> CONSTRUCTOR = ITEMS.register("constructor",
+            () -> new BlockItem(BlockRegistry.CONSTRUCTOR.get(), new Item.Properties()));
+
     public static final RegistryObject<JungleStaff> JUNGLE_STAFF = ITEMS.register("jungle_staff",
             () -> new JungleStaff(new Item.Properties().durability(20)));
 

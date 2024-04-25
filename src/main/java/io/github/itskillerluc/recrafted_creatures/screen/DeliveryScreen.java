@@ -61,6 +61,15 @@ public class DeliveryScreen extends Screen {
         this.initialized = true;
     }
 
+    private void checkSearchStringUpdate(String string) {
+        string = string.toLowerCase(Locale.ROOT);
+        if (!string.equals(this.lastSearch)) {
+            this.deliveryList.setFilter(string);
+            this.lastSearch = string;
+            this.deliveryList.updatePlayerList(this.minecraft.player.connection.getOnlinePlayerIds(), this.deliveryList.getScrollAmount());
+        }
+    }
+
     private int windowHeight() {
         return Math.max(52, this.height - 128 - 16);
     }
@@ -71,15 +80,6 @@ public class DeliveryScreen extends Screen {
 
     private int marginX() {
         return (this.width - 238) / 2;
-    }
-
-    private void checkSearchStringUpdate(String string) {
-        string = string.toLowerCase(Locale.ROOT);
-        if (!string.equals(this.lastSearch)) {
-            this.deliveryList.setFilter(string);
-            this.lastSearch = string;
-            this.deliveryList.updatePlayerList(this.minecraft.player.connection.getOnlinePlayerIds(), this.deliveryList.getScrollAmount());
-        }
     }
 
     public void renderBackground(GuiGraphics pGuiGraphics) {

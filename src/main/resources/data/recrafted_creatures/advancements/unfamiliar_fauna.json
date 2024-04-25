@@ -151,6 +151,66 @@
           }
         ]
       }
+    },
+    "beaver": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:beaver"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "orangutan": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:orangutan"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "secretarybird": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "type_specific": {
+                "type": "player",
+                "looking_at": {
+                  "type": "recrafted_creatures:secretarybird"
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   },
   "requirements": [
@@ -174,6 +234,15 @@
     ],
     [
       "chameleon"
+    ],
+    [
+      "orangutan"
+    ],
+    [
+      "secretarybird"
+    ],
+    [
+      "beaver"
     ]
   ],
   "rewards": {
