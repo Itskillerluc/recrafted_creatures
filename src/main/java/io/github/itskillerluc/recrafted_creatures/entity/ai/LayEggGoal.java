@@ -18,7 +18,7 @@ public class LayEggGoal <T extends PathfinderMob & EggLaying> extends MoveToBloc
     private final BiPredicate<LevelReader, BlockPos> isValidPos;
 
     public LayEggGoal(T entity, double pSpeedModifier, BlockState eggs, BiPredicate<LevelReader, BlockPos> isValidPos) {
-        super(entity, pSpeedModifier, 16);
+        super(entity, pSpeedModifier, 16, 16);
         this.entity = entity;
         this.eggs = eggs;
         this.isValidPos = isValidPos;
@@ -29,6 +29,7 @@ public class LayEggGoal <T extends PathfinderMob & EggLaying> extends MoveToBloc
     public boolean canContinueToUse() {
         return super.canContinueToUse() && this.entity.hasEgg();
     }
+
     public void tick() {
         super.tick();
         BlockPos blockpos = entity.blockPosition();
@@ -44,6 +45,7 @@ public class LayEggGoal <T extends PathfinderMob & EggLaying> extends MoveToBloc
                 entity.setHasEgg(false);
                 entity.setEggLaying(false);
                 entity.setInLove(600);
+                stop();
             }
 
             if (entity.getEggLaying()) {

@@ -281,11 +281,8 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
                     this.setInLove(pPlayer);
                     pPlayer.getItemInHand(pHand).shrink(1);
                     return InteractionResult.SUCCESS;
-                } else {
-                    return super.mobInteract(pPlayer, pHand);
                 }
             }
-            return InteractionResult.SUCCESS;
         } else if (this.getOwner() == null && !level().isClientSide() && (pPlayer.getItemInHand(pHand).is(Items.BAMBOO) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);

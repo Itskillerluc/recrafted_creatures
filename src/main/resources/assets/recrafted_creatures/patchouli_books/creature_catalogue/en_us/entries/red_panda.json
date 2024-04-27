@@ -5,11 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Red Pandas are small passive mammals, they can be found in Jungles and Bamboo Jungles and can be tamed and bred with Bamboo. \n Upon being tamed they can help you escape conflicts with mobs, by distracting the enemies. \n Red Pandas will also occasionally sleep and play with each other."
+      "text": "Red Pandas are small passive mammals, they can be found in Jungles and Bamboo Jungles and can be tamed and bred with Bamboo. Upon being tamed they can help you escape conflicts with mobs, by distracting the enemies. Red Pandas will also occasionally sleep and play with each other."
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:red_panda"
+      "entity": "recrafted_creatures:red_panda",
+      "scale": 0.5
     }
   ]
 }

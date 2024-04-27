@@ -87,6 +87,7 @@ public class ZebraAI {
         Brain<Zebra> brain = zebra.getBrain();
         brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
         zebra.setAggressive(brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET));
+        zebra.getEntityData().set(Zebra.RUN_AWAY_FROM, brain.getMemory(MemoryModuleType.AVOID_TARGET).map(  Entity::getUUID));
     }
 
     public static void wasHurtBy(Zebra zebra, LivingEntity pTarget) {

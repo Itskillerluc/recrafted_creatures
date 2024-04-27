@@ -5,11 +5,20 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Marmots are small passive rodents which can be found exclusively in Meadows. \n They will sometimes alert other marmots of enemies or players by preforming their signature scream, which gives said enemy the Spectral Arrow Effect. \n You can feed Marmots multiple kinds of foods by dropping them on the ground \n This includes Tall Grass, Eggs, Cookies, Dandelions, and TNT. \n Be warned though, as the TNT can have explosive consequences! You can also hand feed a Marmot any of these foods (except TNT) to breed them. \n Marmots also have some other behaviors, for example they can dance to music disks, and dropping an anvil on them flattens them like a Pancake. \n In this state the Marmot cannot be moved and will stay that way forever, only death can save them. \n There is also a rare chance that when killed, they drop a Megaphone Fragment."
+      "text": "Marmots are small passive rodents which can be found exclusively in Meadows. They will sometimes alert other marmots of enemies or players by preforming their signature scream, which gives said enemy the Spectral Arrow Effect. You can feed Marmots multiple kinds of foods by dropping them on the ground."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "This includes Tall Grass, Eggs, Cookies, Dandelions, and TNT. Be warned though, as the TNT can have explosive consequences! You can also hand feed a Marmot any of these foods (except TNT) to breed them."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Marmots also have some other behaviors, for example they can dance to music disks, and dropping an anvil on them flattens them like a Pancake. In this state the Marmot cannot be moved and will stay that way forever, only death can save them. There is also a rare chance that when killed, they drop a Megaphone Fragment."
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:marmot"
+      "entity": "recrafted_creatures:marmot",
+      "scale": 0.8
     }
   ]
 }

@@ -31,6 +31,10 @@
   "subtitle.recrafted_creatures.zebra_ambience": "Zebra Ambient",
   "subtitle.recrafted_creatures.zebra_death": "Zebra Death",
   "subtitle.recrafted_creatures.zebra_hurt": "Zebra Hurt",
+  "subtitle.recrafted_creatures.beaver_ambience": "Beaver Ambient",
+  "subtitle.recrafted_creatures.orangutan_death": "Orangutan Death",
+  "subtitle.recrafted_creatures.orangutan_hurt": "Orangutan Hurt",
+  "subtitle.recrafted_creatures.orangutan_ambience": "Orangutan Ambient",
 
   "item.recrafted_creatures.giraffe_spawn_egg": "Giraffe Spawn Egg",
   "item.recrafted_creatures.red_panda_spawn_egg": "Red Panda Spawn Egg",

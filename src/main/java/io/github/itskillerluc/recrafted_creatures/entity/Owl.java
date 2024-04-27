@@ -333,11 +333,6 @@ public class Owl extends TamableRCMob implements Animatable<OwlModel>, VariantHo
         return random.nextBoolean() ? SoundRegistry.OWL_AMBIENCE.get() : SoundRegistry.OWL_HOOT.get();
     }
 
-    @Override
-    protected float getSoundVolume() {
-        return 2F;
-    }
-
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {

@@ -16,7 +16,7 @@ public class RandomTickMixin {
     private void recraftedcreatures$tickChunk(ServerLevel level, LevelChunk chunk, int ticks) {
         chunk.getLevel().getCapability(ExtraTickProvider.EXTRA_TICK_CAP).ifPresent(cap -> {
             if (cap.getChunks().contains(chunk)) {
-                level.tickChunk(chunk, ticks * 15);
+                level.tickChunk(chunk, ticks * 500);
             }
         });
     }

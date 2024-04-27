@@ -5,11 +5,19 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Mammoth meat is dropped from Mammoths, it can be placed on the ground and eaten like a cake. \n The block can also be cooked in a furnace and smoker like other foods."
+      "text": "Mammoth meat is dropped by Mammoths.$(br2)It can be placed on the ground and eaten like a cake.$(br2)The block can also be cooked in a furnace and smoker like other foods."
     },
     {
       "type": "patchouli:spotlight",
       "item": "recrafted_creatures:raw_mammoth_meat"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "recrafted_creatures:cooked_mammoth_meat"
+    },
+    {
+      "type": "patchouli:smelting",
+      "recipe": "recrafted_creatures:cooked_mammoth_meat"
     }
   ]
 }

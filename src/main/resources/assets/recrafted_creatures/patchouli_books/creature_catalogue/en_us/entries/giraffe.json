@@ -5,11 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Giraffes are the tallest animals of the mod, they can be found exclusively in Savannas and can be tamed and bred with Wheat, Carrots or Leaf Blocks. \n Upon being tamed they can be given a saddle and be ridden. While they can't jump like horses, they are faster and can allow you to break blocks further away. Upon death they drop leather."
+      "text": "Giraffes are the tallest animals of the mod, they can be found exclusively in Savannas and can be tamed and bred with Wheat, Carrots or Leaf Blocks. $(br)Upon being tamed they can be given a saddle and be ridden. While they can't jump like horses, they are faster and can allow you to break blocks further away. Upon death they drop leather."
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:giraffe"
+      "entity": "recrafted_creatures:giraffe",
+      "scale": 0.5
     }
   ]
 }

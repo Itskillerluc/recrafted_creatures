@@ -63,6 +63,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     private static final EntityDataAccessor<Optional<BlockPos>> NEST = SynchedEntityData.defineId(Secretarybird.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "secretary_bird");
     private static final EntityDataAccessor<SecretarybirdVariant> VARIANT = SynchedEntityData.defineId(Secretarybird.class, SECRETARYBIRD_VARIANT_SERIALIZER);
+    private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(Secretarybird.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<OptionalInt> POTION_COLOR = SynchedEntityData.defineId(Secretarybird.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> SecretarybirdModel.createStateMap(getAnimation()));
@@ -91,7 +92,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
                 .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.ATTACK_DAMAGE, 4)
                 .add(Attributes.FOLLOW_RANGE, 40)
-                .add(Attributes.FLYING_SPEED, 0.4F);
+                .add(Attributes.FLYING_SPEED, 0.6F);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        setVariant(SecretarybirdVariant.values()[pLevel.getRandom().nextIntBetweenInclusive(0, 2)]);
+        setVariant(SecretarybirdVariant.values()[pLevel.getRandom().nextIntBetweenInclusive(0, 1)]);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -131,6 +132,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
         entityData.define(LAYING_EGG, false);
         entityData.define(NEST, Optional.empty());
         entityData.define(POTION_COLOR, OptionalInt.empty());
+        entityData.define(FLYING, false);
     }
 
     protected PathNavigation createNavigation(Level pLevel) {
@@ -146,9 +148,9 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     public void tick() {
         super.tick();
         if (level().isClientSide()) {
-            animateWhen("idle", hasPose(Pose.STANDING));
+            animateWhen("idle", !isFlying() && hasPose(Pose.STANDING));
             animateWhen("sit", hasPose(Pose.SITTING));
-            animateWhen("fly", isFlying());
+            animateWhen("fly", entityData.get(FLYING));
         }
     }
 
@@ -163,19 +165,19 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
         this.goalSelector.addGoal(0, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, true) {
+        this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, false) {
             @Override
             public boolean canUse() {
-                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+                return super.canUse() && entityData.get(COMMAND) == Command.FOLLOWING  && !hasEgg();
             }
 
             @Override
             public boolean canContinueToUse() {
-                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING;
+                return super.canContinueToUse() && entityData.get(COMMAND) == Command.FOLLOWING && !hasEgg();
             }
         });
         this.goalSelector.addGoal(3, new EggLayingBreedGoal<>(this, 1.0D));
-        this.goalSelector.addGoal(4, new MoveToBlockGoal(this, 1, 16, 8) {
+        this.goalSelector.addGoal(4, new MoveToBlockGoal(this, 1, 16, 16) {
 
             @Override
             public boolean canUse() {
@@ -191,22 +193,45 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
             @Override
             public void start() {
                 moveControl = flyingControl;
+                entityData.set(FLYING, true);
                 super.start();
             }
 
             @Override
             protected boolean isValidTarget(LevelReader pLevel, BlockPos pPos) {
-                return pLevel.isEmptyBlock(pPos.above()) && pLevel.getBlockState(pPos).is(BlockTags.LEAVES);
+                return pLevel.isEmptyBlock(pPos.above()) && pLevel.getBlockState(pPos.below()).is(BlockTags.LEAVES);
             }
 
             @Override
             protected void moveMobToBlock() {
+                moveControl = flyingControl;
+                entityData.set(FLYING, true);
                 super.moveMobToBlock();
                 goToTree = false;
-                moveControl = flyingControl;
             }
         });
-        this.goalSelector.addGoal(4, new LayEggGoal<>(this, 1, BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get().defaultBlockState(), (level, pos) -> level.getBlockState(pos).is(BlockTags.LEAVES)));
+        this.goalSelector.addGoal(4, new LayEggGoal<>(this, 1, BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get().defaultBlockState(), (level, pos) -> level.getBlockState(pos).is(BlockTags.LEAVES)) {
+            @Override
+            public void start() {
+                moveControl = flyingControl;
+                entityData.set(FLYING, true);
+                setNoGravity(true);
+                super.start();
+            }
+
+            @Override
+            public boolean isInterruptable() {
+                return false;
+            }
+
+            @Override
+            public void stop() {
+                setNoGravity(true);
+                moveControl = walkingControl;
+                entityData.set(FLYING, false);
+                super.stop();
+            }
+        });
         this.goalSelector.addGoal(4, new SecretarybirdWanderGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1, false));
         this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
@@ -216,7 +241,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new DefendTargetGoal<>(this, LivingEntity.class, false, () -> entityData.get(NEST).get().getCenter(), 50).shouldDefend(() -> entityData.get(NEST).isPresent()));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, entity -> entity.getBoundingBox().getXsize() * entity.getBoundingBox().getYsize() * getBoundingBox().getZsize() < 1));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, entity -> !(entity instanceof Secretarybird) && entity.getBoundingBox().getXsize() * entity.getBoundingBox().getYsize() * getBoundingBox().getZsize() < 1));
     }
 
     @Override
@@ -294,8 +319,15 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
 
     private void calculateFlapping() {
         Vec3 vec3 = this.getDeltaMovement();
-        if (!this.onGround() && vec3.y < 0.0D) {
-            this.setDeltaMovement(vec3.multiply(1.0D, target != null ? 0.9D : 0.6D, 1.0D));
+        if (!this.onGround() && vec3.y < 0.0D && moveControl == flyingControl) {
+            this.setDeltaMovement(vec3.multiply(1.0D, 0.6, 1.0D));
+        }
+    }
+
+    @Override
+    protected void jumpFromGround() {
+        if (moveControl == flyingControl) {
+            super.jumpFromGround();
         }
     }
 
@@ -337,6 +369,11 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     @Override
     public boolean isFlying() {
         return !this.onGround();
+    }
+
+    @Override
+    public float getStepHeight() {
+        return 1;
     }
 
     @Override
@@ -444,11 +481,13 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
 
         protected Vec3 getPosition() {
             Vec3 vec3;
+            entityData.set(FLYING, false);
             Secretarybird.this.moveControl = walkingControl;
             setNoGravity(false);
             if (this.mob.level().random.nextFloat() < 0.05F) {
-                Secretarybird.this.moveControl = flyingControl;
                 if (mob.getEntityData().get(NEST).isPresent()) {
+                    Secretarybird.this.moveControl = flyingControl;
+                    entityData.set(FLYING, true);
                     vec3 = mob.getEntityData().get(NEST).get().getCenter();
                 } else {
                     goToTree = true;

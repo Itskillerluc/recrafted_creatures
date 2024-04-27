@@ -32,9 +32,9 @@ public class ZebraModel extends AnimatableDucModel<Zebra> {
     @Override
     public void setupAnim(@NotNull Zebra pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        if (pEntity.hasControllingPassenger()) {
+        if (pEntity.hasControllingPassenger() && !pEntity.isJumping() || pEntity.getEntityData().get(Zebra.RUN_AWAY_FROM).isPresent()) {
             this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.zebra.gallop").animation(), pLimbSwing, pLimbSwingAmount, 1, 2f);
-        } else {
+        } else if (!pEntity.isJumping()){
             this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.zebra.walk").animation(), pLimbSwing, pLimbSwingAmount, 5    , 2);
         }
         if (this.young){

@@ -124,5 +124,37 @@
       "recrafted_creatures:megaphone_sound_3",
       "recrafted_creatures:megaphone_sound_4"
     ]
+  },
+  "entity.beaver_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.beaver_ambience",
+    "sounds": [
+      "recrafted_creatures:beaver-sound-1",
+      "recrafted_creatures:beaver-sound-2",
+      "recrafted_creatures:beaver-sound-3",
+      "recrafted_creatures:beaver-sound-4",
+      "recrafted_creatures:beaver-sound-5"
+    ]
+  },
+  "entity.orangutan_death": {
+    "subtitle": "subtitle.recrafted_creatures.orangutan_death",
+    "sounds": [
+      "recrafted_creatures:orangutan_death"
+    ]
+  },
+  "entity.orangutan_hurt": {
+    "subtitle": "subtitle.recrafted_creatures.orangutan_hurt",
+    "sounds": [
+      "recrafted_creatures:orangutan_hurt_1",
+      "recrafted_creatures:orangutan_hurt_2"
+    ]
+  },
+  "entity.orangutan_ambience": {
+    "subtitle": "subtitle.recrafted_creatures.orangutan_ambience",
+    "sounds": [
+      "recrafted_creatures:orangutan_sound_1",
+      "recrafted_creatures:orangutan_sound_2",
+      "recrafted_creatures:orangutan_sound_3",
+      "recrafted_creatures:orangutan_sound_4"
+    ]
   }
 }

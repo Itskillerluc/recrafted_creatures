@@ -7,6 +7,8 @@ import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger
 import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
 import io.github.itskillerluc.recrafted_creatures.client.models.BeaverModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.FoodSearching;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.MoveToFoodGoal;
 import io.github.itskillerluc.recrafted_creatures.menu.BeaverMenu;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
@@ -56,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, MenuProvider {
+public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, MenuProvider, FoodSearching {
     private static final EntityDataSerializer<BeaverVariant> BEAVER_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(BeaverVariant.class);
     private static final EntityDataSerializer<Mirror> MIRROR_SERIALIZER = EntityDataSerializer.simpleEnum(Mirror.class);
     private static final EntityDataSerializer<Rotation> ROTATION_SERIALIZER = EntityDataSerializer.simpleEnum(Rotation.class);
@@ -70,6 +72,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final int MAX_TRADE_TIME = 40;
     private static final int BUILD_TIME = 1200;
+    private ItemEntity itemTarget;
     static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/beaver_barter");
 
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> RedPandaModel.createStateMap(getAnimation()));
@@ -94,6 +97,16 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new BeaverMenu(pContainerId, pPlayerInventory, List.of(), this, List.of());
+    }
+
+    @Override
+    public ItemEntity getItemTarget() {
+        return itemTarget;
+    }
+
+    @Override
+    public void setItemTarget(ItemEntity target) {
+        itemTarget = target;
     }
 
     class BeaverMoveControl extends MoveControl {
@@ -245,6 +258,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new BeaverGoal(new FloatGoal(this)));
         this.goalSelector.addGoal(2, new BeaverGoal(new SitWhenOrderedToGoal(this)));
+        this.goalSelector.addGoal(3, new MoveToFoodGoal<>(this, 1, 5, item -> item.getItem().is(Tags.BEAVER_BARTERING)));
         this.goalSelector.addGoal(3, new BeaverGoal(new FollowOwnerGoal(this, 1.4D, 10.0F, 2.0F, false) {
             @Override
             public boolean canUse() {
@@ -425,7 +439,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
                     }
                     return InteractionResult.SUCCESS;
                 }
-                return InteractionResult.SUCCESS;
+                return super.mobInteract(pPlayer, pHand);
             }
         } else if (this.getOwner() == null && !level().isClientSide() && (pPlayer.getItemInHand(pHand).is(ItemRegistry.FRUIT_KEBAB.get()) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
@@ -596,19 +610,19 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundRegistry.RED_PANDA_HURT.get();
+        return SoundRegistry.BEAVER_AMBIENCE.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundRegistry.RED_PANDA_DEATH.get();
+        return SoundRegistry.BEAVER_AMBIENCE.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundRegistry.RED_PANDA_AMBIENCE.get();
+        return SoundRegistry.BEAVER_AMBIENCE.get();
     }
 
     public enum BeaverVariant {

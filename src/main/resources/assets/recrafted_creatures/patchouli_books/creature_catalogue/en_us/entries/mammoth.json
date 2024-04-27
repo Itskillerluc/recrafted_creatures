@@ -5,11 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Mammoths are large neutral mobs which can be found in Snowy Plains. You can tame and breed them by feeding them Melons or Pumpkins. \n Tamed Mammoths can be ridden without a saddle, and gain tribal markings on their body, which can be dyed. \n Upon death they drop Mammoth meat which can be cooked and eaten."
+      "text": "Mammoths are large neutral mobs which can be found in Snowy Plains. You can tame and breed them by feeding them Melons or Pumpkins. $(br)Tamed Mammoths can be ridden without a saddle, and gain tribal markings on their body, which can be dyed. $(br)Upon death they drop Mammoth meat which can be cooked and eaten."
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:mammoth"
+      "entity": "recrafted_creatures:mammoth",
+      "scale": 0.5
     }
   ]
 }

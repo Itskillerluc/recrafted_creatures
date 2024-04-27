@@ -27,7 +27,9 @@ public class SecretarybirdModel extends AnimatableDucModel<Secretarybird> {
     @Override
     public void setupAnim(@NotNull Secretarybird pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.secretary_bird.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
+        if (!pEntity.isFlying()) {
+            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.secretary_bird.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
+        }
         ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).xRot += pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
         ((Ducling) getAnyDescendantWithName("Head").orElseThrow()).yRot += pNetHeadYaw * ((float) Math.PI / 180F);
     }

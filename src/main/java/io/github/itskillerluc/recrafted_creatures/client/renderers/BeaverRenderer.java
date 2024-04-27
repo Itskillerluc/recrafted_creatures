@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BeaverRenderer extends MobRenderer<Beaver, BeaverModel> {
     public BeaverRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new BeaverModel(((Ducling) pContext.bakeLayer(BeaverModel.LAYER_LOCATION))), 1.1F);
+        super(pContext, new BeaverModel(((Ducling) pContext.bakeLayer(BeaverModel.LAYER_LOCATION))), 0.5F);
         addLayer(new BeaverHoldsItemLayer(this, pContext.getItemInHandRenderer()));
     }
 

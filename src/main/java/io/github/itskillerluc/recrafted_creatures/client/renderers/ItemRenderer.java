@@ -43,13 +43,11 @@ public class ItemRenderer extends BlockEntityWithoutLevelRenderer {
                 }
                 case FIRST_PERSON_LEFT_HAND -> {
                     pPoseStack.mulPose(new Quaternionf().rotateX(Mth.PI));
-                    pPoseStack.translate(0, -1, 0);
-                    pPoseStack.scale(0.5f, 0.5f, 0.5f);
+                    pPoseStack.translate(0, -1.3, 0);
                 }
                 case FIRST_PERSON_RIGHT_HAND -> {
                     pPoseStack.mulPose(new Quaternionf().rotateX(Mth.PI));
-                    pPoseStack.translate(1, -1, 0);
-                    pPoseStack.scale(0.5f, 0.5f, 0.5f);
+                    pPoseStack.translate(1, -1.3, 0);
                 }
                 case HEAD -> {
                 }
@@ -72,7 +70,7 @@ public class ItemRenderer extends BlockEntityWithoutLevelRenderer {
             model.root.getAllParts().forEach(ModelPart::resetPose);
             if (Minecraft.getInstance().level != null) {
                 if (pStack.getOrCreateTag().contains("use")) {
-                    Util.animate(model, JungleStaff.ANIMATION.getAnimations().get("animation.jungle_staff.use").animation(), Minecraft.getInstance().level.getGameTime() * 100, 1, model.getVectorCache());
+                    Util.animate(model, JungleStaff.ANIMATION.getAnimations().get("animation.jungle_staff.use").animation(), Minecraft.getInstance().level.getGameTime() * 10, 1, model.getVectorCache());
                 } else {
                     Util.animate(model, JungleStaff.ANIMATION.getAnimations().get("animation.jungle_staff.idle").animation(), Minecraft.getInstance().level.getGameTime() * 100, 1, model.getVectorCache());
                 }

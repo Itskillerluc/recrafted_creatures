@@ -33,6 +33,12 @@ public class SoundRegistry{
         public static final RegistryObject<SoundEvent> ZEBRA_HURT = register("entity.zebra_hurt");
         public static final RegistryObject<SoundEvent> ZEBRA_AMBIENCE = register("entity.zebra_ambience");
 
+        public static final RegistryObject<SoundEvent> ORANGUTAN_DEATH = register("entity.orangutan_death");
+        public static final RegistryObject<SoundEvent> ORANGUTAN_HURT = register("entity.orangutan_hurt");
+        public static final RegistryObject<SoundEvent> ORANGUTAN_AMBIENCE = register("entity.orangutan_ambience");
+
+        public static final RegistryObject<SoundEvent> BEAVER_AMBIENCE = register("entity.beaver_ambience");
+
         public static final RegistryObject<SoundEvent> MEGAPHONE_SOUND = register("item.megaphone_sound");
 
 

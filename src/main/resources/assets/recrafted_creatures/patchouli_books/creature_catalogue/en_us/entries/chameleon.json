@@ -5,11 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Chameleons are small passive reptiles found only in Jungles. \n They can change their color to match any block they stand on, and have the ability to climb up walls. \n Chameleons are able to eat Silverfish, Cave Spiders, and small Slimes and Magma Cubes using their long tongue. \n Doing so will cause them to spit out a Rainbow Jell Block. \n They are also bred with Spider Eyes."
+      "text": "Chameleons are small passive reptiles found only in Jungles. They can change their color to match any block they stand on, and have the ability to climb up walls. Chameleons are able to eat Silverfish, Cave Spiders, and small Slimes and Magma Cubes using their long tongue. Doing so will cause them to spit out a Rainbow Jell Block. They are also bred with Spider Eyes."
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:chameleon"
+      "entity": "recrafted_creatures:chameleon",
+      "scale": 0.8
     }
   ]
 }

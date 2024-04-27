@@ -19,6 +19,10 @@ public class SecretarybirdRenderer extends MobRenderer<Secretarybird, Secretaryb
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(Secretarybird pEntity) {
+        var name = pEntity.getCustomName();
+        if (name != null && name.getString().equalsIgnoreCase("opila")) {
+            return Secretarybird.SecretarybirdVariant.OPILA.texture;
+        }
         return pEntity.getVariant().texture;
     }
 }

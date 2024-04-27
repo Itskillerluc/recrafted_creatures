@@ -5,7 +5,11 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Owls are passive flying Birds found in Forests, Taigas, Snowy Taigas, Old Growth Taigas, and Dark Oak Forests. They have two variants, a brown one for normal biomes and a white one for the Snowy Biomes. \n During the day, they like to sleep on tree tops and will awaken during the night, Owls will also hunt Rabbits. \n You can tame them with Raw rabbit and breed them with Cooked Rabbit. \n Owls also have a delivery system! If you give an envelope to an owl and then crouch while right  clicking, \n you can enter the name of any player and the item will be delivered! \n Owls also have a third skin for when named Rowlet which is based on the Pokemon."
+      "text": "Owls are passive flying Birds found in Forests, Taigas, Snowy Taigas, Old Growth Taigas, and Dark Oak Forests. They have two variants, a brown one for normal biomes and a white one for the Snowy Biomes. During the day, they like to sleep on tree tops and will awaken during the night, Owls will also hunt Rabbits."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "You can tame them with Raw rabbit and breed them with Cooked Rabbit. Owls also have a delivery system! If you give an envelope to an owl and then crouch while right  clicking, you can enter the name of any player and the item will be delivered! Owls also have a third skin for when named Rowlet which is based on the Pokemon."
     },
     {
       "type": "patchouli:entity",

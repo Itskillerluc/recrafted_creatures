@@ -61,7 +61,7 @@ public class ItemRegistry {
             () -> new ForgeSpawnEggItem(EntityRegistry.OWL, 0x7B3F00, 0xB87333, new Item.Properties()));
 
     public static final RegistryObject<ForgeSpawnEggItem> SECRETARYBIRD_SPAWN_EGG = ITEMS.register("secretarybird_spawn_egg",
-            () -> new ForgeSpawnEggItem(EntityRegistry.SECRETARYBIRD, 0xEDEADE, 0xEBF5FB, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(EntityRegistry.SECRETARYBIRD, 0x3EB489, 0xFFFFFF, new Item.Properties()));
 
     public static final RegistryObject<ForgeSpawnEggItem> ORANGUTAN_SPAWN_EGG = ITEMS.register("orangutan_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.ORANGUTAN, 0xd65e09, 0x808080, new Item.Properties()));
@@ -114,6 +114,9 @@ public class ItemRegistry {
 
     public static final RegistryObject<BlockItem> OWL_EGG = ITEMS.register("owl_egg",
             () -> new BlockItem(BlockRegistry.OWL_EGG_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockItem> SECRETARYBIRD_EGG = ITEMS.register("secretarybird_egg",
+            () -> new BlockItem(BlockRegistry.SECRETARYBIRD_EGG_BLOCk.get(), new Item.Properties()));
 
     public static final RegistryObject<BlockItem> RAINBOW_GEL = ITEMS.register("rainbow_gel",
             () -> new BlockItem(BlockRegistry.RAINBOW_GEL.get(), new Item.Properties()));

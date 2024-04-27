@@ -4,10 +4,13 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.OrangutanModel;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.FoodSearching;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.MoveToFoodGoal;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.OrangutanBabyRidePacket;
 import io.github.itskillerluc.recrafted_creatures.networking.packets.ScareOrangutanPacket;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.Tags;
 import io.github.itskillerluc.recrafted_creatures.util.Util;
 import net.minecraft.core.BlockPos;
@@ -17,10 +20,12 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -37,6 +42,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -52,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Orangutan extends Animal implements NeutralMob, Animatable<OrangutanModel> {
+public class Orangutan extends Animal implements NeutralMob, Animatable<OrangutanModel>, FoodSearching {
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BYTE);
 
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "orangutan");
@@ -68,6 +74,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     private UUID persistentAngerTarget;
     public int scared = 0;
     private int pickupCooldown;
+    private ItemEntity entityTarget;
     public Orangutan(EntityType<? extends Orangutan> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new OrangutanMoveControl();
@@ -90,6 +97,35 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
                 return true;
             }
         };
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        if (pPlayer.getItemInHand(pHand).is(Tags.ORANGUTAN_BARTERING) && this.getAge() == 0 && !this.isInLove()) {
+            this.setInLove(pPlayer);
+            pPlayer.getItemInHand(pHand).shrink(1);
+            return InteractionResult.SUCCESS;
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return SoundRegistry.ORANGUTAN_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundRegistry.ORANGUTAN_DEATH.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundRegistry.ORANGUTAN_AMBIENCE.get();
     }
 
     @Override
@@ -118,10 +154,10 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         }
 
         if (level().isClientSide()) {
-            animateWhen("idle", !isMoving(this) && onGround() && !isSleeping());
+            animateWhen("idle", !isClimbing() && !isMoving(this) && onGround() && !isSleeping());
             animateWhen("sleep", isSleeping());
-            animateWhen("climb", isClimbing() && isMoving(this));
-            animateWhen("tree_jump", !onGround());
+            animateWhen("climb", isClimbing());
+            animateWhen("tree_jump", !isClimbing() && !onGround());
             animateWhen("trade", !getMainHandItem().isEmpty());
         } else {
             this.setClimbing(this.horizontalCollision);
@@ -178,6 +214,16 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         super.readAdditionalSaveData(pCompound);
         this.readPersistentAngerSaveData(this.level(), pCompound);
         setSleeping(pCompound.getBoolean("isSleeping"));
+    }
+
+    @Override
+    public ItemEntity getItemTarget() {
+        return entityTarget;
+    }
+
+    @Override
+    public void setItemTarget(ItemEntity target) {
+        entityTarget = target;
     }
 
     class OrangutanMoveControl extends MoveControl {
@@ -237,6 +283,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new OrangutanGoal(new FloatGoal(this)));
+        this.goalSelector.addGoal(2, new OrangutanGoal(new MoveToFoodGoal<>(this, 1, 5, item -> item.getItem().is(Tags.ORANGUTAN_BARTERING))));
         this.goalSelector.addGoal(2, new OrangutanGoal(new BreedGoal(this, 1.0D, Orangutan.class)));
         this.goalSelector.addGoal(3, new OrangutanGoal(new ClimbOnBackGoal(7, 2)));
         this.goalSelector.addGoal(3, new OrangutanGoal(new SleepGoal(this, 1, 20, 20)));

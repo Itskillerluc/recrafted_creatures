@@ -5,11 +5,16 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The Zebra is a neutral variant of the Horse which spawn exclusively in Savannas, they can be found roaming in large herds. \n If one member of the herd is provoked then it will attack while the rest flee, and if you stand behind a Zebra it will kick and then run. \n You can tame and breed one the same way as any other horse, and when tamed they can be given a saddle and a chest, similar to Donkeys and Mules. \n There is also a rare blonde variant which is simply a cosmetic change. \n Zebras also have two drops, being Zebra Meat and Zebra Hide!"
+      "text": "The Zebra is a neutral variant of the Horse which spawn exclusively in Savannas, they can be found roaming in large herds. If one member of the herd is provoked then it will attack while the rest flee, and if you stand behind a Zebra it will kick and then run."
+    },
+    {
+      "type": "patchouli:text",
+      "text": " You can tame and breed one the same way as any other horse, and when tamed they can be given a saddle and a chest, similar to Donkeys and Mules. There is also a rare blonde variant which is simply a cosmetic change. Zebras also have two drops, being Zebra Meat and Zebra Hide!"
     },
     {
       "type": "patchouli:entity",
-      "entity": "recrafted_creatures:zebra"
+      "entity": "recrafted_creatures:zebra",
+      "scale": 0.8
     }
   ]
 }

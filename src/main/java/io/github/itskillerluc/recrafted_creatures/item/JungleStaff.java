@@ -67,7 +67,7 @@ public class JungleStaff extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        pPlayer.getCooldowns().addCooldown(this, 1200);
+        pPlayer.getCooldowns().addCooldown(this, 600);
         if (pPlayer.isShiftKeyDown()) {
             for (int i = 0; i < WALL_HEIGHT; i++) {
                 for (int j = -(WALL_WIDTH / 2); j < WALL_WIDTH / 2; j++) {
@@ -88,7 +88,7 @@ public class JungleStaff extends Item {
                 }
             }
         } else {
-            pPlayer.getItemInHand(pUsedHand).getOrCreateTag().putInt("use", 600);
+            pPlayer.getItemInHand(pUsedHand).getOrCreateTag().putInt("use", 300);
             pPlayer.getItemInHand(pUsedHand).getOrCreateTag().put("chunk", NbtUtils.writeBlockPos(pPlayer.chunkPosition().getWorldPosition()));
             if (!pLevel.isClientSide()) {
                 pLevel.getCapability(ExtraTickProvider.EXTRA_TICK_CAP).ifPresent(cap -> {

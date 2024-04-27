@@ -22,6 +22,6 @@ public class BlockRegistry {
     public static final RegistryObject<CarpetBlock> ZEBRA_CARPET = BLOCKS.register("zebra_carpet", () -> new CarpetBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY)));
     public static final RegistryObject<Block> STICK_BUNDLE = BLOCKS.register("stick_bundle", () -> new Block(BlockBehaviour.Properties.copy(Blocks.MANGROVE_ROOTS)));
     public static final RegistryObject<Block> MUDDY_STICK_BUNDLE = BLOCKS.register("muddy_stick_bundle", () -> new Block(BlockBehaviour.Properties.copy(Blocks.MUDDY_MANGROVE_ROOTS)));
-    public static final RegistryObject<ThornBlock> THORN_BLOCK = BLOCKS.register("thorn_block", () -> new ThornBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.HARD_CROP)));
+    public static final RegistryObject<ThornBlock> THORN_BLOCK = BLOCKS.register("thorn_block", () -> new ThornBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.CROP)));
     public static final RegistryObject<ConstructorBlock> CONSTRUCTOR = BLOCKS.register("constructor", () -> new ConstructorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 }
