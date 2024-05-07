@@ -81,7 +81,7 @@ public class Zebra extends AbstractChestedHorse implements NeutralMob, Animatabl
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        var herd = new CreateHerd();
+        var herd = new CreateHerd<>(zebra -> true);
         herd.actuallyCreateHerd(pLevel.getLevel(), this, pLevel.getLevel().getGameTime(), new ArrayList<>(pLevel.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(this.position(), 16, 16, 16))));
         attributes().add(Attributes.JUMP_STRENGTH, generateJumpStrength(() -> pLevel.getRandom().nextDouble()));
         if (random.nextFloat() < 0.02f) {
@@ -120,7 +120,9 @@ public class Zebra extends AbstractChestedHorse implements NeutralMob, Animatabl
     @Override
     public void tick() {
         super.tick();
-
+        if (isInWater() && isVehicle()){
+            ejectPassengers();
+        }
         if (level().isClientSide()) {
             animateWhen("idle", !isMoving(this) && !isJumping);
             animateWhen("jump", isJumping);

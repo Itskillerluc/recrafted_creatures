@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public class RedPandaRenderer extends MobRenderer<RedPanda, RedPandaModel> {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/red_panda.png");
     public static final ResourceLocation LOCATION_SLEEPING = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/red_panda_sleeping.png");
+    public static final ResourceLocation LOCATION_BUILDER = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/red_panda_builder.png");
+    public static final ResourceLocation LOCATION_BUILDER_SLEEPING = new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/red_panda_builder_sleeping.png");
 
     public RedPandaRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new RedPandaModel((Ducling) pContext.bakeLayer(RedPandaModel.LAYER_LOCATION)), 0.4f);
@@ -50,6 +52,11 @@ public class RedPandaRenderer extends MobRenderer<RedPanda, RedPandaModel> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(RedPanda pEntity) {
-        return pEntity.isRedPandaSleeping() ? LOCATION_SLEEPING : LOCATION;
+        var name = pEntity.getCustomName();
+        if (name != null && name.getString().equalsIgnoreCase("bob")) {
+            return pEntity.isRedPandaSleeping() ? LOCATION_BUILDER_SLEEPING : LOCATION_BUILDER;
+        } else {
+            return pEntity.isRedPandaSleeping() ? LOCATION_SLEEPING : LOCATION;
+        }
     }
 }

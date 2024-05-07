@@ -90,31 +90,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
             }
         });
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(5, new TryFindWaterGoal(this) {
 
-            @Override
-            public boolean canUse() {
-                return random.nextFloat() > 0.02f && super.canUse() && !foundWater;
-            }
-
-            @Override
-            public void start() {
-                BlockPos blockpos = null;
-
-                for(BlockPos blockpos1 : BlockPos.betweenClosed(Mth.floor(Giraffe.this.getX() - 2.0D), Mth.floor(Giraffe.this.getY() - 2.0D), Mth.floor(Giraffe.this.getZ() - 2.0D), Mth.floor(Giraffe.this.getX() + 2.0D), Giraffe.this.getBlockY(), Mth.floor(Giraffe.this.getZ() + 2.0D))) {
-                    if (Giraffe.this.level().getFluidState(blockpos1).is(FluidTags.WATER)) {
-                        blockpos = blockpos1;
-                        break;
-                    }
-                }
-
-                if (blockpos != null) {
-                    Giraffe.this.getMoveControl().setWantedPosition((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 1.0D);
-                    foundWater = true;
-                    level().broadcastEntityEvent(Giraffe.this, (byte) 1);
-                }
-            }
-        });
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));

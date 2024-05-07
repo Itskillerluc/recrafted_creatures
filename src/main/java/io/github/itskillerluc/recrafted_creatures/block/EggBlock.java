@@ -79,7 +79,7 @@ public abstract class EggBlock extends Block implements EntityBlock {
         }
     }
 
-    private void decreaseEggs(Level pLevel, BlockPos pPos, BlockState pState) {
+    protected void decreaseEggs(Level pLevel, BlockPos pPos, BlockState pState) {
         pLevel.playSound(null, pPos, SoundEvents.TURTLE_EGG_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + pLevel.random.nextFloat() * 0.2F);
         int i = pState.getValue(getEggs());
         if (i <= 1) {

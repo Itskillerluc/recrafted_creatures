@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.Set;
 
@@ -27,6 +28,10 @@ public class SecretarybirdModel extends AnimatableDucModel<Secretarybird> {
     @Override
     public void setupAnim(@NotNull Secretarybird pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+        if (this.young){
+            root().offsetScale(new Vector3f(-0.35f, -0.35f, -0.35f));
+            root().offsetPos(new Vector3f(0f, 7f, 0f));
+        }
         if (!pEntity.isFlying()) {
             this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.secretary_bird.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
         }

@@ -44,6 +44,11 @@ public class SecretarybirdEggBlock extends EggBlock {
     }
 
     @Override
+    public boolean canBeReplaced(@NotNull BlockState pState, BlockPlaceContext pUseContext) {
+        return false;
+    }
+
+    @Override
     protected boolean canDestroyEgg(Level pLevel, Entity pEntity) {
         if (!(pEntity instanceof Secretarybird) && !(pEntity instanceof Bat)) {
             if (!(pEntity instanceof LivingEntity)) {
@@ -84,5 +89,10 @@ public class SecretarybirdEggBlock extends EggBlock {
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HATCH);
+    }
+
+    @Override
+    protected void decreaseEggs(Level pLevel, BlockPos pPos, BlockState pState) {
+        pLevel.destroyBlock(pPos, false);
     }
 }

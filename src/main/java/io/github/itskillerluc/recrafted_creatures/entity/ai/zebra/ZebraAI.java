@@ -16,10 +16,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.Objects;
@@ -46,7 +48,7 @@ public class ZebraAI {
     private static void initCoreActivity(Brain<Zebra> pBrain) {
         pBrain.addActivity(Activity.CORE, 0,ImmutableList.of(
                 new Swim(0.8F),
-                new CreateHerd(),
+                new CreateHerd<>(AbstractHorse::isTamed),
                 HerdAI.flee(MemoryModuleType.AVOID_TARGET, 2.0F, 12, true, Entity::position),
                 new LookAtTargetSink(45, 90),
                 new RunOne<>(ImmutableList.of(
@@ -102,6 +104,7 @@ public class ZebraAI {
             zebra.getBrain().getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES).ifPresent(memory -> {
                 for (LivingEntity livingEntity : memory) {
                     if (livingEntity instanceof Zebra zBra && !livingEntity.getUUID().equals(zebra.getUUID())) {
+                        if (zBra.isTamed()) continue;
                         zBra.getBrain().setMemoryWithExpiry(MemoryModuleType.IS_PANICKING, true, 600L);
                         zBra.getBrain().setMemoryWithExpiry(MemoryModuleType.AVOID_TARGET, avoid, 600L);
                     }

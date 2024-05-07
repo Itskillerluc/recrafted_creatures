@@ -289,6 +289,9 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
         if (level().isClientSide()) {
             animateWhen("idle", hasPose(Pose.STANDING));
         }
+        if (isInWater() && isVehicle()){
+            ejectPassengers();
+        }
     }
 
     @Override

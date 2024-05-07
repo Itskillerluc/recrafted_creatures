@@ -1,5 +1,6 @@
 package io.github.itskillerluc.recrafted_creatures.entity.ai.zebra;
 
+import io.github.itskillerluc.recrafted_creatures.registries.MemoryModuleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -44,6 +45,7 @@ public class TameZebra extends Behavior<AbstractHorse> {
     @Override
     protected void start(ServerLevel pLevel, AbstractHorse pEntity, long pGameTime) {
         pEntity.getNavigation().moveTo(this.posX, this.posY, this.posZ, 1.2f);
+        pEntity.getBrain().eraseMemory(MemoryModuleRegistry.HERD.get());
     }
 
     @Override

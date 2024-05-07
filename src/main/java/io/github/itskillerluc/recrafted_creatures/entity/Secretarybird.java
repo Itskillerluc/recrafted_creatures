@@ -73,6 +73,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     int layEggCounter;
     List<Supplier<MobEffectInstance>> effect = new ArrayList<>();
     boolean isDancing = false;
+    long timeOut;
 
 
     static {
@@ -104,6 +105,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
             listTag.add(mobEffectInstanceSupplier.get().save(new CompoundTag()));
         }
         pCompound.put("effect", listTag);
+        pCompound.putLong("timeOut", timeOut);
     }
 
     @Override
@@ -116,6 +118,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
             if (instance == null) continue;
             effect.add(() -> new MobEffectInstance(instance));
         }
+        timeOut = pCompound.getLong("timeOut")  ;
     }
 
     @Override
@@ -199,6 +202,10 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
 
             @Override
             protected boolean isValidTarget(LevelReader pLevel, BlockPos pPos) {
+                if (level().getGameTime() - timeOut > 1200) {
+                    timeOut = 0;
+                    return pLevel.isEmptyBlock(pPos) && !pLevel.isEmptyBlock(pPos.below());
+                }
                 return pLevel.isEmptyBlock(pPos.above()) && pLevel.getBlockState(pPos.below()).is(BlockTags.LEAVES);
             }
 
@@ -241,7 +248,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new DefendTargetGoal<>(this, LivingEntity.class, false, () -> entityData.get(NEST).get().getCenter(), 50).shouldDefend(() -> entityData.get(NEST).isPresent()));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, entity -> !(entity instanceof Secretarybird) && entity.getBoundingBox().getXsize() * entity.getBoundingBox().getYsize() * getBoundingBox().getZsize() < 1));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, entity -> !this.isTame() && !(entity instanceof Secretarybird) && entity.getBoundingBox().getXsize() * entity.getBoundingBox().getYsize() * getBoundingBox().getZsize() < 1));
     }
 
     @Override
@@ -252,6 +259,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
                 getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), 1);
             } else {
                 goToTree = true;
+                timeOut = level().getGameTime();
             }
         }
         return super.hurt(pSource, pAmount);

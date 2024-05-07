@@ -12,13 +12,18 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 
 import java.util.*;
+import java.util.function.Predicate;
 
-public class CreateHerd extends Behavior<LivingEntity> {
-    public CreateHerd() {
+public class CreateHerd <T extends LivingEntity> extends Behavior<T> {
+    private final Predicate<T> predicate;
+
+    public CreateHerd(Predicate<T> condition) {
         super(Map.of(MemoryModuleRegistry.HERD.get(),MemoryStatus.VALUE_ABSENT, MemoryModuleType.NEAREST_LIVING_ENTITIES, MemoryStatus.VALUE_PRESENT));
+        predicate = condition;
     }
 
-    protected boolean checkExtraStartConditions(ServerLevel level, LivingEntity entity) {
+    protected boolean checkExtraStartConditions(ServerLevel level, T entity) {
+        if (!predicate.test(entity)) return false;
         if (level.getCapability(HerdProvider.HERD_CAP).isPresent()) {
             IHerd cap = level.getCapability(HerdProvider.HERD_CAP).resolve().get();
             for (LivingEntity livingEntity : entity.getBrain().getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES).get()) {

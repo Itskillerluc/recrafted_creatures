@@ -282,7 +282,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     }
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new OrangutanGoal(new FloatGoal(this)));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new OrangutanGoal(new MoveToFoodGoal<>(this, 1, 5, item -> item.getItem().is(Tags.ORANGUTAN_BARTERING))));
         this.goalSelector.addGoal(2, new OrangutanGoal(new BreedGoal(this, 1.0D, Orangutan.class)));
         this.goalSelector.addGoal(3, new OrangutanGoal(new ClimbOnBackGoal(7, 2)));
