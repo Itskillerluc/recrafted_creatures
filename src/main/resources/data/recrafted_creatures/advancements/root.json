@@ -5,7 +5,7 @@
     },
     "title": "Recrafted Creatures",
     "description": "The animal adventure begins",
-    "background": "recrafted_creatures:textures/gui/advancement_bg.png",
+    "background": "recrafted_creatures:textures/block/rainbow_gel.png",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true

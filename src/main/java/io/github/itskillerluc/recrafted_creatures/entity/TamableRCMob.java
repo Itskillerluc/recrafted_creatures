@@ -42,7 +42,7 @@ public abstract class TamableRCMob extends TamableAnimal {
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         var result = super.mobInteract(pPlayer, pHand);
-        if (result == InteractionResult.PASS && this.isTame()) {
+        if (result == InteractionResult.PASS && this.isTame() && isOwnedBy(pPlayer)) {
             cycleCommand(pPlayer);
             return InteractionResult.SUCCESS;
         }

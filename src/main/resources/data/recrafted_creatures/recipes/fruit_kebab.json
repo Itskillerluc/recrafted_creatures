@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  m",
+    " a ",
+    "s  "
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "a": {
+      "item": "recrafted_creatures:apple_slice"
+    },
+    "m": {
+      "item": "minecraft:melon_slice"
+    }
+  },
+  "result": {
+    "item": "recrafted_creatures:fruit_kebab"
+  }
+}

@@ -147,7 +147,7 @@ public class ItemRegistry {
             () -> new Item(new Item.Properties().food(Foods.COOKED_BEEF)));
 
     public static final RegistryObject<Item> FRUIT_KEBAB = ITEMS.register("fruit_kebab",
-            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationMod(0.7f).build())));
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).build())));
 
     public static final RegistryObject<BlockItem> ZEBRA_CARPET = ITEMS.register("zebra_carpet",
             () -> new BlockItem(BlockRegistry.ZEBRA_CARPET.get(), new Item.Properties()));
@@ -156,7 +156,7 @@ public class ItemRegistry {
             () -> new BlockItem(BlockRegistry.CONSTRUCTOR.get(), new Item.Properties()));
 
     public static final RegistryObject<JungleStaff> JUNGLE_STAFF = ITEMS.register("jungle_staff",
-            () -> new JungleStaff(new Item.Properties().durability(20)));
+            () -> new JungleStaff(new Item.Properties().durability(20).rarity(Rarity.RARE)));
 
     public static BuilderHatModel builderHatModel;
     public static final RegistryObject<Item> BUILDER_HAT = ITEMS.register("builder_hat",

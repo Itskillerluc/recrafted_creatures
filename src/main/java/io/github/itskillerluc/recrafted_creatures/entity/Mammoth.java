@@ -205,12 +205,12 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER && !level().isClientSide()) {
+        if (this.getOwner() != null && PotionUtils.getPotion(pPlayer.getItemInHand(pHand)) == Potions.WATER) {
             entityData.set(COLOR, 0xFF0000);
             pPlayer.setItemInHand(pHand, new ItemStack(Items.GLASS_BOTTLE));
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() != null && pPlayer.getItemInHand(pHand).is(Tags.Items.DYES) && !level().isClientSide()) {
+        if (this.getOwner() != null && pPlayer.getItemInHand(pHand).is(Tags.Items.DYES)) {
             DyeItem item = ((DyeItem) pPlayer.getItemInHand(pHand).getItem());
             int existingColor = getColor();
             int dyeColor = item.getDyeColor().getTextColor();
@@ -219,17 +219,17 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
             entityData.set(COLOR, resultColor);
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK) && !level().isClientSide()) {
+        if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && pPlayer.getItemInHand(pHand).is(Items.HAY_BLOCK)) {
             this.setInLove(pPlayer);
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
-        if (this.isBaby() && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()) {
+        if (this.isBaby() && isFood(pPlayer.getItemInHand(pHand))) {
             pPlayer.getItemInHand(pHand).shrink(1);
             this.ageUp(getSpeedUpSecondsWhenFeeding(-getAge()), true);
             return InteractionResult.SUCCESS;
         }
-        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0 && !level().isClientSide()) {
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
             if (pPlayer.isShiftKeyDown()){
                 var itemStack = pPlayer.getItemInHand(pHand);
                 if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
@@ -244,7 +244,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                 return InteractionResult.SUCCESS;
             }
         }
-        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
@@ -252,12 +252,12 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                 this.entityData.set(COLOR, 0xFF0000);
                 this.level().broadcastEntityEvent(this, (byte)7);
                 pPlayer.getItemInHand(pHand).shrink(1);
+                return InteractionResult.SUCCESS;
             } else {
                 this.level().broadcastEntityEvent(this, (byte)6);
                 pPlayer.getItemInHand(pHand).shrink(1);
+                return InteractionResult.SUCCESS;
             }
-
-            return InteractionResult.SUCCESS;
         }
         return super.mobInteract(pPlayer, pHand);
     }

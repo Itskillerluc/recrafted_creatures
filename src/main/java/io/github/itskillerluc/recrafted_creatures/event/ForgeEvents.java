@@ -1,15 +1,22 @@
 package io.github.itskillerluc.recrafted_creatures.event;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
+import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
 import io.github.itskillerluc.recrafted_creatures.capability.ExtraTickProvider;
 import io.github.itskillerluc.recrafted_creatures.capability.HerdProvider;
 import io.github.itskillerluc.recrafted_creatures.capability.IExtraTick;
 import io.github.itskillerluc.recrafted_creatures.capability.IHerd;
+import io.github.itskillerluc.recrafted_creatures.entity.Beaver;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
+import io.github.itskillerluc.recrafted_creatures.util.StreamUtils;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.telemetry.events.WorldLoadEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bucketable;
@@ -24,10 +31,13 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = RecraftedCreatures.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEvents {
@@ -73,8 +83,25 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void livingHurtEvent(final LivingHurtEvent event) {
-        if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).is(ItemRegistry.BUILDER_HAT.get())) {
+        if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).is(ItemRegistry.BUILDER_HAT.get()) && event.getSource().is(DamageTypes.FALLING_ANVIL)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void worldLoadEvent(final LevelEvent.Load event) {
+        if (!event.getLevel().isClientSide()) {
+            Beaver.structures = CompletableFuture.supplyAsync((() -> StreamUtils.execute(() -> ((ServerLevel) event.getLevel()).getStructureManager().listTemplates()
+                    .parallel().filter(template ->
+                            ((ServerLevel) event.getLevel()).getStructureManager().get(template)
+                                    .map(structureTemplate ->
+                                            structureTemplate.palettes.stream()
+                                                    .allMatch(palette ->
+                                                            palette.blocks().stream()
+                                                                    .parallel()
+                                                                    .allMatch(block ->
+                                                                            ConstructorBlockEntity.PALETTE.containsKey(block.state().getBlock()))))
+                                    .orElse(false)).toList())));
         }
     }
 }

@@ -47,7 +47,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:barrier",
+          "name": "recrafted_creatures:jungle_staff",
           "weight": 2
         },
         {

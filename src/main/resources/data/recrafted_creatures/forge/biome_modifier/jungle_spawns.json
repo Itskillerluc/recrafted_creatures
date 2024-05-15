@@ -13,6 +13,12 @@
       "weight": 130,
       "minCount": 1,
       "maxCount": 3
+    },
+    {
+      "type": "recrafted_creatures:orangutan",
+      "weight": 130,
+      "minCount": 1,
+      "maxCount": 3
     }
   ]
 

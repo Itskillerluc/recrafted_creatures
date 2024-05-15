@@ -9,6 +9,7 @@ import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.registries.*;
+import io.github.itskillerluc.recrafted_creatures.util.StreamUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -45,6 +46,7 @@ public class RecraftedCreatures
     public static final String MODID = "recrafted_creatures";
     public RecraftedCreatures()
     {
+        StreamUtils.setup(this);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         
         modEventBus.addListener(this::addEntityAttributes);
@@ -93,6 +95,8 @@ public class RecraftedCreatures
         event.register(EntityRegistry.OWL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityRegistry.SECRETARYBIRD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityRegistry.ORANGUTAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
     private void addEntityAttributes(EntityAttributeCreationEvent event){

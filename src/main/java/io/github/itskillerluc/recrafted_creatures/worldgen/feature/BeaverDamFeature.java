@@ -1,6 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures.worldgen.feature;
 
 import com.mojang.serialization.Codec;
+import io.github.itskillerluc.recrafted_creatures.block.StickBundleBlock;
 import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,7 @@ public class BeaverDamFeature extends Feature<NoneFeatureConfiguration> {
                     } else if (random > 0.2) {
                         pContext.level().setBlock(pos.relative(Direction.DOWN, offset), BlockRegistry.MUDDY_STICK_BUNDLE.get().defaultBlockState(), 3);
                     } else if (random > 0.1) {
-                        pContext.level().setBlock(pos.relative(Direction.DOWN, offset), BlockRegistry.STICK_BUNDLE.get().defaultBlockState(), 3);
+                        pContext.level().setBlock(pos.relative(Direction.DOWN, offset), BlockRegistry.STICK_BUNDLE.get().defaultBlockState().setValue(StickBundleBlock.WATERLOGGED, true), 3);
                     } else {
                         pContext.level().setBlock(pos.relative(Direction.DOWN, offset), Blocks.OAK_WOOD.defaultBlockState(), 3);
                     }

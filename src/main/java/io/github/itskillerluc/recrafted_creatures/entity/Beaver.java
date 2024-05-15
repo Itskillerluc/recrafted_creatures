@@ -47,6 +47,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -57,6 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, MenuProvider, FoodSearching {
     private static final EntityDataSerializer<BeaverVariant> BEAVER_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(BeaverVariant.class);
@@ -67,6 +69,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     public static final EntityDataAccessor<Rotation> ROTATION = SynchedEntityData.defineId(Beaver.class, ROTATION_SERIALIZER);
     public static final EntityDataAccessor<BeaverVariant> VARIANT = SynchedEntityData.defineId(Beaver.class, BEAVER_VARIANT_SERIALIZER);
     public static final EntityDataAccessor<String> BUILD_NAME = SynchedEntityData.defineId(Beaver.class, EntityDataSerializers.STRING);
+    public static CompletableFuture<List<ResourceLocation>> structures = CompletableFuture.completedFuture(List.of());
 
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "beaver");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
@@ -426,7 +429,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
                 } else if (!pPlayer.isShiftKeyDown()) {
                     if (!level().isClientSide()) {
                         NetworkHooks.openScreen((ServerPlayer) pPlayer, this, buf -> {
-                            buf.writeCollection(((ServerLevel) level()).getStructureManager().listTemplates().filter(template -> ((ServerLevel) level()).getStructureManager().get(template).get().palettes.stream().allMatch(palette -> palette.blocks().stream().allMatch(block -> ConstructorBlockEntity.PALETTE.containsKey(block.state().getBlock())))).toList(), FriendlyByteBuf::writeResourceLocation);
+                            buf.writeCollection(structures.join(), FriendlyByteBuf::writeResourceLocation);
                             buf.writeInt(getId());
                             buf.writeCollection(requiredMaterials.stream()
                                     .map(material -> {

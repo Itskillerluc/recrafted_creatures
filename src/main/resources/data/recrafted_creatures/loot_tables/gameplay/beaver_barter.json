@@ -12,7 +12,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:barrier",
+          "name": "recrafted_creatures:constructor",
           "weight": 2
         },
         {

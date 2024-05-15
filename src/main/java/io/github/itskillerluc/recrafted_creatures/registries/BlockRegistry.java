@@ -19,8 +19,8 @@ public class BlockRegistry {
     public static final RegistryObject<OwlEggBlock> OWL_EGG_BLOCK = BLOCKS.register("owl_egg_block", () -> new OwlEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG)));
     public static final RegistryObject<SecretarybirdEggBlock> SECRETARYBIRD_EGG_BLOCk = BLOCKS.register("secretarybird_egg_block", () -> new SecretarybirdEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG)));
     public static final RegistryObject<Block> RAINBOW_GEL = BLOCKS.register("rainbow_gel", () -> new HalfTransparentBlock(BlockBehaviour.Properties.of().sound(SoundType.SLIME_BLOCK).mapColor(MapColor.COLOR_LIGHT_GREEN).friction(0.8F).noOcclusion().strength(0.8f).lightLevel(block -> 7).jumpFactor(0.6f)));
-    public static final RegistryObject<CarpetBlock> ZEBRA_CARPET = BLOCKS.register("zebra_carpet", () -> new CarpetBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY)));
-    public static final RegistryObject<Block> STICK_BUNDLE = BLOCKS.register("stick_bundle", () -> new Block(BlockBehaviour.Properties.copy(Blocks.MANGROVE_ROOTS)));
+    public static final RegistryObject<CarpetBlock> ZEBRA_CARPET = BLOCKS.register("zebra_carpet", () -> new CarpetBlock(BlockBehaviour.Properties.of().sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
+    public static final RegistryObject<Block> STICK_BUNDLE = BLOCKS.register("stick_bundle", () -> new StickBundleBlock(BlockBehaviour.Properties.copy(Blocks.MANGROVE_ROOTS)));
     public static final RegistryObject<Block> MUDDY_STICK_BUNDLE = BLOCKS.register("muddy_stick_bundle", () -> new Block(BlockBehaviour.Properties.copy(Blocks.MUDDY_MANGROVE_ROOTS)));
     public static final RegistryObject<ThornBlock> THORN_BLOCK = BLOCKS.register("thorn_block", () -> new ThornBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.CROP)));
     public static final RegistryObject<ConstructorBlock> CONSTRUCTOR = BLOCKS.register("constructor", () -> new ConstructorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));

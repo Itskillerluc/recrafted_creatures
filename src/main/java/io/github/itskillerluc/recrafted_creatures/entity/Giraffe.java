@@ -131,7 +131,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0 && !level().isClientSide()) {
+        if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
             if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty() && pPlayer.isShiftKeyDown()) {
                 setSaddled(false);
                 pPlayer.setItemInHand(pHand, new ItemStack(Items.SADDLE));
@@ -145,8 +145,15 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
                     this.heal(3);
                 }
                 return InteractionResult.SUCCESS;
-            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE)) {
+            } else if (pPlayer.getItemInHand(pHand).isEmpty()) {
                 pPlayer.startRiding(this);
+                return InteractionResult.SUCCESS;
+            } else if (pPlayer.getItemInHand(pHand).is(Items.SADDLE)) {
+                setSaddled(true);
+                pPlayer.getItemInHand(pHand).shrink(1);
+                return InteractionResult.SUCCESS;
+            } else {
+                return super.mobInteract(pPlayer, pHand);
             }
         }
         if (this.getOwner() != null && this.getAge() == 0 && !this.isInLove() && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()) {

@@ -7,14 +7,18 @@ import io.github.itskillerluc.recrafted_creatures.registries.BlockEntityRegistry
 import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -69,7 +73,12 @@ public class SecretarybirdEggBlock extends EggBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new EggBlockEntity<>(BlockEntityRegistry.SECRETARYBIRD_EGG.get(), pPos, pState, 4500, level -> EntityRegistry.CHAMELEON.get().create(level), 2, null);
+        return new EggBlockEntity<>(BlockEntityRegistry.SECRETARYBIRD_EGG.get(), pPos, pState, 4500, level -> {
+            var bird = EntityRegistry.SECRETARYBIRD.get().create(level);
+            if (bird == null) return null;
+            bird.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(pPos), MobSpawnType.TRIGGERED, null, null);
+            return bird;
+        }, 2, null);
     }
 
     @Nullable
@@ -93,6 +102,7 @@ public class SecretarybirdEggBlock extends EggBlock {
 
     @Override
     protected void decreaseEggs(Level pLevel, BlockPos pPos, BlockState pState) {
+        pLevel.playSound(null, pPos, SoundEvents.TURTLE_EGG_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + pLevel.random.nextFloat() * 0.2F);
         pLevel.destroyBlock(pPos, false);
     }
 }
