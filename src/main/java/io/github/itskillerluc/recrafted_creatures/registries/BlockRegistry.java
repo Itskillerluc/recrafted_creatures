@@ -2,6 +2,7 @@ package io.github.itskillerluc.recrafted_creatures.registries;
 
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.block.*;
+import io.github.itskillerluc.recrafted_creatures.item.HatItem;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -24,4 +25,5 @@ public class BlockRegistry {
     public static final RegistryObject<Block> MUDDY_STICK_BUNDLE = BLOCKS.register("muddy_stick_bundle", () -> new Block(BlockBehaviour.Properties.copy(Blocks.MUDDY_MANGROVE_ROOTS)));
     public static final RegistryObject<ThornBlock> THORN_BLOCK = BLOCKS.register("thorn_block", () -> new ThornBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.CROP)));
     public static final RegistryObject<ConstructorBlock> CONSTRUCTOR = BLOCKS.register("constructor", () -> new ConstructorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<HatDummyBlock> BUILDER_HAT = BLOCKS.register("builder_hat", () -> new HatDummyBlock(HatItem.Hats.BUILDER_HAT, BlockBehaviour.Properties.of()));
 }

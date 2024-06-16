@@ -7,16 +7,16 @@
 				"texture_width": 32,
 				"texture_height": 32,
 				"visible_bounds_width": 2,
-				"visible_bounds_height": 1.5,
-				"visible_bounds_offset": [0, 0.25, 0]
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
 			},
 			"bones": [
 				{
-					"name": "Builder Hat",
-					"pivot": [-2.5, 8, -0.25],
+					"name": "head",
+					"pivot": [-2.5, 24, -0.25],
 					"cubes": [
 						{
-							"origin": [-4.5, 0, -4.25],
+							"origin": [-4.5, 24, -4.25],
 							"size": [9, 6, 9],
 							"uv": {
 								"north": {"uv": [9, 0], "uv_size": [9, 6]},
@@ -28,7 +28,7 @@
 							}
 						},
 						{
-							"origin": [-4.5, 0, -8.25],
+							"origin": [-4.5, 24, -8.25],
 							"size": [9, 2, 4],
 							"uv": {
 								"north": {"uv": [18, 8], "uv_size": [9, 2]},

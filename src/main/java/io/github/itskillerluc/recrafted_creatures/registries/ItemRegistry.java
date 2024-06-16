@@ -5,6 +5,7 @@ import io.github.itskillerluc.recrafted_creatures.block.OwlEnvelope;
 import io.github.itskillerluc.recrafted_creatures.client.models.BuilderHatModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.JungleStaffModel;
 import io.github.itskillerluc.recrafted_creatures.client.renderers.ItemRenderer;
+import io.github.itskillerluc.recrafted_creatures.item.HatItem;
 import io.github.itskillerluc.recrafted_creatures.item.JungleStaff;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -24,12 +25,14 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.rmi.registry.Registry;
 import java.util.function.Consumer;
@@ -158,18 +161,6 @@ public class ItemRegistry {
     public static final RegistryObject<JungleStaff> JUNGLE_STAFF = ITEMS.register("jungle_staff",
             () -> new JungleStaff(new Item.Properties().durability(20).rarity(Rarity.RARE)));
 
-    public static BuilderHatModel builderHatModel;
     public static final RegistryObject<Item> BUILDER_HAT = ITEMS.register("builder_hat",
-            () -> new ArmorItem(ArmorMaterials.BUILDER, ArmorItem.Type.HELMET, new Item.Properties()) {
-                @Override
-                public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-                    consumer.accept(new IClientItemExtensions() {
-                        @Override
-                        public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                            builderHatModel.headRotation = new Vec2(original.head.xRot, original.head.yRot);
-                            return builderHatModel;
-                        }
-                    });
-                }
-            });
+            () -> new HatItem(BlockRegistry.BUILDER_HAT.get(), new Item.Properties()));
 }
