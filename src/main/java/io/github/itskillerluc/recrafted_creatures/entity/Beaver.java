@@ -415,14 +415,14 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
-            if (pPlayer.getItemInHand(pHand).is(ItemRegistry.FRUIT_KEBAB.get()) && this.getHealth() < this.getMaxHealth()) {
+            if (pPlayer.getItemInHand(pHand).is(Items.GOLDEN_CARROT) && this.getHealth() < this.getMaxHealth()) {
                 if (!pPlayer.getAbilities().instabuild) {
                     pPlayer.getItemInHand(pHand).shrink(1);
                 }
                 this.heal(3);
                 return InteractionResult.SUCCESS;
             } else {
-                if (pPlayer.getItemInHand(pHand).is(ItemRegistry.FRUIT_KEBAB.get()) && this.getAge() == 0 && !this.isInLove()) {
+                if (pPlayer.getItemInHand(pHand).is(Items.GOLDEN_CARROT) && this.getAge() == 0 && !this.isInLove()) {
                     this.setInLove(pPlayer);
                     pPlayer.getItemInHand(pHand).shrink(1);
                     return InteractionResult.SUCCESS;
@@ -444,7 +444,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
                 }
                 return super.mobInteract(pPlayer, pHand);
             }
-        } else if (this.getOwner() == null && !level().isClientSide() && (pPlayer.getItemInHand(pHand).is(ItemRegistry.FRUIT_KEBAB.get()) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
+        } else if (this.getOwner() == null && !level().isClientSide() && (pPlayer.getItemInHand(pHand).is(Items.GOLDEN_CARROT) || pPlayer.getItemInHand(pHand).is(ItemRegistry.APPLE_SLICE.get()))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();

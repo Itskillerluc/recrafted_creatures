@@ -13,6 +13,7 @@ import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.Tags;
 import io.github.itskillerluc.recrafted_creatures.util.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -66,6 +67,8 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> OrangutanModel.createStateMap(getAnimation()));
     public static final EntityDataAccessor<Boolean> ON_BACK = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Orangutan.class, EntityDataSerializers.BOOLEAN);
+    private static final int MAX_TRADE_TIME = 40;
+    private static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/orangutan_barter");
     public int curiosity;
     public int missingMommy;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -73,6 +76,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     @javax.annotation.Nullable
     private UUID persistentAngerTarget;
     public int scared = 0;
+    private int tradeTimer;
     private int pickupCooldown;
     private ItemEntity entityTarget;
     public Orangutan(EntityType<? extends Orangutan> pEntityType, Level pLevel) {
@@ -100,14 +104,8 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     }
 
     @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (pPlayer.getItemInHand(pHand).is(Tags.ORANGUTAN_BARTERING) && this.getAge() == 0 && !this.isInLove()) {
-            this.setInLove(pPlayer);
-            pPlayer.getItemInHand(pHand).shrink(1);
-            return InteractionResult.SUCCESS;
-        } else {
-            return super.mobInteract(pPlayer, pHand);
-        }
+    public boolean isFood(ItemStack pStack) {
+        return pStack.is(Items.GOLDEN_APPLE);
     }
 
     @Nullable
@@ -133,7 +131,29 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         super.tick();
         if (!getMainHandItem().isEmpty()) {
             navigation.stop();
-            setSpeed(0);
+            if (tradeTimer++ > (level().isClientSide ? MAX_TRADE_TIME - 1 : MAX_TRADE_TIME)) {
+                pickupCooldown = 200;
+                tradeTimer = 0;
+                if (getMainHandItem().is(Tags.ORANGUTAN_BARTERING)) {
+                    if(level().isClientSide()) {
+                        playAnimation("trade_accept");
+                    } else {
+                        getMainHandItem().shrink(1);
+                        LootTable lootTable = level().getServer().getLootData().getLootTable(LOOT);
+                        List<ItemStack> list = lootTable.getRandomItems(new LootParams.Builder(((ServerLevel) level())).withParameter(LootContextParams.THIS_ENTITY, Orangutan.this).create(LootContextParamSets.PIGLIN_BARTER));
+                        for (ItemStack itemStack : list) {
+                            spawnAtLocation(itemStack);
+                        }
+                    }
+                } else {
+                    if (level().isClientSide()) {
+                        playAnimation("trade_decline");
+                    } else {
+                        spawnAtLocation(getMainHandItem());
+                        setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                    }
+                }
+            }
         }
         if (pickupCooldown > 0) pickupCooldown--;
         if (scared > 0) scared--;
@@ -158,7 +178,6 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
             animateWhen("sleep", isSleeping());
             animateWhen("climb", isClimbing());
             animateWhen("tree_jump", !isClimbing() && !onGround());
-            animateWhen("trade", !getMainHandItem().isEmpty());
         } else {
             this.setClimbing(this.horizontalCollision);
         }
@@ -289,7 +308,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         this.goalSelector.addGoal(3, new OrangutanGoal(new SleepGoal(this, 1, 20, 20)));
         this.goalSelector.addGoal(6, new OrangutanGoal(new WaterAvoidingRandomStrollGoal(this, 0.7D)));
         this.goalSelector.addGoal(7, new OrangutanGoal(new LookAtPlayerGoal(this, Player.class, 6.0F)));
-        this.goalSelector.addGoal(9, new BarterGoal());
+        //todo //this.goalSelector.addGoal(9, new BarterGoal());
         this.goalSelector.addGoal(8, new OrangutanGoal(new RandomLookAroundGoal(this)));
         this.goalSelector.addGoal(2, new OrangutanGoal(new MeleeAttackGoal(this, 0.9f, true) {
             @Override
@@ -379,40 +398,37 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         }
     }
 
-    class BarterGoal extends Goal {
-        static final ResourceLocation LOOT = new ResourceLocation(RecraftedCreatures.MODID, "gameplay/orangutan_barter");
-
-        @Override
-        public boolean canUse() {
-            return !getMainHandItem().isEmpty() && random.nextFloat() > 0.9f;
-        }
-
-        @Override
-        public void start() {
-            pickupCooldown = 200;
-            if (getMainHandItem().is(Tags.ORANGUTAN_BARTERING)) {
-                getMainHandItem().shrink(1);
-                LootTable loottable = level().getServer().getLootData().getLootTable(LOOT);
-                List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel)level())).withParameter(LootContextParams.THIS_ENTITY, Orangutan.this).create(LootContextParamSets.PIGLIN_BARTER));
-                for (ItemStack itemStack : list) {
-                    spawnAtLocation(itemStack);
-                }
-                level().broadcastEntityEvent(Orangutan.this, (byte)1);
-            } else {
-                spawnAtLocation(getMainHandItem());
-                setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                level().broadcastEntityEvent(Orangutan.this, (byte)2);
-            }
-        }
-    }
+//    class BarterGoal extends Goal {
+//
+//        @Override
+//        public boolean canUse() {
+//            return !getMainHandItem().isEmpty() && random.nextFloat() > 0.9f;
+//        }
+//
+//        @Override
+//        public void start() {
+//            pickupCooldown = 200;
+//            if (getMainHandItem().is(Tags.ORANGUTAN_BARTERING)) {
+//                getMainHandItem().shrink(1);
+//                LootTable loottable = level().getServer().getLootData().getLootTable(LOOT);
+//                List<ItemStack> list = loottable.getRandomItems((new LootParams.Builder((ServerLevel)level())).withParameter(LootContextParams.THIS_ENTITY, Orangutan.this).create(LootContextParamSets.PIGLIN_BARTER));
+//                for (ItemStack itemStack : list) {
+//                    spawnAtLocation(itemStack);
+//                }
+//                level().broadcastEntityEvent(Orangutan.this, (byte)1);
+//            } else {
+//                spawnAtLocation(getMainHandItem());
+//                setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+//                level().broadcastEntityEvent(Orangutan.this, (byte)2);
+//            }
+//        }
+//    }
 
     @Override
     public void handleEntityEvent(byte pId) {
         super.handleEntityEvent(pId);
         if (pId == 1) {
-            replayAnimation("trade_accept");
-        } else if (pId == 2) {
-            replayAnimation("trade_decline");
+            playAnimation("trade");
         }
     }
 
@@ -598,6 +614,7 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     @Override
     protected void pickUpItem(ItemEntity pItemEntity) {
         if (this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
+            level().broadcastEntityEvent(this, (byte) 1);
             this.onItemPickup(pItemEntity);
             ItemStack itemstack = removeOneItemFromItemEntity(pItemEntity);
             this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
