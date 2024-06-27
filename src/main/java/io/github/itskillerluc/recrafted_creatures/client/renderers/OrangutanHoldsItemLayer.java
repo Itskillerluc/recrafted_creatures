@@ -30,7 +30,7 @@ public class OrangutanHoldsItemLayer extends RenderLayer<Orangutan, OrangutanMod
         poseStack.pushPose();
         poseStack.mulPose(new Quaternionf().rotateAxis(Mth.PI, new Vector3f(1, 0, 0)));
         poseStack.scale(1.2f, 1.2f, 1.2f);
-        poseStack.translate(0, f1 - (pLivingEntity.isBaby() ? 0.2 : 0), 0.8);
+        poseStack.translate(0, f1 - (pLivingEntity.isBaby() ? 0.2 : 0), 0.6);
         this.itemInHandRenderer.renderItem(pLivingEntity, itemstack, ItemDisplayContext.GROUND, false, poseStack, pBuffer, pPackedLight);
         poseStack.popPose();
     }

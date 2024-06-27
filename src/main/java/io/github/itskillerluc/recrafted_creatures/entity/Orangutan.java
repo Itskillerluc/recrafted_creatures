@@ -76,6 +76,8 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     @javax.annotation.Nullable
     private UUID persistentAngerTarget;
     public int scared = 0;
+    public boolean stopWalking = false;
+    private boolean couldntWalk;
     private int tradeTimer;
     private int pickupCooldown;
     private ItemEntity entityTarget;
@@ -126,10 +128,15 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         return SoundRegistry.ORANGUTAN_AMBIENCE.get();
     }
 
+
     @Override
     public void tick() {
         super.tick();
         if (!getMainHandItem().isEmpty()) {
+            stopAnimation("walk");
+            stopWalking = true;
+            couldntWalk = true;
+            setDeltaMovement(0, getDeltaMovement().y, 0);
             navigation.stop();
             if (tradeTimer++ > (level().isClientSide ? MAX_TRADE_TIME - 1 : MAX_TRADE_TIME)) {
                 pickupCooldown = 200;
@@ -172,9 +179,17 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
                 missingMommy++;
             }
         }
-
+        if (couldntWalk && (!getAnimationState("trade").map(AnimationState::isStarted).orElse(false) && !getAnimationState("trade_accept").map(AnimationState::isStarted).orElse(false) && !getAnimationState("trade_decline").map(AnimationState::isStarted).orElse(false))) {
+            stopWalking = false;
+            couldntWalk = false;
+            lerpSteps = 0;
+            lerpX = getX();
+            lerpY = getY();
+            lerpZ = getZ();
+            setPos(new Vec3(xOld, yOld, zOld));
+        }
         if (level().isClientSide()) {
-            animateWhen("idle", !isClimbing() && !isMoving(this) && onGround() && !isSleeping());
+            animateWhen("idle", !isClimbing() && !isMoving(this) && onGround() && !isSleeping() && !stopWalking);
             animateWhen("sleep", isSleeping());
             animateWhen("climb", isClimbing());
             animateWhen("tree_jump", !isClimbing() && !onGround());
@@ -210,6 +225,13 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
 
     @Override
     public void aiStep() {
+        if (stopWalking) {
+            lerpSteps = 0;
+            lerpX = getX();
+            lerpY = getY();
+            lerpZ = getZ();
+            setPos(new Vec3(xOld, yOld, zOld));
+        }
         super.aiStep();
         setDiscardFriction(!onGround());
         if (!this.level().isClientSide) {
@@ -252,14 +274,15 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
 
         @Override
         public void tick() {
-            if (Orangutan.this.canMove()) {
+            if (!Orangutan.this.isImmobile()) {
                 super.tick();
             }
         }
     }
 
-    boolean canMove() {
-        return !this.isSleeping() && getMainHandItem().isEmpty();
+    @Override
+    protected boolean isImmobile() {
+        return super.isImmobile() || this.isSleeping() && stopWalking;
     }
 
     @Override
@@ -308,7 +331,6 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         this.goalSelector.addGoal(3, new OrangutanGoal(new SleepGoal(this, 1, 20, 20)));
         this.goalSelector.addGoal(6, new OrangutanGoal(new WaterAvoidingRandomStrollGoal(this, 0.7D)));
         this.goalSelector.addGoal(7, new OrangutanGoal(new LookAtPlayerGoal(this, Player.class, 6.0F)));
-        //todo //this.goalSelector.addGoal(9, new BarterGoal());
         this.goalSelector.addGoal(8, new OrangutanGoal(new RandomLookAroundGoal(this)));
         this.goalSelector.addGoal(2, new OrangutanGoal(new MeleeAttackGoal(this, 0.9f, true) {
             @Override

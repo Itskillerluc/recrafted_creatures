@@ -28,12 +28,8 @@ public class OrangutanModel extends AnimatableDucModel<Orangutan> {
     @Override
     public void setupAnim(@NotNull Orangutan pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-        if (!pEntity.isClimbing()) {
-            if (pEntity.isInWater()) {
-                this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.orangutan.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
-            } else {
-                this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.orangutan.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
-            }
+        if (!pEntity.isClimbing() && !pEntity.stopWalking) {
+            this.animateWalk(pEntity.getAnimation().getAnimations().get("animation.orangutan.walk").animation(), pLimbSwing, pLimbSwingAmount, 4, 10);
         }
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).xRot += pHeadPitch * ((float) Math.PI / 180F) + (pEntity.hasPose(Pose.SITTING) ? 0.610865f : 0);
         ((Ducling) getAnyDescendantWithName("head").orElseThrow()).zRot -= 0.5* pNetHeadYaw * ((float) Math.PI / 180F);
