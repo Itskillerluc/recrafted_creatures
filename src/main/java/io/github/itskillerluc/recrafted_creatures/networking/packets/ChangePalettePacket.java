@@ -1,6 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures.networking.packets;
 
 import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
+import io.github.itskillerluc.recrafted_creatures.entity.Beaver;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -56,6 +57,7 @@ public class ChangePalettePacket {
             var actualPalette = new StructureTemplate.Palette(infoList);
             template.palettes.add(paletteId, actualPalette);
             ((ServerLevel) level).getStructureManager().save(structure);
+            Beaver.canReload.countDown();
         });
     }
 }

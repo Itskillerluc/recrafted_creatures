@@ -32,9 +32,9 @@ public class ConstructorBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         if (blockentity instanceof ConstructorBlockEntity constructorBlockEntity) {
-            return constructorBlockEntity.usedBy() ? InteractionResult.sidedSuccess(pLevel.isClientSide) : InteractionResult.PASS;
+            return constructorBlockEntity.usedBy() ? InteractionResult.sidedSuccess(pLevel.isClientSide) : InteractionResult.FAIL;
         } else {
-            return InteractionResult.PASS;
+            return InteractionResult.FAIL;
         }
     }
 
@@ -53,6 +53,12 @@ public class ConstructorBlock extends BaseEntityBlock {
                     constructorBlockEntity.createdBy(pPlacer);
                     constructorBlockEntity.detectSize();
                     constructorBlockEntity.setShowBoundingBox(true);
+
+                    if (pLevel.getBlockEntity(constructorBlockEntity.getCorner()) instanceof ConstructorBlockEntity be) {
+                        be.setCorner(pPos);
+                        be.setStructureSize(constructorBlockEntity.getStructureSize());
+                        be.setStructurePos(constructorBlockEntity.getStructurePos());
+                    }
                 }
             }
 

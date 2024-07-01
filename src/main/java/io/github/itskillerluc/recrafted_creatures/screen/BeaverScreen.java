@@ -1,5 +1,6 @@
 package io.github.itskillerluc.recrafted_creatures.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.advancement.BeaverBuildTrigger;
 import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
@@ -24,6 +25,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -189,5 +191,17 @@ public class BeaverScreen extends AbstractContainerScreen<BeaverMenu> {
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         structureList.mouseClicked(pMouseX, pMouseY, pButton);
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
+        if (!this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+            return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+        } else if (searchBox.isFocused()) {
+            return searchBox.keyPressed(pKeyCode, pScanCode, pModifiers);
+        } else {
+            return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+        }
     }
 }

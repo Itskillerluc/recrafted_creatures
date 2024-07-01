@@ -324,6 +324,13 @@ public class Marmot extends Animal implements Animatable<MarmotModel>, FoodSearc
         return SoundRegistry.MARMOT_AMBIENCE.get();
     }
 
+    @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.1f;
+    }
+
+
     public void setRecordPlayingNearby(BlockPos pPos, boolean pIsPartying) {
         isDancing = pIsPartying;
         NetworkChannel.CHANNEL.sendToServer(new DancePacket(this.getUUID(), pIsPartying));

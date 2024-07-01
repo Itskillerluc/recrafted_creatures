@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class ConstructorBlockEntity extends BlockEntity {
@@ -256,7 +257,7 @@ public class ConstructorBlockEntity extends BlockEntity {
      *
      * @return true if the template was successfully saved.
      */
-    public boolean saveStructure(ServerPlayer player) {
+    public boolean saveStructure(ServerPlayer player, AtomicBoolean condition) {
         if (!this.level.isClientSide && this.structureName != null) {
             BlockPos blockpos = this.getBlockPos().offset(this.structurePos);
             ServerLevel serverlevel = (ServerLevel)this.level;
@@ -270,12 +271,12 @@ public class ConstructorBlockEntity extends BlockEntity {
             }
 
             structuretemplate.fillFromWorld(this.level, blockpos, this.structureSize, false, Blocks.AIR);
+            structuretemplate.setAuthor(this.author);
 
             for (int i = 0; i < structuretemplate.palettes.size(); i++) {
                 NetworkChannel.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new AskColorPacket(structuretemplate.palettes.get(i).blocks().stream().map(StructureTemplate.StructureBlockInfo::state).toList(), structureName, i));
             }
 
-            structuretemplate.setAuthor(this.author);
             return true;
         } else {
             return false;

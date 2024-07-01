@@ -128,6 +128,11 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
         return SoundRegistry.ORANGUTAN_AMBIENCE.get();
     }
 
+    @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.3f;
+    }
 
     @Override
     public void tick() {

@@ -1,6 +1,7 @@
 package io.github.itskillerluc.recrafted_creatures.networking.packets;
 
 import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
+import io.github.itskillerluc.recrafted_creatures.entity.Beaver;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,6 +15,7 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.GameData;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class SaveStructurePacket {
@@ -36,7 +38,9 @@ public class SaveStructurePacket {
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getSender().level().getBlockEntity(constructorPos) instanceof ConstructorBlockEntity blockEntity) {
             blockEntity.setStructureName(structureName);
-            blockEntity.saveStructure(ctx.get().getSender());
+            AtomicBoolean waitingCondition = new AtomicBoolean(false);
+            blockEntity.saveStructure(ctx.get().getSender(), waitingCondition);
+            Beaver.reloadStructures(ctx.get().getSender().serverLevel());
         }
     }
 }

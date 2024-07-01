@@ -44,8 +44,11 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void interactEvent(PlayerInteractEvent.EntityInteract event) {
         if (event.getTarget() instanceof Frog frog) {
-            event.setCancellationResult(bucketMobPickup(event.getEntity(), event.getHand(), frog).get());
-            event.setCanceled(true);
+            var result = bucketMobPickup(event.getEntity(), event.getHand(), frog);
+            if (result.isPresent() && result.get().consumesAction()) {
+                event.setCancellationResult(result.get());
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -91,17 +94,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void worldLoadEvent(final LevelEvent.Load event) {
         if (!event.getLevel().isClientSide()) {
-            Beaver.structures = CompletableFuture.supplyAsync((() -> StreamUtils.execute(() -> ((ServerLevel) event.getLevel()).getStructureManager().listTemplates()
-                    .parallel().filter(template ->
-                            ((ServerLevel) event.getLevel()).getStructureManager().get(template)
-                                    .map(structureTemplate ->
-                                            structureTemplate.palettes.stream()
-                                                    .allMatch(palette ->
-                                                            palette.blocks().stream()
-                                                                    .parallel()
-                                                                    .allMatch(block ->
-                                                                            ConstructorBlockEntity.PALETTE.containsKey(block.state().getBlock()))))
-                                    .orElse(false)).toList())));
+            Beaver.reloadStructures(((ServerLevel) event.getLevel()));
         }
     }
 }

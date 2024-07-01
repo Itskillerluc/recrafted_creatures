@@ -14,6 +14,7 @@ import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.Tags;
+import io.github.itskillerluc.recrafted_creatures.util.StreamUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
@@ -54,11 +55,15 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.network.NetworkHooks;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
 
 public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, MenuProvider, FoodSearching {
     private static final EntityDataSerializer<BeaverVariant> BEAVER_VARIANT_SERIALIZER = EntityDataSerializer.simpleEnum(BeaverVariant.class);
@@ -70,7 +75,7 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     public static final EntityDataAccessor<BeaverVariant> VARIANT = SynchedEntityData.defineId(Beaver.class, BEAVER_VARIANT_SERIALIZER);
     public static final EntityDataAccessor<String> BUILD_NAME = SynchedEntityData.defineId(Beaver.class, EntityDataSerializers.STRING);
     public static CompletableFuture<List<ResourceLocation>> structures = CompletableFuture.completedFuture(List.of());
-
+    public static CountDownLatch canReload = new CountDownLatch(1);
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "beaver");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final int MAX_TRADE_TIME = 40;
@@ -626,6 +631,33 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundRegistry.BEAVER_AMBIENCE.get();
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        return 0.5f;
+    }
+
+    public static void reloadStructures(ServerLevel level) {
+        Beaver.structures = CompletableFuture.supplyAsync((() -> {
+            try {
+                canReload.await(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                LogManager.getLogger().catching(e);
+            }
+            canReload = new CountDownLatch(1);
+            return StreamUtils.execute(() -> level.getStructureManager().listTemplates()
+                .parallel().filter(template ->
+                        level.getStructureManager().get(template)
+                                .map(structureTemplate ->
+                                        structureTemplate.palettes.stream()
+                                                .allMatch(palette ->
+                                                        palette.blocks().stream()
+                                                                .parallel()
+                                                                .allMatch(block ->
+                                                                        ConstructorBlockEntity.PALETTE.containsKey(block.state().getBlock()))))
+                                .orElse(false)).toList());
+        }));
     }
 
     public enum BeaverVariant {

@@ -294,6 +294,12 @@ public class Chameleon extends Animal implements Animatable<ChameleonModel>, Egg
     }
 
     @Override
+    protected float getSoundVolume() {
+        //todo
+        return super.getSoundVolume();
+    }
+
+    @Override
     public void handleEntityEvent(byte pId) {
         super.handleEntityEvent(pId);
         if (pId == 5 && level().isClientSide()) {

@@ -480,4 +480,10 @@ public class RedPanda extends TamableRCMob implements Animatable<RedPandaModel> 
     protected SoundEvent getAmbientSound() {
         return SoundRegistry.RED_PANDA_AMBIENCE.get();
     }
+
+    @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.04f;
+    }
 }

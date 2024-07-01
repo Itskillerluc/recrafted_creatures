@@ -463,6 +463,12 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
     }
 
     @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.1f;
+    }
+
+    @Override
     public void handleEntityEvent(byte pId) {
 
         if (pId == -4) {

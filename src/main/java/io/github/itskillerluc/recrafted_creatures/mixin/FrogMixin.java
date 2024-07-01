@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Frog.class)
+@Debug(export = true)
 public abstract class FrogMixin extends Animal implements Bucketable {
     public FrogMixin(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

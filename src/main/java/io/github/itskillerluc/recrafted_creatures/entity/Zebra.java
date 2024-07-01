@@ -234,6 +234,12 @@ public class Zebra extends AbstractChestedHorse implements NeutralMob, Animatabl
         return SoundRegistry.ZEBRA_HURT.get();
     }
 
+    @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.3f;
+    }
+
     public boolean hurt(DamageSource pSource, float pAmount) {
         boolean flag = super.hurt(pSource, pAmount);
         if (this.level().isClientSide) {

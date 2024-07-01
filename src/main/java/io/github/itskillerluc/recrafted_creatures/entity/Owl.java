@@ -340,6 +340,12 @@ public class Owl extends TamableRCMob implements Animatable<OwlModel>, VariantHo
     }
 
     @Override
+    protected float getSoundVolume() {
+        //todo
+        return 0.08f;
+    }
+
+    @Override
     public void setVariant(OwlVariant pVariant) {
         entityData.set(VARIANT, pVariant);
     }
