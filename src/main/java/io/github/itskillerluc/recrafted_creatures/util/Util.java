@@ -4,12 +4,10 @@ import io.github.itskillerluc.recrafted_creatures.client.models.IAnimatableModel
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.phys.Vec3;
@@ -20,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.util.LandRandomPos.generateRandomPosTowardDirection;
 import static net.minecraft.world.entity.ai.util.LandRandomPos.movePosUpOutOfSolid;
@@ -172,7 +169,7 @@ public class Util {
         return true;
     }
 
-    public static <F, C> C GetNonNullElseGet(F value, Function<F, C> function, C other) {
+    public static <F, C> C getNonNullElseGet(F value, Function<F, C> function, C other) {
         if (value == null) {
             return other;
         } else {

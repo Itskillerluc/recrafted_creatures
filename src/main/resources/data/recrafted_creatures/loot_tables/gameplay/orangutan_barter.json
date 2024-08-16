@@ -48,7 +48,7 @@
         {
           "type": "minecraft:item",
           "name": "recrafted_creatures:jungle_staff",
-          "weight": 2
+          "weight": 10
         },
         {
           "type": "minecraft:item",
@@ -94,6 +94,11 @@
           "type": "minecraft:item",
           "name": "minecraft:wooden_hoe",
           "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "recrafted_creatures:leaf_picker",
+          "weight": 10
         },
         {
           "type": "minecraft:item",

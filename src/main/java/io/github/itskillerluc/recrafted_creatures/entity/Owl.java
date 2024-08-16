@@ -103,7 +103,7 @@ public class Owl extends TamableRCMob implements Animatable<OwlModel>, VariantHo
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putString("variant", getVariant().name());
+        pCompound.putInt("variant", getVariant().ordinal());
         if (entityData.get(DELIVERY_TARGET).isPresent()) {
             pCompound.putUUID("deliveryTarget", entityData.get(DELIVERY_TARGET).get());
         }
@@ -116,7 +116,7 @@ public class Owl extends TamableRCMob implements Animatable<OwlModel>, VariantHo
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        setVariant(OwlVariant.valueOf(pCompound.getString("variant")));
+        setVariant(OwlVariant.values()[(pCompound.getInt("variant"))]);
         entityData.set(DELIVERY_TARGET, pCompound.hasUUID("deliveryTarget") ? Optional.of(pCompound.getUUID("deliveryTarget")) : Optional.empty());
         entityData.set(SENDER, pCompound.hasUUID("sender") ? Optional.of(pCompound.getUUID("sender")) : Optional.empty());
         setSleeping(pCompound.getBoolean("isSleeping"));

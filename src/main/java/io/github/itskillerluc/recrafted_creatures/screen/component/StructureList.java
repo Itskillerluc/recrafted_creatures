@@ -120,7 +120,7 @@ public class StructureList extends ObjectSelectionList<StructureEntry> {
             screen.mirrorCycleButton.active = true;
             screen.show.active = true;
             screen.build.active = false;
-            NetworkChannel.CHANNEL.sendToServer(new SetBeaverSettingsPacket(screen.beaver.getId(), screen.mirror, screen.rotation, screen.showVar, Util.GetNonNullElseGet(getSelected(), StructureEntry::getStructureName, null), screen.shouldBuild));
+            NetworkChannel.CHANNEL.sendToServer(new SetBeaverSettingsPacket(screen.beaver.getId(), screen.mirror, screen.rotation, screen.showVar, Util.getNonNullElseGet(getSelected(), StructureEntry::getStructureName, null), screen.shouldBuild));
             return true;
         }
         return false;
