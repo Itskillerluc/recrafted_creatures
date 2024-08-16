@@ -69,11 +69,11 @@ public class ZebraAI {
                 Pair.of(1, StartAttacking.create(ZebraAI::findNearestValidAttackTarget)),
                 Pair.of(2, new FollowTemptation((p_250812_) -> 1F)),
                 Pair.of(2, StartAttacking.create(zebra -> BehaviorUtils.getLivingEntityFromUUIDMemory(zebra, MemoryModuleType.ANGRY_AT))),
-                Pair.of(3, BabyFollowAdult.create(UniformInt.of(5, 16), 2.5F)),
+                Pair.of(3, BabyFollowAdult.create(UniformInt.of(5, 16), 1F)),
                 Pair.of(4, new RandomLookAround(UniformInt.of(150, 250), 30.0F, 0.0F, 0.0F)),
                 Pair.of(5, new RunOne<>(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT), ImmutableList.of(
                         Pair.of(HerdAI.stroll(1, 15, 5, true), 1),
-                        Pair.of(SetWalkTargetFromLookTarget.create(2.0F, 3), 1),
+                        Pair.of(SetWalkTargetFromLookTarget.create(1, 3), 1),
                         Pair.of(new DoNothing(30, 60), 1))))));
 
     }

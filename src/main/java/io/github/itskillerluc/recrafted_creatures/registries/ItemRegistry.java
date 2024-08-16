@@ -134,8 +134,12 @@ public class ItemRegistry {
             () -> new InstrumentItem(new Item.Properties().rarity(Rarity.RARE).stacksTo(1), Tags.MEGAPHONE) {
                 @Override
                 public UseAnim getUseAnimation(ItemStack pStack) {
-                    if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
-                        return UseAnim.BOW;
+                    if (net.minecraftforge.fml.loading.FMLEnvironment.dist == net.minecraftforge.api.distmarker.Dist.CLIENT && !net.minecraftforge.fml.loading.FMLLoader.getLaunchHandler().isData()) {
+                        if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
+                            return UseAnim.BOW;
+                        } else {
+                            return UseAnim.TOOT_HORN;
+                        }
                     } else {
                         return UseAnim.TOOT_HORN;
                     }

@@ -99,7 +99,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putString("variant", getVariant().name());
+        pCompound.putInt("variant", getVariant().ordinal());
         ListTag listTag = new ListTag();
         for (Supplier<MobEffectInstance> mobEffectInstanceSupplier : effect) {
             listTag.add(mobEffectInstanceSupplier.get().save(new CompoundTag()));
@@ -111,7 +111,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        setVariant(SecretarybirdVariant.valueOf(pCompound.getString("variant")));
+        setVariant(SecretarybirdVariant.values()[pCompound.getInt("variant")]);
         ListTag listTag = pCompound.getList("effect", Tag.TAG_COMPOUND);
         for (int i = 0; i < listTag.size(); i++) {
             var instance = MobEffectInstance.load(listTag.getCompound(i));
@@ -130,7 +130,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(VARIANT, SecretarybirdVariant.White);
+        entityData.define(VARIANT, SecretarybirdVariant.WHITE);
         entityData.define(HAS_EGG, false);
         entityData.define(LAYING_EGG, false);
         entityData.define(NEST, Optional.empty());
@@ -159,7 +159,9 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
 
     @Override
     public void swing(InteractionHand pHand) {
-        replayAnimation(random.nextBoolean() ? "kill" : "kill2");
+        if (level().isClientSide()) {
+            replayAnimation(random.nextBoolean() ? "kill" : "kill2");
+        }
         super.swing(pHand);
     }
 
@@ -516,7 +518,7 @@ public class Secretarybird extends TamableRCMob implements Animatable<Secretaryb
     }
 
     public enum SecretarybirdVariant {
-        White(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/white_secretary_bird.png")),
+        WHITE(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/white_secretary_bird.png")),
         GRAY(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/gray_secretary_bird.png")),
         OPILA(new ResourceLocation(RecraftedCreatures.MODID, "textures/entity/opila_secretary_bird.png"));
 

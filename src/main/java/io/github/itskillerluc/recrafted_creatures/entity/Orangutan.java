@@ -516,7 +516,6 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.getEntity() != null) {
             scared = 200;
-            NetworkChannel.CHANNEL.sendToServer(new ScareOrangutanPacket(getUUID(), 200));
             Vec3 posAway = LandRandomPos.getPosAway(this, 10, 5, pSource.getEntity().position());
             if (posAway != null) {
                 navigation.moveTo(posAway.x(), posAway.y(), posAway.z(), 1);

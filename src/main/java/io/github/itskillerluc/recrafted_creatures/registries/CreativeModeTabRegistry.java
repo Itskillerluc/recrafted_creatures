@@ -37,7 +37,6 @@ public class CreativeModeTabRegistry {
                                 .stream()
                                 .map(RegistryObject::get)
                                 .filter(item -> item != ItemRegistry.MEGAPHONE.get() &&
-                                        item != ItemRegistry.APPLE_SLICE.get() &&
                                         item != ItemRegistry.LEAF_PICKER.get() &&
                                         item != ItemRegistry.SMALL_LEAF.get())
                                 .forEach(out::accept);

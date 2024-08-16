@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -278,6 +279,9 @@ public class ConstructorBlockEntity extends BlockEntity {
             }
 
             return true;
+        } else if (structureName == null) {
+            player.sendSystemMessage(Component.translatableWithFallback("gui.constructor.invalid_name", "Invalid name. Name can only contain [a-z0-9_-] characters."), true);
+            return false;
         } else {
             return false;
         }
