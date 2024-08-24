@@ -237,7 +237,9 @@ public class Marmot extends Animal implements Animatable<MarmotModel>, FoodSearc
 
     private void explode() {
         if (isPrimed()) {
-            playAnimation("shake");
+            if (this.level().isClientSide) {
+                playAnimation("shake");
+            }
             setFuse(getFuse() + 1);
             if (getFuse() > 80) {
                 if (!this.level().isClientSide) {
@@ -340,7 +342,7 @@ public class Marmot extends Animal implements Animatable<MarmotModel>, FoodSearc
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypes.FALLING_ANVIL) && entityData.get(ANVIL) == 0) {
-            playAnimation("anvil");
+            if (level().isClientSide) playAnimation("anvil");
             entityData.set(ANVIL, (byte) 1);
             setNoAi(true);
             return false;
