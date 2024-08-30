@@ -138,7 +138,9 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
     public void tick() {
         super.tick();
         if (!getMainHandItem().isEmpty()) {
-            stopAnimation("walk");
+            if (level().isClientSide) {
+                stopAnimation("walk");
+            }
             stopWalking = true;
             couldntWalk = true;
             setDeltaMovement(0, getDeltaMovement().y, 0);
@@ -205,7 +207,9 @@ public class Orangutan extends Animal implements NeutralMob, Animatable<Oranguta
 
     @Override
     public void swing(InteractionHand pHand, boolean pUpdateSelf) {
-        replayAnimation(random.nextBoolean() ? "swat" : "swat_flipped");
+        if (level().isClientSide) {
+            replayAnimation(random.nextBoolean() ? "swat" : "swat_flipped");
+        }
         super.swing(pHand, pUpdateSelf);
     }
 

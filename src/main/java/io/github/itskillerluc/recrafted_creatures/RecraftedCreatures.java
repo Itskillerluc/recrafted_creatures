@@ -75,6 +75,7 @@ public class RecraftedCreatures
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configs.COMMON_SPEC);
     }
 
     public void registerSpawnPlacement(SpawnPlacementRegisterEvent event) {

@@ -7,6 +7,7 @@ import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger
 import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
 import io.github.itskillerluc.recrafted_creatures.client.models.BeaverModel;
 import io.github.itskillerluc.recrafted_creatures.client.models.RedPandaModel;
+import io.github.itskillerluc.recrafted_creatures.config.Configs;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.FoodSearching;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.MoveToFoodGoal;
 import io.github.itskillerluc.recrafted_creatures.menu.BeaverMenu;
@@ -647,7 +648,9 @@ public class Beaver extends TamableRCMob implements Animatable<BeaverModel>, Men
             }
             canReload = new CountDownLatch(1);
             return StreamUtils.execute(() -> level.getStructureManager().listTemplates()
-                .parallel().filter(template ->
+                .parallel()
+                    .filter(rl -> Configs.Server.beaverStructureWhitelist.get().isEmpty() || Configs.Server.beaverStructureWhitelist.get().contains(rl.getNamespace()))
+                    .filter(template ->
                         level.getStructureManager().get(template)
                                 .map(structureTemplate ->
                                         structureTemplate.palettes.stream()
