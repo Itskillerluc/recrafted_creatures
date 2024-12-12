@@ -13,10 +13,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
@@ -41,13 +37,15 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable, Saddleable {
+public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "giraffe");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
     private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(Items.WHEAT, Items.HAY_BLOCK.asItem(), Items.CARROT, Items.GOLDEN_CARROT), Ingredient.of(ItemTags.LEAVES)));
-    private static final EntityDataAccessor<Boolean> SADDLED = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.BOOLEAN);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -69,7 +67,6 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(SADDLED, false);
         entityData.define(HAS_TARGET, false);
     }
 
@@ -97,7 +94,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
             @Override
             public void start() {
-                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0){
+                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0) {
                     return;
                 }
                 super.start();
@@ -122,8 +119,8 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     public void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction function) {
         if (this.hasPassenger(pPassenger)) {
-            float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
-            float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
+            float f3 = Mth.sin(this.yBodyRot * ((float) Math.PI / 180F));
+            float f = Mth.cos(this.yBodyRot * ((float) Math.PI / 180F));
             pPassenger.setPos(this.getX() + (0.5 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (0.5 * f));
 
         }
@@ -132,11 +129,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
-            if (isSaddled() && pPlayer.getItemInHand(pHand).isEmpty() && pPlayer.isShiftKeyDown()) {
-                setSaddled(false);
-                pPlayer.setItemInHand(pHand, new ItemStack(Items.SADDLE));
-                return InteractionResult.SUCCESS;
-            } else if (!pPlayer.getItemInHand(pHand).is(Items.SADDLE) && pPlayer.isShiftKeyDown()){
+            if (pPlayer.isShiftKeyDown()) {
                 var itemStack = pPlayer.getItemInHand(pHand);
                 if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
                     if (!pPlayer.getAbilities().instabuild) {
@@ -148,10 +141,6 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
             } else if (pPlayer.getItemInHand(pHand).isEmpty()) {
                 pPlayer.startRiding(this);
                 return InteractionResult.SUCCESS;
-            } else if (pPlayer.getItemInHand(pHand).is(Items.SADDLE)) {
-                setSaddled(true);
-                pPlayer.getItemInHand(pHand).shrink(1);
-                return InteractionResult.SUCCESS;
             } else {
                 return super.mobInteract(pPlayer, pHand);
             }
@@ -161,15 +150,15 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
             pPlayer.getItemInHand(pHand).shrink(1);
             return InteractionResult.SUCCESS;
         }
-        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand)) && !level().isClientSide()) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
                 this.setTarget(null);
-                this.level().broadcastEntityEvent(this, (byte)7);
+                this.level().broadcastEntityEvent(this, (byte) 7);
                 pPlayer.getItemInHand(pHand).shrink(1);
             } else {
-                this.level().broadcastEntityEvent(this, (byte)6);
+                this.level().broadcastEntityEvent(this, (byte) 6);
             }
 
             return InteractionResult.SUCCESS;
@@ -196,7 +185,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
                 replayAnimation("tail");
             }
         } else {
-            if (isInWater() && isVehicle()){
+            if (isInWater() && isVehicle()) {
                 ejectPassengers();
             }
         }
@@ -206,15 +195,15 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     protected void addPassenger(@NotNull Entity pPassenger) {
         super.addPassenger(pPassenger);
-        if (!level().isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
-            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 :3));
+        if (!level().isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null) {
+            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 : 3));
         }
     }
 
     @Override
     protected void removePassenger(@NotNull Entity pPassenger) {
         super.removePassenger(pPassenger);
-        if (pPassenger instanceof Player player && !level().isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+        if (pPassenger instanceof Player player && !level().isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null) {
             player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() - (player.isCreative() ? 3.5 : 3));
         }
     }
@@ -254,7 +243,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
 
     public void travel(@NotNull Vec3 pTravelVector) {
         if (this.isAlive()) {
-            if (this.isVehicle() && isSaddled()) {
+            if (this.isVehicle()) {
                 LivingEntity livingentity = this.getControllingPassenger();
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
@@ -269,7 +258,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
                 }
 
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                    this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                     super.travel(new Vec3(f, pTravelVector.y, f1));
                 }
                 this.calculateEntityAnimation(false);
@@ -318,34 +307,6 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     }
 
     @Override
-    public boolean isSaddleable() {
-        return !isSaddled() && getOwnerUUID() != null;
-    }
-
-    public void setSaddled(boolean saddled){
-        entityData.set(SADDLED, saddled);
-    }
-
-    @Override
-    public void equipSaddle(@Nullable SoundSource pSource) {
-        setSaddled(true);
-        if (pSource != null) {
-            this.level().playSound(null, this, this.getSaddleSoundEvent(), pSource, 0.5F, 1.0F);
-        }
-    }
-
-    @Override
-    public @NotNull SoundEvent getSaddleSoundEvent() {
-        return SoundEvents.HORSE_SADDLE;
-    }
-
-    @Override
-    public boolean isSaddled() {
-        return entityData.get(SADDLED);
-    }
-
-
-    @Override
     public ResourceLocation getModelLocation() {
         return LOCATION;
     }
@@ -373,13 +334,11 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("saddled", isSaddled());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        setSaddled(pCompound.getBoolean("saddled"));
     }
 
     @Override

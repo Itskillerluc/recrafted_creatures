@@ -18,6 +18,6 @@ public class GiraffeRenderer extends MobRenderer<Giraffe, GiraffeModel> {
     }
     @Override
     public @NotNull ResourceLocation getTextureLocation(Giraffe pEntity) {
-        return pEntity.isSaddled() ? LOCATION_SADDLED : LOCATION;
+        return LOCATION;
     }
 }
