@@ -4,6 +4,7 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
+import io.github.itskillerluc.recrafted_creatures.entity.ai.GiraffeHitAndRunGoal;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
@@ -91,15 +91,17 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, true));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this) {
-            @Override
-            public void start() {
-                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0) {
-                    return;
-                }
-                super.start();
-            }
-        });
+        /**targetSelector.addGoal(1, new HurtByTargetGoal(this) {
+        @Override public void start() {
+        if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0) {
+        return;
+        }
+        super.start();
+        }
+        });**/
+
+        this.goalSelector.addGoal(1, new GiraffeHitAndRunGoal(this));
+
     }
 
     public boolean getHasTarget() {
