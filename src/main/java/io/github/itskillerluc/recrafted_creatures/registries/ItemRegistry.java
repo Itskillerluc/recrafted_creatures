@@ -49,8 +49,8 @@ public class ItemRegistry {
     public static final RegistryObject<ForgeSpawnEggItem> ZEBRA_SPAWN_EGG = ITEMS.register("zebra_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.ZEBRA, 0xFFFFFF, 0x000000, new Item.Properties()));
 
-    public static final RegistryObject<ForgeSpawnEggItem> MAMMOTH_SPAWN_EGG = ITEMS.register("mammoth_spawn_egg",
-            () -> new ForgeSpawnEggItem(EntityRegistry.MAMMOTH, 0x6b4832, 0x473123, new Item.Properties()));
+  /*  public static final RegistryObject<ForgeSpawnEggItem> MAMMOTH_SPAWN_EGG = ITEMS.register("mammoth_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityRegistry.MAMMOTH, 0x6b4832, 0x473123, new Item.Properties()));*/
 
     public static final RegistryObject<ForgeSpawnEggItem> MARMOT_SPAWN_EGG = ITEMS.register("marmot_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.MARMOT, 0xC08F5F, 0x7C5240, new Item.Properties()));
@@ -69,11 +69,12 @@ public class ItemRegistry {
     public static final RegistryObject<ForgeSpawnEggItem> ORANGUTAN_SPAWN_EGG = ITEMS.register("orangutan_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.ORANGUTAN, 0xd65e09, 0x808080, new Item.Properties()));
 
+    /*
     public static final RegistryObject<BlockItem> MAMMOTH_MEAT = ITEMS.register("raw_mammoth_meat",
             () -> new BlockItem(BlockRegistry.RAW_MAMMOTH_MEAT.get(), new Item.Properties()));
 
     public static final RegistryObject<BlockItem> COOKED_MAMMOTH_MEAT = ITEMS.register("cooked_mammoth_meat",
-            () -> new BlockItem(BlockRegistry.COOKED_MAMMOTH_MEAT.get(), new Item.Properties()));
+            () -> new BlockItem(BlockRegistry.COOKED_MAMMOTH_MEAT.get(), new Item.Properties()));*/
 
     public static final RegistryObject<MobBucketItem> FROG_BUCKET = ITEMS.register("frog_bucket",
             () -> new MobBucketItem(() -> EntityType.FROG, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_TADPOLE, new Item.Properties().stacksTo(1)));

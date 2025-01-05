@@ -1,11 +1,9 @@
 package io.github.itskillerluc.recrafted_creatures;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.itskillerluc.recrafted_creatures.advancement.BeaverBuildTrigger;
 import io.github.itskillerluc.recrafted_creatures.advancement.OwlDeliveryTrigger;
 import io.github.itskillerluc.recrafted_creatures.blockentity.ConstructorBlockEntity;
 import io.github.itskillerluc.recrafted_creatures.config.Configs;
-import io.github.itskillerluc.recrafted_creatures.registries.BlockRegistry;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import io.github.itskillerluc.recrafted_creatures.networking.NetworkChannel;
 import io.github.itskillerluc.recrafted_creatures.registries.*;
@@ -17,7 +15,6 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
@@ -40,15 +37,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RecraftedCreatures.MODID)
-public class RecraftedCreatures
-{
+public class RecraftedCreatures {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "recrafted_creatures";
-    public RecraftedCreatures()
-    {
+
+    public RecraftedCreatures() {
         StreamUtils.setup(this);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        
+
         modEventBus.addListener(this::addEntityAttributes);
         modEventBus.addListener(this::registerSpawnPlacement);
         modEventBus.addListener(this::postInit);
@@ -85,8 +81,8 @@ public class RecraftedCreatures
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityRegistry.ZEBRA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(EntityRegistry.MAMMOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+/*        event.register(EntityRegistry.MAMMOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);*/
         event.register(EntityRegistry.MARMOT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -100,11 +96,12 @@ public class RecraftedCreatures
         event.register(EntityRegistry.ORANGUTAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
-    private void addEntityAttributes(EntityAttributeCreationEvent event){
+
+    private void addEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(EntityRegistry.GIRAFFE.get(), Giraffe.attributes().build());
         event.put(EntityRegistry.RED_PANDA.get(), RedPanda.attributes().build());
         event.put(EntityRegistry.ZEBRA.get(), Zebra.attributes().build());
-        event.put(EntityRegistry.MAMMOTH.get(), Mammoth.attributes().build());
+        //event.put(EntityRegistry.MAMMOTH.get(), Mammoth.attributes().build());
         event.put(EntityRegistry.MARMOT.get(), Marmot.attributes().build());
         event.put(EntityRegistry.CHAMELEON.get(), Chameleon.attributes().build());
         event.put(EntityRegistry.OWL.get(), Owl.attributes().build());
@@ -121,11 +118,11 @@ public class RecraftedCreatures
              * Dispense the specified stack, play the dispense sound, and spawn particles.
              */
             public ItemStack execute(BlockSource p_123561_, ItemStack p_123562_) {
-                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem)p_123562_.getItem();
+                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem) p_123562_.getItem();
                 BlockPos blockpos = p_123561_.getPos().relative(p_123561_.getBlockState().getValue(DispenserBlock.FACING));
                 Level level = p_123561_.getLevel();
-                if (dispensiblecontaineritem.emptyContents((Player)null, level, blockpos, (BlockHitResult)null, p_123562_)) {
-                    dispensiblecontaineritem.checkExtraContent((Player)null, level, p_123562_, blockpos);
+                if (dispensiblecontaineritem.emptyContents((Player) null, level, blockpos, (BlockHitResult) null, p_123562_)) {
+                    dispensiblecontaineritem.checkExtraContent((Player) null, level, p_123562_, blockpos);
                     return new ItemStack(Items.BUCKET);
                 } else {
                     return this.defaultDispenseItemBehavior.dispense(p_123561_, p_123562_);

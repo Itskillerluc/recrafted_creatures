@@ -6,6 +6,7 @@ import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.GiraffeModel;
 import io.github.itskillerluc.recrafted_creatures.entity.ai.GiraffeHitAndRunGoal;
 import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
+import io.github.itskillerluc.recrafted_creatures.registries.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +15,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -24,10 +24,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -45,7 +45,7 @@ import java.util.UUID;
 public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<GiraffeModel>, PlayerRideable {
     public static final ResourceLocation LOCATION = new ResourceLocation(RecraftedCreatures.MODID, "giraffe");
     public static final DucAnimation ANIMATION = DucAnimation.create(LOCATION);
-    private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(Items.WHEAT, Items.HAY_BLOCK.asItem(), Items.CARROT, Items.GOLDEN_CARROT), Ingredient.of(ItemTags.LEAVES)));
+    private static final Ingredient FOOD_ITEMS = Ingredient.merge(List.of(Ingredient.of(ItemRegistry.FRUIT_KEBAB.get())));
     private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.BOOLEAN);
     private final Lazy<Map<String, AnimationState>> animations = Lazy.of(() -> GiraffeModel.createStateMap(getAnimation()));
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -275,6 +275,7 @@ public class Giraffe extends TamableRCMob implements NeutralMob, Animatable<Gira
     public boolean isFood(@NotNull ItemStack pStack) {
         return FOOD_ITEMS.test(pStack);
     }
+
 
     @Nullable
     @Override

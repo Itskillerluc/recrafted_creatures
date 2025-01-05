@@ -37,7 +37,7 @@ public class ClientEvents {
         EntityRenderers.register(EntityRegistry.GIRAFFE.get(), GiraffeRenderer::new);
         EntityRenderers.register(EntityRegistry.RED_PANDA.get(), RedPandaRenderer::new);
         EntityRenderers.register(EntityRegistry.ZEBRA.get(), ZebraRenderer::new);
-        EntityRenderers.register(EntityRegistry.MAMMOTH.get(), MammothRenderer::new);
+      //  EntityRenderers.register(EntityRegistry.MAMMOTH.get(), MammothRenderer::new);
         EntityRenderers.register(EntityRegistry.MARMOT.get(), MarmotRenderer::new);
         EntityRenderers.register(EntityRegistry.CHAMELEON.get(), ChameleonRenderer::new);
         EntityRenderers.register(EntityRegistry.OWL.get(), OwlRenderer::new);

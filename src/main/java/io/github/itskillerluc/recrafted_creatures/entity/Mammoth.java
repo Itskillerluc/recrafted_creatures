@@ -4,7 +4,6 @@ import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.client.models.MammothModel;
-import io.github.itskillerluc.recrafted_creatures.registries.EntityRegistry;
 import io.github.itskillerluc.recrafted_creatures.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,6 +58,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(Mammoth.class, EntityDataSerializers.INT);
+
     public Mammoth(EntityType<? extends Mammoth> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -74,6 +74,12 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                 .add(Attributes.MAX_HEALTH, 60)
                 .add(Attributes.MOVEMENT_SPEED, 0.4D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D);
+    }
+
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+        return null;
     }
 
     @Override
@@ -98,7 +104,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class){
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, Mammoth.class) {
             @Override
             public boolean canUse() {
                 if (!this.animal.isInLove()) {
@@ -114,7 +120,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                 double d0 = Double.MAX_VALUE;
                 Animal animal = null;
 
-                for(Animal animal1 : list) {
+                for (Animal animal1 : list) {
                     if (this.animal.canMate(animal1) && this.animal.distanceToSqr(animal1) < d0) {
                         animal = animal1;
                         d0 = this.animal.distanceToSqr(animal1);
@@ -157,7 +163,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                     } else {
                         this.mob.swing(InteractionHand.MAIN_HAND);
                         this.mob.doHurtTarget(pEnemy);
-                        level().broadcastEntityEvent(Mammoth.this, (byte)-6);
+                        level().broadcastEntityEvent(Mammoth.this, (byte) -6);
                         pEnemy.knockback(2, this.mob.getX() - pEnemy.getX(), this.mob.getZ() - pEnemy.getZ());
 
                     }
@@ -169,7 +175,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
         targetSelector.addGoal(1, new HurtByTargetGoal(this) {
             @Override
             public void start() {
-                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0){
+                if (getOwnerUUID() != null && mob.getLastHurtByMob() != null && mob.getLastHurtByMob().getUUID().compareTo(getOwnerUUID()) == 0) {
                     return;
                 }
                 super.start();
@@ -192,14 +198,14 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
     @Override
     public void positionRider(@NotNull Entity pPassenger, @NotNull MoveFunction function) {
         if (this.hasPassenger(pPassenger)) {
-            float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
-            float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
+            float f3 = Mth.sin(this.yBodyRot * ((float) Math.PI / 180F));
+            float f = Mth.cos(this.yBodyRot * ((float) Math.PI / 180F));
             pPassenger.setPos(this.getX() + (0.7 * f3), this.getY() + getPassengersRidingOffset(), this.getZ() - (0.7 * f));
 
         }
     }
 
-    public int getColor(){
+    public int getColor() {
         return entityData.get(COLOR);
     }
 
@@ -230,7 +236,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
             return InteractionResult.SUCCESS;
         }
         if (getOwnerUUID() != null && this.getOwnerUUID().compareTo(pPlayer.getUUID()) == 0) {
-            if (pPlayer.isShiftKeyDown()){
+            if (pPlayer.isShiftKeyDown()) {
                 var itemStack = pPlayer.getItemInHand(pHand);
                 if (this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
                     if (!pPlayer.getAbilities().instabuild) {
@@ -239,22 +245,22 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
                     this.heal(3);
                 }
                 return InteractionResult.SUCCESS;
-            } else if (pHand == InteractionHand.MAIN_HAND && !isBaby()){
+            } else if (pHand == InteractionHand.MAIN_HAND && !isBaby()) {
                 pPlayer.startRiding(this);
                 return InteractionResult.SUCCESS;
             }
         }
-        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))){
+        if (this.getOwner() == null && isFood(pPlayer.getItemInHand(pHand))) {
             if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                 this.tame(pPlayer);
                 this.navigation.stop();
                 this.setTarget(null);
                 this.entityData.set(COLOR, 0xFF0000);
-                this.level().broadcastEntityEvent(this, (byte)7);
+                this.level().broadcastEntityEvent(this, (byte) 7);
                 pPlayer.getItemInHand(pHand).shrink(1);
                 return InteractionResult.SUCCESS;
             } else {
-                this.level().broadcastEntityEvent(this, (byte)6);
+                this.level().broadcastEntityEvent(this, (byte) 6);
                 pPlayer.getItemInHand(pHand).shrink(1);
                 return InteractionResult.SUCCESS;
             }
@@ -276,9 +282,9 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
         int diffBlue = -dyeBlue + originalBlue;
 
 
-        int resultRed = 255 - Math.max(0, 255 - originalRed + diffRed/Math.max(1, Math.abs(diffRed/16)));
-        int resultGreen = 255 - Math.max(0, 255- originalGreen + diffGreen/Math.max(1, Math.abs(diffGreen/16)));
-        int resultBlue = 255 - Math.max(0, 255 - originalBlue + diffBlue/Math.max(1, Math.abs(diffBlue/16)));
+        int resultRed = 255 - Math.max(0, 255 - originalRed + diffRed / Math.max(1, Math.abs(diffRed / 16)));
+        int resultGreen = 255 - Math.max(0, 255 - originalGreen + diffGreen / Math.max(1, Math.abs(diffGreen / 16)));
+        int resultBlue = 255 - Math.max(0, 255 - originalBlue + diffBlue / Math.max(1, Math.abs(diffBlue / 16)));
 
         return resultRed << 16 | resultGreen << 8 | resultBlue;
     }
@@ -289,7 +295,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
         if (level().isClientSide()) {
             animateWhen("idle", hasPose(Pose.STANDING));
         }
-        if (isInWater() && isVehicle()){
+        if (isInWater() && isVehicle()) {
             ejectPassengers();
         }
     }
@@ -297,15 +303,15 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
     @Override
     protected void addPassenger(@NotNull Entity pPassenger) {
         super.addPassenger(pPassenger);
-        if (!level().isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
-            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 :3));
+        if (!level().isClientSide() && pPassenger instanceof Player player && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null) {
+            player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() + (player.isCreative() ? 2.5 : 3));
         }
     }
 
     @Override
     protected void removePassenger(@NotNull Entity pPassenger) {
         super.removePassenger(pPassenger);
-        if (pPassenger instanceof Player player && !level().isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null){
+        if (pPassenger instanceof Player player && !level().isClientSide() && player.getAttribute(ForgeMod.BLOCK_REACH.get()) != null) {
             player.getAttribute(ForgeMod.BLOCK_REACH.get()).setBaseValue(player.getBlockReach() - (player.isCreative() ? 3.5 : 3));
         }
     }
@@ -377,16 +383,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
         return pStack.is(Items.PUMPKIN) || pStack.is(Items.MELON);
     }
 
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
-        var entity = EntityRegistry.MAMMOTH.get().create(pLevel);
-        if (((Mammoth) pOtherParent).isTame() && isTame()){
-            entity.setTame(true);
-            entity.setOwnerUUID(this.getOwnerUUID());
-        }
-        return entity;
-    }
+
     @Override
     public int getAmbientSoundInterval() {
         return 400;
@@ -473,7 +470,7 @@ public class Mammoth extends TamableRCMob implements NeutralMob, Animatable<Mamm
 
         if (pId == -4) {
             replayAnimation("attack");
-        } else if (pId == -6){
+        } else if (pId == -6) {
             replayAnimation("stomp");
         } else {
             super.handleEntityEvent(pId);

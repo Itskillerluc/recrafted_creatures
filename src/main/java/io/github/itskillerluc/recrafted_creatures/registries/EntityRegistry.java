@@ -1,5 +1,6 @@
 package io.github.itskillerluc.recrafted_creatures.registries;
 
+import ca.weblite.objc.Proxy;
 import io.github.itskillerluc.recrafted_creatures.RecraftedCreatures;
 import io.github.itskillerluc.recrafted_creatures.entity.*;
 import net.minecraft.resources.ResourceLocation;
@@ -24,9 +25,9 @@ public class EntityRegistry {
             () -> EntityType.Builder.of(Zebra::new, MobCategory.CREATURE).sized(1.3964844F, 1.8F)
                     .build(new ResourceLocation(RecraftedCreatures.MODID, "zebra").toString()));
 
-    public static final RegistryObject<EntityType<Mammoth>> MAMMOTH = ENTITY_TYPES.register("mammoth",
+  /*  public static final RegistryObject<EntityType<Mammoth>> MAMMOTH = ENTITY_TYPES.register("mammoth",
             () -> EntityType.Builder.of(Mammoth::new, MobCategory.CREATURE).sized(3, 3f)
-                    .build(new ResourceLocation(RecraftedCreatures.MODID, "mammoth").toString()));
+                    .build(new ResourceLocation(RecraftedCreatures.MODID, "mammoth").toString()));*/
 
     public static final RegistryObject<EntityType<Marmot>> MARMOT = ENTITY_TYPES.register("marmot",
             () -> EntityType.Builder.of(Marmot::new, MobCategory.CREATURE).sized(0.5f, 1f)
